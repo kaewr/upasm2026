@@ -107,6 +107,9 @@
   .count-btns button.selected{background:var(--accent);color:var(--on-accent);}
   .primary-btn{background:var(--accent);color:var(--on-accent);padding:18px 22px;font-size:19px;border-radius:12px;width:100%;margin-top:10px;min-height:56px;}
   .secondary-btn{background:transparent;color:var(--text-dim);padding:13px 16px;border:1px solid var(--border);border-radius:10px;font-size:15px;min-height:44px;}
+  .link-row{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+  .link-row a{flex:1;min-width:150px;text-align:center;background:transparent;color:var(--text-dim);padding:13px 16px;border:1px solid var(--border);border-radius:10px;font-size:15px;min-height:44px;display:flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;}
+  .link-row a:hover{border-color:var(--accent);color:var(--text);}
   .note{font-size:14px;color:var(--text-dim);margin-top:14px;line-height:1.65;}
 
   /* ---------- Game screen ---------- */
@@ -297,6 +300,11 @@
     <button class="primary-btn" id="start-btn">เริ่มเกม 🎲</button>
     <button class="secondary-btn" id="load-file-btn" style="width:100%;margin-top:8px;">📂 โหลดเกมจากไฟล์...</button>
     <input type="file" id="load-file-input" accept="application/json,.json" class="hidden">
+
+    <div class="link-row">
+      <a href="cards.html" target="_blank" rel="noopener">🗂️ สำรวจการ์ดทั้งหมด</a>
+      <a href="manual.html" target="_blank" rel="noopener">📖 คู่มือการเล่น</a>
+    </div>
 
     <div class="note">
       ⚠️ นี่คือเวอร์ชัน Alpha สำหรับทดสอบภายในทีม: กลไกและเนื้อหาการ์ดอาจยังมีจุดผิดพลาดหรือไม่สมบูรณ์ ช่วยกันทดลองเล่นและแจ้งปัญหาที่พบ เพื่อนำไปแก้ไขก่อนเผยแพร่จริง

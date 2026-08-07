@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>คู่มือการเล่น — คุ้มครองชีวิต พิชิตโซเดียม</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧂</text></svg>">
+<style>
+  :root{
+    --bg:#F6EEDA;
+    --surface:#FFFCF3;
+    --surface-2:#EDE2C3;
+    --ink:#241C10;
+    --ink-dim:#62583F;
+    --border:#D9C79B;
+    --border-strong:#BFA875;
+    --accent:#C98A2C;
+    --accent-strong:#8A5B18;
+    --accent-soft:#F1DDAE;
+
+    --mission:#1565C0;
+    --food:#C97A00;
+    --obstacle:#C22A2A;
+    --support:#8E24AA;
+    --knowledge:#1E8E3E;
+
+    --zone-green:#1E8E3E;
+    --zone-yellow:#C97A00;
+    --zone-red:#C22A2A;
+
+    --shadow: 0 1px 2px rgba(36,28,16,0.06), 0 8px 24px -12px rgba(36,28,16,0.18);
+    --radius: 14px;
+  }
+  :root[data-theme="dark"]{
+    --bg:#10190F; --surface:#182417; --surface-2:#21311F; --ink:#F1E9D2; --ink-dim:#C9C2A8;
+    --border:#3B4E36; --border-strong:#4E6647; --accent:#F2C14E; --accent-strong:#FFD670; --accent-soft:#3A2F17;
+    --mission:#6FA6E8; --food:#F2B84E; --obstacle:#EB7A72; --support:#D08CE0; --knowledge:#5FC088;
+    --zone-green:#5FC088; --zone-yellow:#F2B84E; --zone-red:#EB7A72;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#10190F; --surface:#182417; --surface-2:#21311F; --ink:#F1E9D2; --ink-dim:#C9C2A8;
+      --border:#3B4E36; --border-strong:#4E6647; --accent:#F2C14E; --accent-strong:#FFD670; --accent-soft:#3A2F17;
+      --mission:#6FA6E8; --food:#F2B84E; --obstacle:#EB7A72; --support:#D08CE0; --knowledge:#5FC088;
+      --zone-green:#5FC088; --zone-yellow:#F2B84E; --zone-red:#EB7A72;
+    }
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(circle at 1px 1px, rgba(128,110,60,0.10) 1px, transparent 0) 0 0/22px 22px,
+      var(--bg);
+    color:var(--ink);
+    font-family:'Sarabun','Noto Sans Thai','Leelawadee UI',system-ui,sans-serif;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{ background:var(--accent-soft); }
+  a{ color:var(--accent-strong); }
+  h1,h2,h3,h4{ font-family:'Sarabun','Noto Sans Thai',system-ui,sans-serif; text-wrap:balance; margin:0; color:var(--ink); }
+  p{ margin:0; }
+  .wrap{ max-width:980px; margin:0 auto; padding:0 20px 100px; }
+
+  .topnav{
+    position:sticky; top:0; z-index:20;
+    background:color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--border);
+  }
+  .topnav-inner{
+    max-width:980px; margin:0 auto; padding:10px 20px;
+    display:flex; gap:8px; overflow-x:auto; scrollbar-width:thin;
+  }
+  .topnav a{
+    flex:none;
+    font-size:12.5px; font-weight:700; text-decoration:none; color:var(--ink-dim);
+    padding:6px 12px; border-radius:999px; border:1px solid transparent;
+    white-space:nowrap;
+  }
+  .topnav a:hover{ border-color:var(--border-strong); color:var(--ink); }
+  .topnav a.back{ color:var(--accent-strong); border-color:var(--accent-soft); background:var(--accent-soft); }
+
+  .hero{ padding:56px 0 36px; text-align:center; }
+  .eyebrow{
+    display:inline-block; font-size:12px; font-weight:800; letter-spacing:0.14em;
+    text-transform:uppercase; color:var(--accent-strong);
+    background:var(--accent-soft); padding:6px 14px; border-radius:999px;
+    margin-bottom:18px;
+  }
+  .hero h1{ font-size:clamp(28px,5vw,44px); font-weight:800; margin-bottom:10px; }
+  .hero .sub{ font-size:16px; color:var(--ink-dim); max-width:640px; margin:0 auto; }
+  .stat-row{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-top:30px; }
+  .stat-chip{
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:12px; padding:10px 16px; box-shadow:var(--shadow); min-width:96px;
+  }
+  .stat-chip .n{ font-size:22px; font-weight:800; color:var(--accent-strong); font-variant-numeric:tabular-nums; display:block; }
+  .stat-chip .l{ font-size:11.5px; color:var(--ink-dim); }
+
+  section{ padding:52px 0; scroll-margin-top:64px; border-top:1px dashed var(--border); }
+  section:first-of-type{ border-top:none; }
+  .sec-head{ margin-bottom:28px; }
+  .sec-num{ font-size:12px; font-weight:800; color:var(--accent-strong); letter-spacing:0.08em; }
+  .sec-head h2{ font-size:clamp(21px,3vw,27px); font-weight:800; margin-top:4px; }
+  .sec-head p{ color:var(--ink-dim); margin-top:8px; max-width:640px; font-size:14.5px; }
+
+  .path{ display:flex; align-items:stretch; gap:0; overflow-x:auto; padding:8px 4px 18px; }
+  .path-node{ flex:1 0 148px; position:relative; text-align:center; padding:0 6px; }
+  .path-node .dot{
+    width:46px; height:46px; border-radius:50%; margin:0 auto 10px;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--surface); border:2px solid var(--accent); color:var(--accent-strong);
+    font-weight:800; font-size:16px; font-variant-numeric:tabular-nums;
+    box-shadow:var(--shadow); position:relative; z-index:1;
+  }
+  .path-node.final .dot{ background:var(--accent); color:var(--surface); border-color:var(--accent); }
+  .path-node::before{
+    content:''; position:absolute; top:23px; left:-50%; width:100%; height:2px;
+    background:repeating-linear-gradient(90deg, var(--border-strong) 0 6px, transparent 6px 12px);
+  }
+  .path-node:first-child::before{ display:none; }
+  .path-node .th{ font-weight:800; font-size:14.5px; }
+  .path-node .en{ font-size:11.5px; color:var(--ink-dim); }
+  .path-node .foot{ font-size:11px; color:var(--ink-dim); margin-top:4px; }
+
+  .tile-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin-top:8px; }
+  .tile-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:12px;
+    padding:14px; display:flex; gap:10px; align-items:flex-start; box-shadow:var(--shadow);
+  }
+  .tile-card .ic{ font-size:22px; line-height:1; }
+  .tile-card .name{ font-weight:700; font-size:13.5px; }
+  .tile-card .meta{ font-size:11.5px; color:var(--ink-dim); margin-top:2px; }
+  .tile-card .chip{
+    display:inline-block; margin-top:6px; font-size:10.5px; font-weight:800;
+    padding:2px 8px; border-radius:999px; color:#fff;
+  }
+
+  .timeline{ position:relative; padding-left:34px; margin-top:8px; }
+  .timeline::before{ content:''; position:absolute; left:13px; top:6px; bottom:6px; width:2px; background:var(--border-strong); }
+  .tl-step{ position:relative; padding-bottom:26px; }
+  .tl-step:last-child{ padding-bottom:0; }
+  .tl-step::before{
+    content:attr(data-n); position:absolute; left:-34px; top:0; width:28px; height:28px;
+    border-radius:50%; background:var(--accent); color:var(--surface);
+    font-weight:800; font-size:13px; display:flex; align-items:center; justify-content:center;
+    box-shadow:var(--shadow);
+  }
+  .tl-step h4{ font-size:15px; font-weight:700; margin-bottom:4px; }
+  .tl-step p{ font-size:13.5px; color:var(--ink-dim); }
+  .tl-step .tag{
+    display:inline-block; font-size:10.5px; font-weight:800; letter-spacing:0.04em;
+    background:var(--accent-soft); color:var(--accent-strong); padding:2px 8px; border-radius:999px; margin-top:6px;
+  }
+
+  .tbl-wrap{ overflow-x:auto; border:1px solid var(--border); border-radius:12px; }
+  table{ width:100%; border-collapse:collapse; font-size:13.5px; min-width:560px; background:var(--surface); }
+  th,td{ text-align:left; padding:11px 14px; border-bottom:1px solid var(--border); vertical-align:top; }
+  th{ background:var(--surface-2); font-size:12px; text-transform:uppercase; letter-spacing:0.05em; color:var(--ink-dim); }
+  tr:last-child td{ border-bottom:none; }
+  .dot-sw{ display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:7px; }
+
+  .card-gallery{ display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:16px; }
+  .gcard{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+    overflow:hidden; box-shadow:var(--shadow); display:flex; flex-direction:column;
+  }
+  .gcard .band{ padding:14px 16px; color:#fff; }
+  .gcard .band .ic{ font-size:20px; }
+  .gcard .band .ttl{ font-weight:800; font-size:15px; margin-top:4px; }
+  .gcard .band .cnt{ font-size:11.5px; opacity:0.9; margin-top:2px; }
+  .gcard .body{ padding:14px 16px; font-size:13px; color:var(--ink-dim); flex:1; }
+  .gcard .body b{ color:var(--ink); }
+  .gcard ul{ margin:8px 0 0; padding-left:18px; }
+  .gcard li{ margin-bottom:4px; }
+
+  .tag-pill{
+    display:inline-block; font-size:10.5px; font-weight:800; padding:2px 8px; border-radius:999px;
+    background:var(--surface-2); color:var(--ink-dim); margin:2px 4px 2px 0; white-space:nowrap;
+  }
+
+  .end-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px; }
+  .end-card{ background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px; box-shadow:var(--shadow); }
+  .end-card .ic{ font-size:26px; }
+  .end-card h3{ font-size:16px; font-weight:800; margin-top:8px; }
+  .end-card p{ font-size:13.5px; color:var(--ink-dim); margin-top:6px; }
+
+  .conn-list{ display:flex; flex-direction:column; gap:10px; margin-top:8px; }
+  .conn-item{
+    display:flex; gap:12px; align-items:flex-start; background:var(--surface);
+    border:1px solid var(--border); border-radius:12px; padding:12px 16px; box-shadow:var(--shadow);
+  }
+  .conn-item .arrow{ font-size:16px; color:var(--accent-strong); flex:none; margin-top:1px; }
+  .conn-item .txt b{ color:var(--ink); }
+  .conn-item .txt{ font-size:13.5px; color:var(--ink-dim); }
+
+  footer{ text-align:center; padding:40px 20px 10px; color:var(--ink-dim); font-size:12px; }
+  footer .v{ margin-top:4px; font-variant-numeric:tabular-nums; }
+
+  @media (prefers-reduced-motion: no-preference){ section{ animation:fade-up .5s ease both; } }
+  @keyframes fade-up{ from{ opacity:0; transform:translateY(8px); } to{ opacity:1; transform:none; } }
+</style>
+</head>
+<body>
+
+<nav class="topnav"><div class="topnav-inner">
+  <a class="back" href="sodium-quest-mvp.html">← กลับไปเล่นเกม</a>
+  <a href="#board">เส้นทางกระดาน</a>
+  <a href="#setup">เริ่มต้น</a>
+  <a href="#turn">กลไกในตา</a>
+  <a href="#tiles">ช่อง↔การ์ด</a>
+  <a href="#cards">ประเภทการ์ด</a>
+  <a href="#effects">รางวัล/บทลงโทษ</a>
+  <a href="#end">จบด่าน/จบเกม</a>
+  <a href="#links">การเชื่อมโยง</a>
+  <a href="cards.html">🗂️ สำรวจการ์ด</a>
+</div></nav>
+
+<div class="wrap">
+
+  <div class="hero">
+    <span class="eyebrow">คู่มืออ้างอิงกลไกเกม</span>
+    <h1>คุ้มครองชีวิต พิชิตโซเดียม</h1>
+    <p class="sub">เกมกระดานเพื่อการเรียนรู้เรื่องการลดโซเดียม/ความเค็ม สำหรับอาสาสมัครสาธารณสุขประจำหมู่บ้าน (อสม.) พื้นที่ภาคเหนือตอนบน</p>
+    <div class="stat-row">
+      <div class="stat-chip"><span class="n">5</span><span class="l">หมู่บ้าน (ด่าน)</span></div>
+      <div class="stat-chip"><span class="n">12+1</span><span class="l">ช่อง/ด่าน</span></div>
+      <div class="stat-chip"><span class="n">5</span><span class="l">ประเภทการ์ด</span></div>
+      <div class="stat-chip"><span class="n">199</span><span class="l">การ์ดรวมทั้งเกม</span></div>
+      <div class="stat-chip"><span class="n">1–5</span><span class="l">ผู้เล่น</span></div>
+    </div>
+  </div>
+
+  <section id="board">
+    <div class="sec-head">
+      <div class="sec-num">01 — โครงสร้างกระดาน</div>
+      <h2>เส้นทางการเดินทาง 5 หมู่บ้าน</h2>
+      <p>ผู้เล่นทุกคนเดินทางผ่านหมู่บ้านตามลำดับเดียวกัน ตามกรอบแนวคิดการเปลี่ยนพฤติกรรม: เข้าถึง → เข้าใจ → ไต่ถาม → ตัดสินใจ → นำไปใช้</p>
+    </div>
+    <div class="path">
+      <div class="path-node"><div class="dot">1</div><div class="th">บ้านเปิดใจ๋</div><div class="en">หมู่บ้านแห่งการเข้าถึง</div><div class="foot">🚩 ขึด → จุดผ่านด่าน</div></div>
+      <div class="path-node"><div class="dot">2</div><div class="th">บ้านผางแจ้ง</div><div class="en">หมู่บ้านแห่งการเข้าใจ</div><div class="foot">🚩 ขึด → จุดผ่านด่าน</div></div>
+      <div class="path-node"><div class="dot">3</div><div class="th">บ้านจ่างถาม</div><div class="en">หมู่บ้านแห่งการไต่ถาม</div><div class="foot">🚩 ขึด → จุดผ่านด่าน</div></div>
+      <div class="path-node"><div class="dot">4</div><div class="th">บ้านแป๋งใจ๋</div><div class="en">หมู่บ้านแห่งการตัดสินใจ</div><div class="foot">🚩 ขึด → จุดผ่านด่าน</div></div>
+      <div class="path-node final"><div class="dot">5</div><div class="th">บ้านปันใจ้</div><div class="en">หมู่บ้านแห่งการนำไปใช้</div><div class="foot">🏁 ขึด → ศาลาประชาคม</div></div>
+    </div>
+
+    <div class="sec-head" style="margin-top:8px;">
+      <h2 style="font-size:17px;">ช่องภายในแต่ละหมู่บ้าน (12 ช่อง + 1 ช่องพิเศษ)</h2>
+    </div>
+    <div class="tile-grid">
+      <div class="tile-card"><div class="ic">🏠</div><div><div class="name">บ้านชาวบ้าน ×8</div><div class="meta">ช่องที่ 1, 3, 4, 6, 7, 9, 10, 11</div><span class="chip" style="background:var(--mission);">การ์ดภารกิจ</span></div></div>
+      <div class="tile-card"><div class="ic">➕</div><div><div class="name">รพ.สต. (อนามัย) ×1</div><div class="meta">ช่องที่ 2</div><span class="chip" style="background:var(--knowledge);">การ์ดความรู้</span></div></div>
+      <div class="tile-card"><div class="ic">🧺</div><div><div class="name">กาดนัด ×1</div><div class="meta">ช่องที่ 5</div><span class="chip" style="background:var(--food);">การ์ดอาหาร</span></div></div>
+      <div class="tile-card"><div class="ic">🏯</div><div><div class="name">บ้านป้อหลวง ×1</div><div class="meta">ช่องที่ 8</div><span class="chip" style="background:var(--support);">การ์ดสนับสนุน</span></div></div>
+      <div class="tile-card"><div class="ic">⚠️</div><div><div class="name">ขึด ×1</div><div class="meta">ช่องที่ 12 — ปิดท้ายทุกหมู่บ้าน รวมด่านสุดท้าย</div><span class="chip" style="background:var(--obstacle);">การ์ดอุปสรรค</span></div></div>
+      <div class="tile-card"><div class="ic">🛕/🏁</div><div><div class="name">ศาลาพักคอย / ศาลาประชาคม</div><div class="meta">ทอยเกินช่อง 12 มาลงที่นี่ทันที</div><span class="chip" style="background:var(--ink-dim);">ข้ามการ์ดช่อง 12</span></div></div>
+    </div>
+  </section>
+
+  <section id="setup">
+    <div class="sec-head">
+      <div class="sec-num">02 — เงื่อนไขเริ่มต้น</div>
+      <h2>ก่อนเดินก้าวแรก</h2>
+    </div>
+    <div class="tile-grid">
+      <div class="tile-card"><div class="ic">👥</div><div><div class="name">ผู้เล่น 1–5 คน</div><div class="meta">ตั้งชื่อและเลือกไอคอนได้ก่อนเริ่ม</div></div></div>
+      <div class="tile-card"><div class="ic">🏁</div><div><div class="name">ตำแหน่งเริ่มต้น: นอกกระดาน</div><div class="meta">ทอยครั้งแรกจึงเข้าสู่ช่องที่ 1 เหมือนช่องอื่นทุกประการ</div></div></div>
+      <div class="tile-card"><div class="ic">💯</div><div><div class="name">คะแนนเริ่มต้น: 0</div><div class="meta">สะสมตลอดทั้ง 5 หมู่บ้าน ไม่มีการหักล้างตอนเปลี่ยนด่าน</div></div></div>
+      <div class="tile-card"><div class="ic">🍲</div><div><div class="name">การ์ดอาหารเริ่มต้น 6 ใบ</div><div class="meta">การันตีมีอย่างน้อย 1 ใบจากแต่ละโซนสี (เขียว/เหลือง/แดง)</div></div></div>
+      <div class="tile-card"><div class="ic">💡</div><div><div class="name">การ์ดความรู้เริ่มต้น 1 ใบ</div><div class="meta">สุ่มจากคลัง 20 ใบ</div></div></div>
+      <div class="tile-card"><div class="ic">🤝</div><div><div class="name">การ์ดสนับสนุนเริ่มต้น 0 ใบ</div><div class="meta">ต้องผ่านบ้านป้อหลวงจึงจะได้รับ</div></div></div>
+    </div>
+  </section>
+
+  <section id="turn">
+    <div class="sec-head">
+      <div class="sec-num">03 — กลไกในแต่ละตา</div>
+      <h2>ผู้เล่นหนึ่งตาทำอะไรบ้าง</h2>
+    </div>
+    <div class="timeline">
+      <div class="tl-step" data-n="1"><h4>ทอยเต๋า (1 ลูก, 1–6)</h4><p>ถ้ามี "หยุดเดิน" ค้างจากบทลงโทษก่อนหน้า จะเสียตานี้ไปเลย ไม่ได้ทอย และตัวนับหยุดเดินลดลง 1</p></div>
+      <div class="tl-step" data-n="2"><h4>เดินตามแต้ม ทีละช่อง</h4><p>เคลื่อนบนกระดานพร้อมเสียงฝีเท้าและไฮไลต์ช่องปัจจุบัน</p></div>
+      <div class="tl-step" data-n="3"><h4>ตรวจสอบการทอยเกิน</h4><p>ถ้าก้าวที่จะเดินพาผ่านช่องที่ 12 ไป → หยุดที่ <b>ศาลาพักคอย</b> ทันที <span class="tag">ข้ามภารกิจช่อง 12</span></p></div>
+      <div class="tl-step" data-n="4"><h4>เปิดการ์ดตามประเภทช่อง</h4><p>หยุดพอดีช่องไหน เปิดการ์ดของช่องนั้น (ภารกิจ/อุปสรรค/อาหาร/สนับสนุน/ความรู้) แล้วรับผลตามการ์ด</p></div>
+      <div class="tl-step" data-n="5"><h4>ตรวจสอบจบด่าน</h4><p>ถ้าเป็นผู้เล่นคนสุดท้ายที่ยังไม่ถึงจุดผ่านด่าน → ทุกคนเข้าหมู่บ้านถัดไปพร้อมกัน (คะแนน/การ์ดในมือติดตัวไปด้วย)</p></div>
+      <div class="tl-step" data-n="6"><h4>ส่งตาให้ผู้เล่นถัดไป</h4><p>ข้ามผู้เล่นที่ถึงจุดผ่านด่านแล้วโดยอัตโนมัติ</p></div>
+      <div class="tl-step" data-n="7"><h4>วนซ้ำจนครบ 5 หมู่บ้าน</h4><p>หมู่บ้านสุดท้ายจบที่ <b>ศาลาประชาคม</b> แทนจุดผ่านด่านทั่วไป</p></div>
+    </div>
+  </section>
+
+  <section id="tiles">
+    <div class="sec-head">
+      <div class="sec-num">04 — ช่องกับการ์ด</div>
+      <h2>ช่องแต่ละแบบเปิดการ์ดอะไร</h2>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>ช่อง</th><th>ตำแหน่งในด่าน</th><th>การ์ดที่เปิด</th></tr></thead>
+        <tbody>
+          <tr><td>🏠 บ้านชาวบ้าน</td><td>ช่องที่ 1, 3, 4, 6, 7, 9, 10, 11</td><td><span class="dot-sw" style="background:var(--mission);"></span>การ์ดภารกิจ</td></tr>
+          <tr><td>➕ รพ.สต. (อนามัย)</td><td>ช่องที่ 2</td><td><span class="dot-sw" style="background:var(--knowledge);"></span>การ์ดความรู้</td></tr>
+          <tr><td>🧺 กาดนัด</td><td>ช่องที่ 5</td><td><span class="dot-sw" style="background:var(--food);"></span>การ์ดอาหาร</td></tr>
+          <tr><td>🏯 บ้านป้อหลวง</td><td>ช่องที่ 8</td><td><span class="dot-sw" style="background:var(--support);"></span>การ์ดสนับสนุน</td></tr>
+          <tr><td>⚠️ ขึด</td><td>ช่องที่ 12 (ปิดท้ายทุกหมู่บ้าน)</td><td><span class="dot-sw" style="background:var(--obstacle);"></span>การ์ดอุปสรรค</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:12.5px;color:var(--ink-dim);margin-top:10px;">ลำดับช่องนี้อ้างอิงตามเอกสารต้นฉบับ "วิจัย Bord Game" — ช่องขึดปิดท้ายช่อง 12 เสมอทุกหมู่บ้าน รวมถึงหมู่บ้านสุดท้าย ต้องแก้อุปสรรคให้ผ่านก่อนจึงจะนับว่าเดินทางถึงศาลาประชาคม</p>
+  </section>
+
+  <section id="cards">
+    <div class="sec-head">
+      <div class="sec-num">05 — ประเภทการ์ด</div>
+      <h2>การ์ดทั้ง 5 ชนิด</h2>
+      <p>สีของแต่ละประเภทตรงกับสีจริงที่ใช้ในหน้าจอเกม เพื่อให้จำได้ตรงกันทั้งบนกระดานและในคู่มือนี้ — กดปุ่ม "สำรวจการ์ด" ด้านบนเพื่อดูการ์ดจริงทุกใบ</p>
+    </div>
+    <div class="card-gallery">
+      <div class="gcard">
+        <div class="band" style="background:var(--mission);"><div class="ic">🏠</div><div class="ttl">การ์ดภารกิจ</div><div class="cnt">40 ใบ · 8 ใบ/หมู่บ้าน</div></div>
+        <div class="body">สถานการณ์จำลองงาน อสม. 2 รูปแบบ:
+          <ul>
+            <li><b>เลือกตอบ</b> (38 ใบ) — เลือกคำตอบจากตัวเลือกที่ให้</li>
+            <li><b>เลือกการ์ดอาหาร</b> (2 ใบ) — เลือกการ์ดอาหารในมือให้ตรงเงื่อนไขโซเดียม</li>
+          </ul>
+          สำเร็จก็ต่อเมื่อได้คะแนนบวกจริงเท่านั้น
+        </div>
+      </div>
+      <div class="gcard">
+        <div class="band" style="background:var(--food);"><div class="ic">🧺</div><div class="ttl">การ์ดอาหาร</div><div class="cnt">99 ใบ</div></div>
+        <div class="body">เมนูอาหารเหนือจริง พร้อมโซเดียม(มก.)และโภชนาการ แบ่ง 3 โซน:
+          <ul>
+            <li><span class="dot-sw" style="background:var(--zone-green);"></span>เขียว — 24 ใบ</li>
+            <li><span class="dot-sw" style="background:var(--zone-yellow);"></span>เหลือง — 31 ใบ</li>
+            <li><span class="dot-sw" style="background:var(--zone-red);"></span>แดง — 44 ใบ</li>
+          </ul>
+          ได้เก็บเข้ามือทันทีเมื่อเปิด ไม่มีตัวเลือก
+        </div>
+      </div>
+      <div class="gcard">
+        <div class="band" style="background:var(--obstacle);"><div class="ic">⚠️</div><div class="ttl">การ์ดอุปสรรค</div><div class="cnt">20 ใบ</div></div>
+        <div class="body">สถานการณ์เชิงลบจากความเชื่อ/พฤติกรรมเดิม ส่วนใหญ่ใช้กลไก <b>ตรวจการ์ดความรู้</b> — มีการ์ดความรู้ในมือจึงจะรอด หรือรอดดีกว่า<br><br>บางใบ <code>scope:"all"</code> ส่งผลกับผู้เล่นทุกคนพร้อมกัน</div>
+      </div>
+      <div class="gcard">
+        <div class="band" style="background:var(--support);"><div class="ic">🏯</div><div class="ttl">การ์ดสนับสนุน</div><div class="cnt">20 ใบ</div></div>
+        <div class="body">แรงหนุนดี ๆ จากชุมชน มีรูปภาพเต็มการ์ด ให้คะแนนหรือแจกการ์ดประเภทอื่นเพิ่ม บางใบส่งผลกับผู้เล่นทุกคน (<code>scope:"all"</code>)</div>
+      </div>
+      <div class="gcard">
+        <div class="band" style="background:var(--knowledge);"><div class="ic">💡</div><div class="ttl">การ์ดความรู้</div><div class="cnt">20 ใบ</div></div>
+        <div class="body">ความรู้สุขภาพจริงเกี่ยวกับโรคหลอดเลือดสมองและโซเดียม พร้อมรูปภาพประกอบ เก็บสะสมไว้ใช้ตอนเจอช่อง "ขึด"</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="effects">
+    <div class="sec-head">
+      <div class="sec-num">06 — รางวัลและบทลงโทษ</div>
+      <h2>คำสั่งผลลัพธ์ที่ใช้ร่วมกันข้ามการ์ด</h2>
+      <p>ทุกประเภทการ์ดใช้ "คำศัพท์ผลลัพธ์" ชุดเดียวกัน ทำให้กลไกคาดเดาได้และดูแลรักษาง่าย</p>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>ผลลัพธ์</th><th>ใช้ในการ์ด</th><th>ทำอะไร</th></tr></thead>
+        <tbody>
+          <tr><td><b>score</b> (add/subtract)</td><td><span class="tag-pill">ภารกิจ</span><span class="tag-pill">อุปสรรค</span><span class="tag-pill">สนับสนุน</span></td><td>บวก/ลบคะแนนสะสมโดยตรง</td></tr>
+          <tr><td><b>skipTurn</b></td><td><span class="tag-pill">ภารกิจ</span><span class="tag-pill">อุปสรรค</span></td><td>เพิ่มจำนวนตาที่ต้องหยุดเดิน</td></tr>
+          <tr><td><b>discardCard</b></td><td><span class="tag-pill">ภารกิจ</span><span class="tag-pill">อุปสรรค</span></td><td>สุ่มทิ้งการ์ดประเภทที่ระบุจากมือ (บอกชื่อการ์ดที่ทิ้งเสมอ)</td></tr>
+          <tr><td><b>drawCard</b></td><td><span class="tag-pill">ภารกิจ</span><span class="tag-pill">อุปสรรค</span><span class="tag-pill">สนับสนุน</span></td><td>สุ่มได้การ์ดประเภทที่ระบุเพิ่ม (ไม่ซ้ำกับที่มีอยู่แล้ว ถ้ากองยังมีเหลือ)</td></tr>
+          <tr><td><b>knowledgeCheck</b></td><td><span class="tag-pill">อุปสรรคเท่านั้น</span></td><td>มีการ์ดความรู้ในมือ → รอด (อาจถูกใช้ทิ้ง 1 ใบ); ไม่มี → หักคะแนนตามที่กำหนด</td></tr>
+          <tr><td><b>swapFoodZone</b></td><td><span class="tag-pill">อุปสรรคเท่านั้น</span></td><td>บังคับแลกการ์ดอาหารโซนเขียวทั้งหมด เป็นการ์ดสุ่มจากโซนเหลือง/แดง</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:12.5px;color:var(--ink-dim);margin-top:10px;">เกณฑ์ "ภารกิจสำเร็จ": นับเฉพาะเมื่อได้คะแนนบวกจริง (&gt;0) เท่านั้น — ตัวเลือกที่ไม่บวกไม่ลบเลยถือว่า "ไม่สำเร็จ" เช่นกัน</p>
+  </section>
+
+  <section id="end">
+    <div class="sec-head">
+      <div class="sec-num">07 — เงื่อนไขจบด่านและจบเกม</div>
+      <h2>เมื่อไหร่ถือว่าจบ</h2>
+    </div>
+    <div class="end-grid">
+      <div class="end-card"><div class="ic">🚩</div><h3>จบหมู่บ้าน (ด่าน 1–4)</h3><p>เมื่อผู้เล่นทุกคนแก้อุปสรรค (ขึด) ที่ช่องสุดท้ายผ่านแล้ว (หรือถึงศาลาพักคอยจากการทอยเกิน) ครบทุกคน → เข้าหมู่บ้านถัดไปพร้อมกัน คะแนนและการ์ดในมือติดตัวไปด้วย ตำแหน่งรีเซ็ตเป็นนอกกระดาน</p></div>
+      <div class="end-card"><div class="ic">🏁</div><h3>จบเกม (หลังด่าน 5)</h3><p>เมื่อทุกคนแก้อุปสรรคช่องสุดท้ายของหมู่บ้าน "บ้านปันใจ้" ผ่านแล้ว (หรือทอยเกินเข้าศาลาพักคอย) → เดินทางถึงศาลาประชาคม เกมจบ แสดงตารางจัดอันดับคะแนน ผู้คะแนนสูงสุดชนะ</p></div>
+      <div class="end-card"><div class="ic">💾</div><h3>ส่งออกผลคะแนน</h3><p>หน้าจอสรุปผลมีปุ่มบันทึกผลเป็นไฟล์ CSV (ชื่อ ไอคอน คะแนน วันที่เล่น เวอร์ชันเกม) สำหรับนำไปทำ dashboard ติดตามความก้าวหน้า — กดบันทึกซ้ำได้แม้ปิดหน้าต่างสรุปผลไปแล้ว</p></div>
+    </div>
+  </section>
+
+  <section id="links">
+    <div class="sec-head">
+      <div class="sec-num">08 — การเชื่อมโยงระหว่างระบบ</div>
+      <h2>การ์ดและกลไกอ้างอิงถึงกันอย่างไร</h2>
+    </div>
+    <div class="conn-list">
+      <div class="conn-item"><div class="arrow">➜</div><div class="txt"><b>ภารกิจ ↔ อาหาร</b> — บางใบภารกิจอ้าง id การ์ดอาหารจริงเพื่อโชว์รูป/ชื่อ/โซเดียมประกอบคำถาม</div></div>
+      <div class="conn-item"><div class="arrow">➜</div><div class="txt"><b>อุปสรรค/สนับสนุน ↔ ความรู้</b> — <code>knowledgeCheck</code> อ่านการ์ดความรู้ในมือผู้เล่นเอง ส่วนการ์ดสนับสนุนบางใบแจกการ์ดความรู้กลับเข้ามือ</div></div>
+      <div class="conn-item"><div class="arrow">➜</div><div class="txt"><b>อุปสรรค ↔ อาหาร</b> — <code>swapFoodZone</code> และ <code>drawCard</code> ปรับ/เพิ่มการ์ดอาหารในมือโดยตรงจากคลัง 99 ใบเดียวกัน</div></div>
+      <div class="conn-item"><div class="arrow">➜</div><div class="txt"><b>scope: "all"</b> — ผลของการ์ดอุปสรรค/สนับสนุนบางใบกระทบผู้เล่นทุกคนพร้อมกัน ไม่ใช่แค่คนที่จับได้</div></div>
+      <div class="conn-item"><div class="arrow">➜</div><div class="txt"><b>รูปภาพ</b> — การ์ดอาหาร/สนับสนุน/ความรู้ ชี้ไปยังไฟล์ภาพในโฟลเดอร์ assets ของตนเอง หากไม่มีไฟล์รูป เกมจะ fallback แสดงข้อความอย่างเดียว ไม่ทำให้พัง</div></div>
+      <div class="conn-item"><div class="arrow">➜</div><div class="txt"><b>ไฟล์ข้อมูล ↔ ตัวเกม</b> — ทั้ง 5 ชุดการ์ดที่ฝังในตัวเกมตรงกับไฟล์ข้อมูลอ้างอิง (*_cards_full.json) ทุกใบ 100% (ไฟล์อ้างอิงมี field เอกสารเสริมที่เกมไม่ใช้ แต่เนื้อหาที่เล่นจริงตรงกันทุกตัวอักษร)</div></div>
+    </div>
+  </section>
+
+  <footer>
+    <div>อ้างอิงจากซอร์สโค้ดเกมและไฟล์ข้อมูลการ์ดของโปรเจกต์ ตรวจสอบความสอดคล้องแล้ว</div>
+    <div class="v">คุ้มครองชีวิต พิชิตโซเดียม</div>
+  </footer>
+
+</div>
+</body>
+</html>

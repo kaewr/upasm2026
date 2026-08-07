@@ -7,27 +7,44 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🗂️</text></svg>">
 <style>
   :root{
-    --bg:#F6EEDA; --surface:#FFFCF3; --surface-2:#EDE2C3; --ink:#241C10; --ink-dim:#62583F;
-    --border:#D9C79B; --border-strong:#BFA875; --accent:#C98A2C; --accent-strong:#8A5B18; --accent-soft:#F1DDAE;
+    /* base = "ขาว" (light) — matches the main game's default theme exactly */
+    --bg:#FFFFFF; --surface:#FFFFFF; --surface-2:#EDE8DA;
+    --text:#1a1a16; --text-dim:#4a473e; --border:#8a8370;
+    --accent:#C98A2C; --accent-text:#7a4f18;
+
     --mission:#1565C0; --food:#C97A00; --obstacle:#C22A2A; --support:#8E24AA; --knowledge:#1E8E3E;
     --zone-green:#1E8E3E; --zone-yellow:#C97A00; --zone-red:#C22A2A;
     --shadow: 0 1px 2px rgba(36,28,16,0.06), 0 8px 24px -12px rgba(36,28,16,0.18);
     --radius: 14px;
     --text-zoom: 1.2;
+
+    /* aliases used throughout this stylesheet, derived from the theme above */
+    --ink: var(--text);
+    --ink-dim: var(--text-dim);
+    --border-strong: color-mix(in srgb, var(--border) 55%, var(--text));
+    --accent-strong: var(--accent-text);
+    --accent-soft: color-mix(in srgb, var(--accent) 20%, var(--surface));
   }
-  :root[data-theme="dark"]{
-    --bg:#10190F; --surface:#182417; --surface-2:#21311F; --ink:#F1E9D2; --ink-dim:#C9C2A8;
-    --border:#3B4E36; --border-strong:#4E6647; --accent:#F2C14E; --accent-strong:#FFD670; --accent-soft:#3A2F17;
-    --mission:#6FA6E8; --food:#F2B84E; --obstacle:#EB7A72; --support:#D08CE0; --knowledge:#5FC088;
-    --zone-green:#5FC088; --zone-yellow:#F2B84E; --zone-red:#EB7A72;
+  /* ธีมดำ/เขียว/แดง/ฟ้า/Colorful — สีเดียวกับตัวเกมหลัก (sodium-quest-mvp.html) */
+  html[data-theme="dark"]{
+    --bg:#141414; --surface:#1e1e1e; --surface-2:#2a2a2a; --border:#5a5a5a;
+    --accent:#E0A72E; --accent-text:#F2C14E; --text:#FFFFFF; --text-dim:#D0CCC0;
   }
-  @media (prefers-color-scheme: dark){
-    :root:not([data-theme="light"]){
-      --bg:#10190F; --surface:#182417; --surface-2:#21311F; --ink:#F1E9D2; --ink-dim:#C9C2A8;
-      --border:#3B4E36; --border-strong:#4E6647; --accent:#F2C14E; --accent-strong:#FFD670; --accent-soft:#3A2F17;
-      --mission:#6FA6E8; --food:#F2B84E; --obstacle:#EB7A72; --support:#D08CE0; --knowledge:#5FC088;
-      --zone-green:#5FC088; --zone-yellow:#F2B84E; --zone-red:#EB7A72;
-    }
+  html[data-theme="green"]{
+    --bg:#0A2418; --surface:#123626; --surface-2:#1B4A34; --border:#5c8a71;
+    --accent:#F2C14E; --accent-text:#FFD670; --text:#FFFFFF; --text-dim:#dbe6db;
+  }
+  html[data-theme="red"]{
+    --bg:#2A0E0E; --surface:#3D1414; --surface-2:#4F1C1C; --border:#9a5a5a;
+    --accent:#F2C14E; --accent-text:#FFD670; --text:#FFFFFF; --text-dim:#f0d9d3;
+  }
+  html[data-theme="blue"]{
+    --bg:#0E1B2E; --surface:#152A45; --surface-2:#1D3A5C; --border:#5a7aa8;
+    --accent:#F2B84E; --accent-text:#FFCD70; --text:#FFFFFF; --text-dim:#cfe0ec;
+  }
+  html[data-theme="colorful"]{
+    --bg:#2A1240; --surface:#3D1A5C; --surface-2:#4E2378; --border:#a06fd0;
+    --accent:#FF8A50; --accent-text:#FFB27A; --text:#FFFFFF; --text-dim:#ecdcf7;
   }
   *{box-sizing:border-box;}
   .hidden{ display:none !important; }
@@ -56,6 +73,10 @@
   .topbar h1{ font-size:16px; font-weight:800; flex:1; min-width:160px; }
   .manual-link{ font-size:12.5px; font-weight:700; text-decoration:none; color:var(--ink-dim); }
 
+  .theme-select{
+    flex:none; font-size:12.5px; font-weight:700; font-family:inherit; color:var(--ink-dim);
+    background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:6px 8px;
+  }
   .font-ctl{ display:flex; align-items:center; gap:4px; flex:none; }
   .font-ctl button{
     width:30px; height:30px; border-radius:8px; border:1px solid var(--border); background:var(--surface);
@@ -165,6 +186,14 @@
 <div class="topbar"><div class="topbar-inner">
   <a class="back" href="sodium-quest-mvp.html">← กลับไปเล่นเกม</a>
   <h1>🗂️ สำรวจการ์ดทั้งหมด</h1>
+  <select class="theme-select" id="theme-select" title="ธีมสี">
+    <option value="light">🎨 ขาว</option>
+    <option value="dark">ดำ</option>
+    <option value="green">เขียว</option>
+    <option value="red">แดง</option>
+    <option value="blue">ฟ้า</option>
+    <option value="colorful">Colorful 🌈</option>
+  </select>
   <div class="font-ctl">
     <button type="button" id="font-dec" title="ลดขนาดตัวอักษร">ก−</button>
     <button type="button" id="font-inc" title="เพิ่มขนาดตัวอักษร">ก+</button>
@@ -256,6 +285,19 @@ document.getElementById('font-inc').addEventListener('click', () => {
 document.getElementById('font-dec').addEventListener('click', () => {
   applyZoom(parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--text-zoom')) - 0.1);
 });
+
+/* ---------- theme, shared with the main game via the same localStorage key ---------- */
+const THEME_KEY = 'sodium_quest_theme';
+function applyTheme(name){
+  document.documentElement.setAttribute('data-theme', name);
+  safeLocalSet(THEME_KEY, name);
+  const sel = document.getElementById('theme-select');
+  if(sel) sel.value = name;
+}
+(function initTheme(){
+  applyTheme(safeLocalGet(THEME_KEY) || 'light');
+})();
+document.getElementById('theme-select').addEventListener('change', (e) => applyTheme(e.target.value));
 
 const tabsEl = document.getElementById('tabs');
 Object.keys(DECKS).forEach(key => {

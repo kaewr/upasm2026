@@ -13,6 +13,7 @@
     --zone-green:#1E8E3E; --zone-yellow:#C97A00; --zone-red:#C22A2A;
     --shadow: 0 1px 2px rgba(36,28,16,0.06), 0 8px 24px -12px rgba(36,28,16,0.18);
     --radius: 14px;
+    --text-zoom: 1.2;
   }
   :root[data-theme="dark"]{
     --bg:#10190F; --surface:#182417; --surface-2:#21311F; --ink:#F1E9D2; --ink-dim:#C9C2A8;
@@ -29,8 +30,10 @@
     }
   }
   *{box-sizing:border-box;}
+  .hidden{ display:none !important; }
   body{
     margin:0;
+    zoom: var(--text-zoom);
     background: radial-gradient(circle at 1px 1px, rgba(128,110,60,0.10) 1px, transparent 0) 0 0/22px 22px, var(--bg);
     color:var(--ink); font-family:'Sarabun','Noto Sans Thai','Leelawadee UI',system-ui,sans-serif;
     line-height:1.6; -webkit-font-smoothing:antialiased;
@@ -53,6 +56,15 @@
   .topbar h1{ font-size:16px; font-weight:800; flex:1; min-width:160px; }
   .manual-link{ font-size:12.5px; font-weight:700; text-decoration:none; color:var(--ink-dim); }
 
+  .font-ctl{ display:flex; align-items:center; gap:4px; flex:none; }
+  .font-ctl button{
+    width:30px; height:30px; border-radius:8px; border:1px solid var(--border); background:var(--surface);
+    color:var(--ink-dim); font-weight:800; cursor:pointer; font-family:inherit; line-height:1;
+  }
+  .font-ctl button:first-child{ font-size:12px; }
+  .font-ctl button:last-child{ font-size:16px; }
+  .font-ctl button:hover{ border-color:var(--accent); color:var(--ink); }
+
   .hero{ padding:36px 0 20px; text-align:center; }
   .hero .sub{ font-size:14.5px; color:var(--ink-dim); max-width:560px; margin:8px auto 0; }
 
@@ -66,7 +78,7 @@
   .tab .ic{ font-size:15px; }
   .tab.active{ color:#fff; border-color:transparent; box-shadow:var(--shadow); }
 
-  .toolbar{ display:flex; align-items:center; gap:12px; margin-bottom:20px; flex-wrap:wrap; }
+  .toolbar{ display:flex; align-items:center; gap:12px; margin-bottom:14px; flex-wrap:wrap; }
   .search-box{
     flex:1; min-width:220px; background:var(--surface); border:1px solid var(--border);
     border-radius:10px; padding:10px 14px; font-size:14px; color:var(--ink);
@@ -74,6 +86,18 @@
   }
   .search-box:focus{ outline:2px solid var(--accent); outline-offset:1px; }
   .count-label{ font-size:12.5px; color:var(--ink-dim); font-variant-numeric:tabular-nums; white-space:nowrap; }
+
+  .food-filters{ display:flex; align-items:center; gap:16px; flex-wrap:wrap; margin-bottom:20px; padding:12px 14px; background:var(--surface); border:1px solid var(--border); border-radius:12px; }
+  .filter-group{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .filter-label{ font-size:12px; font-weight:800; color:var(--ink-dim); }
+  .seg{ display:flex; border:1px solid var(--border); border-radius:8px; overflow:hidden; }
+  .seg button{
+    font-size:12.5px; font-weight:700; padding:7px 12px; background:var(--surface);
+    color:var(--ink-dim); border:none; border-right:1px solid var(--border); cursor:pointer; font-family:inherit;
+  }
+  .seg button:last-child{ border-right:none; }
+  .seg button.active{ background:var(--food); color:#fff; }
+  .zone-dot{ display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:5px; }
 
   .grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:16px; }
   .ccard{
@@ -94,9 +118,46 @@
     align-self:flex-start; font-size:10.5px; font-weight:800; color:var(--ink-dim);
     background:var(--surface-2); padding:2px 8px; border-radius:999px;
   }
+  .view-btn{
+    margin-top:4px; align-self:flex-start; font-size:12px; font-weight:700; font-family:inherit;
+    padding:7px 13px; border-radius:8px; border:1px solid var(--deck-color, var(--accent));
+    color:var(--deck-color, var(--accent)); background:transparent; cursor:pointer;
+  }
+  .view-btn:hover{ background:var(--deck-color, var(--accent)); color:#fff; }
   .loading, .empty{ grid-column:1/-1; text-align:center; padding:60px 20px; color:var(--ink-dim); font-size:14px; }
 
   footer{ text-align:center; padding:40px 20px 10px; color:var(--ink-dim); font-size:12px; }
+
+  /* ---------- preview modal (mimics the in-game card popup) ---------- */
+  .preview-overlay{
+    position:fixed; inset:0; background:rgba(20,15,5,0.55); z-index:100;
+    display:none; align-items:center; justify-content:center; padding:20px;
+  }
+  .preview-overlay.show{ display:flex; }
+  .preview-box{
+    background:var(--surface); border-radius:16px; max-width:480px; width:100%;
+    max-height:85vh; overflow-y:auto; padding:20px; position:relative;
+    box-shadow:0 20px 60px rgba(0,0,0,.4);
+  }
+  .pclose{
+    position:absolute; top:12px; right:12px; width:32px; height:32px; border-radius:50%;
+    border:1px solid var(--border); background:var(--surface); color:var(--ink-dim);
+    font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+  }
+  .pclose:hover{ color:var(--ink); border-color:var(--accent); }
+  .pctype{ display:inline-block; font-size:12px; font-weight:800; color:#fff; padding:4px 12px; border-radius:999px; margin-bottom:10px; }
+  .preview-box h3{ font-size:19px; font-weight:800; margin-bottom:10px; }
+  .pdesc{ font-size:14px; color:var(--ink-dim); line-height:1.65; margin-bottom:10px; }
+  .preq{ font-size:13px; font-weight:700; background:var(--surface-2); padding:8px 12px; border-radius:8px; margin-bottom:10px; }
+  .peffect{ font-size:13.5px; background:var(--surface-2); padding:8px 12px; border-radius:8px; margin-bottom:8px; }
+  .phero{ width:calc(100% + 40px); margin:-20px -20px 12px; height:170px; background-size:cover; background-position:center; background-color:var(--support); display:flex; align-items:flex-end; }
+  .phero-scrim{ width:100%; padding:14px 20px; background:linear-gradient(to top, rgba(0,0,0,.65), transparent); }
+  .phero-scrim h3{ color:#fff; margin-bottom:0; }
+  .pimg{ width:100%; max-height:190px; object-fit:cover; border-radius:10px; margin-bottom:10px; }
+  .pchoices{ display:flex; flex-direction:column; gap:8px; }
+  .choice-preview{ background:var(--surface-2); border-radius:8px; padding:10px 12px; }
+  .choice-preview b{ font-size:13.5px; display:block; margin-bottom:4px; }
+  .choice-eff{ font-size:12px; color:var(--ink-dim); }
 </style>
 </head>
 <body>
@@ -104,6 +165,10 @@
 <div class="topbar"><div class="topbar-inner">
   <a class="back" href="sodium-quest-mvp.html">← กลับไปเล่นเกม</a>
   <h1>🗂️ สำรวจการ์ดทั้งหมด</h1>
+  <div class="font-ctl">
+    <button type="button" id="font-dec" title="ลดขนาดตัวอักษร">ก−</button>
+    <button type="button" id="font-inc" title="เพิ่มขนาดตัวอักษร">ก+</button>
+  </div>
   <a class="manual-link" href="manual.html">📖 คู่มือการเล่น</a>
 </div></div>
 
@@ -113,6 +178,26 @@
   </div>
 
   <div class="tabs" id="tabs"></div>
+
+  <div class="food-filters" id="food-filters">
+    <div class="filter-group">
+      <span class="filter-label">เรียงตามโซเดียม</span>
+      <div class="seg" id="sort-seg">
+        <button type="button" data-sort="desc" class="active">มาก → น้อย</button>
+        <button type="button" data-sort="asc">น้อย → มาก</button>
+      </div>
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">แสดงเฉพาะโซน</span>
+      <div class="seg" id="zone-seg">
+        <button type="button" data-zone="all" class="active">ทั้งหมด</button>
+        <button type="button" data-zone="green"><span class="zone-dot" style="background:var(--zone-green);"></span>เขียว</button>
+        <button type="button" data-zone="yellow"><span class="zone-dot" style="background:var(--zone-yellow);"></span>เหลือง</button>
+        <button type="button" data-zone="red"><span class="zone-dot" style="background:var(--zone-red);"></span>แดง</button>
+      </div>
+    </div>
+  </div>
+
   <div class="toolbar">
     <input class="search-box" id="search" type="text" placeholder="ค้นหาด้วยชื่อการ์ด...">
     <span class="count-label" id="count"></span>
@@ -121,6 +206,13 @@
 </div>
 
 <footer>คุ้มครองชีวิต พิชิตโซเดียม — ข้อมูลการ์ดทั้งหมดตรงกับที่ใช้ในเกมจริง</footer>
+
+<div class="preview-overlay" id="preview-overlay">
+  <div class="preview-box">
+    <button type="button" class="pclose" id="preview-close">✕</button>
+    <div id="preview-body"></div>
+  </div>
+</div>
 
 <script>
 const DECKS = {
@@ -131,11 +223,39 @@ const DECKS = {
   knowledge: { file:'knowledge_cards_full.json',       color:'var(--knowledge)', icon:'💡', label:'ความรู้' },
 };
 const ZONE_LABEL = { green:'เขียว - ปลอดภัย', yellow:'เหลือง - ระวัง', red:'แดง - เสี่ยง' };
+const ZONE_SHORT = { green:'เขียว', yellow:'เหลือง', red:'แดง' };
 const ZONE_COLOR = { green:'var(--zone-green)', yellow:'var(--zone-yellow)', red:'var(--zone-red)' };
+const CARD_TH = { food:'อาหาร', knowledge:'ความรู้', support:'สนับสนุน' };
 
 let activeDeck = 'food';
 let searchTerm = '';
+let foodSort = 'desc';
+let foodZone = 'all';
+let lastRendered = [];
 const cache = {};
+
+/* ---------- font size (zoom) control, shared across cards.html/manual.html ---------- */
+// localStorage throws on opaque origins (e.g. opening this file directly via
+// file://) — an unguarded call here would crash the whole inline script
+// before any of the tabs/cards ever render, so every access is wrapped.
+function safeLocalGet(key){ try { return localStorage.getItem(key); } catch(e) { return null; } }
+function safeLocalSet(key, value){ try { localStorage.setItem(key, value); } catch(e) {} }
+const ZOOM_KEY = 'upasm-text-zoom';
+function applyZoom(z){
+  z = Math.min(1.8, Math.max(0.8, z));
+  document.documentElement.style.setProperty('--text-zoom', z);
+  safeLocalSet(ZOOM_KEY, z);
+}
+(function initZoom(){
+  const saved = parseFloat(safeLocalGet(ZOOM_KEY));
+  applyZoom(isNaN(saved) ? 1.2 : saved);
+})();
+document.getElementById('font-inc').addEventListener('click', () => {
+  applyZoom(parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--text-zoom')) + 0.1);
+});
+document.getElementById('font-dec').addEventListener('click', () => {
+  applyZoom(parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--text-zoom')) - 0.1);
+});
 
 const tabsEl = document.getElementById('tabs');
 Object.keys(DECKS).forEach(key => {
@@ -167,6 +287,7 @@ function selectDeck(key){
   });
   document.getElementById('search').value = '';
   searchTerm = '';
+  document.getElementById('food-filters').classList.toggle('hidden', key !== 'food');
   renderCurrent();
 }
 
@@ -174,17 +295,27 @@ async function renderCurrent(){
   const grid = document.getElementById('grid');
   grid.innerHTML = '<div class="loading">กำลังโหลดการ์ด...</div>';
   const cards = await loadDeck(activeDeck);
-  const term = searchTerm.trim();
-  const filtered = term
-    ? cards.filter(c => (c.name || c.title || '').toLowerCase().includes(term.toLowerCase()))
-    : cards;
+  const term = searchTerm.trim().toLowerCase();
+  let filtered = term
+    ? cards.filter(c => (c.name || c.title || '').toLowerCase().includes(term))
+    : cards.slice();
+
+  if(activeDeck === 'food'){
+    if(foodZone !== 'all') filtered = filtered.filter(c => c.sodium.zone === foodZone);
+    filtered.sort((a, b) => {
+      const diff = (a.sodium.amountMg||0) - (b.sodium.amountMg||0);
+      return foodSort === 'asc' ? diff : -diff;
+    });
+  }
+
+  lastRendered = filtered;
   document.getElementById('count').textContent = `${filtered.length} / ${cards.length} ใบ`;
   grid.innerHTML = filtered.length
-    ? filtered.map(c => cardHTML(activeDeck, c)).join('')
-    : '<div class="empty">ไม่พบการ์ดที่ตรงกับคำค้นหา</div>';
+    ? filtered.map((c, i) => cardHTML(activeDeck, c, i)).join('')
+    : '<div class="empty">ไม่พบการ์ดที่ตรงกับเงื่อนไข</div>';
 }
 
-function cardHTML(deckKey, c){
+function cardHTML(deckKey, c, idx){
   const d = DECKS[deckKey];
   const style = `style="--deck-color:${d.color}"`;
   if(deckKey === 'food'){
@@ -201,6 +332,7 @@ function cardHTML(deckKey, c){
       <div class="ceyebrow" style="color:${d.color}">หมู่บ้าน ${c.village}${c.villageName ? ' · ' + c.villageName : ''}</div>
       <div class="cname">${c.title}</div>
       <div class="cdesc">${c.scenario}</div>
+      <button type="button" class="view-btn" data-idx="${idx}">🔍 ดูการ์ด</button>
     </div></div>`;
   }
   if(deckKey === 'obstacle'){
@@ -208,6 +340,7 @@ function cardHTML(deckKey, c){
       <div class="cname">${c.name}</div>
       <div class="cdesc">${c.scenario}</div>
       ${c.scope === 'all' ? '<span class="cbadge">ผลกับทุกคน</span>' : ''}
+      <button type="button" class="view-btn" data-idx="${idx}">🔍 ดูการ์ด</button>
     </div></div>`;
   }
   if(deckKey === 'support'){
@@ -216,6 +349,7 @@ function cardHTML(deckKey, c){
       <div class="cname">${c.name}</div>
       <div class="cdesc">${c.scenario}</div>
       ${c.scope === 'all' ? '<span class="cbadge">ผลกับทุกคน</span>' : ''}
+      <button type="button" class="view-btn" data-idx="${idx}">🔍 ดูการ์ด</button>
     </div></div>`;
   }
   if(deckKey === 'knowledge'){
@@ -223,10 +357,109 @@ function cardHTML(deckKey, c){
     return `<div class="ccard" ${style}>${img}<div class="cbody">
       <div class="cname">${c.name}</div>
       <div class="cdesc">${c.knowledgeFact}</div>
+      <button type="button" class="view-btn" data-idx="${idx}">🔍 ดูการ์ด</button>
     </div></div>`;
   }
   return '';
 }
+
+/* ---------- effect descriptions, mirroring the in-game wording ---------- */
+function describeEffect(eff){
+  if(eff.type === 'score') return `${eff.operation==='subtract'?'-':'+'}${eff.value} คะแนน`;
+  if(eff.type === 'skipTurn') return `หยุดเดิน ${eff.value} ตา`;
+  if(eff.type === 'discardCard') return `${eff.random ? 'สุ่มทิ้ง' : 'ทิ้ง'}การ์ด${CARD_TH[eff.cardType]||eff.cardType} ${eff.count} ใบ`;
+  if(eff.type === 'drawCard'){
+    const zone = eff.zone ? ` โซน${ZONE_SHORT[eff.zone]}` : '';
+    return `ได้การ์ด${CARD_TH[eff.cardType]||eff.cardType}เพิ่ม ${eff.count} ใบ${zone}`;
+  }
+  if(eff.type === 'knowledgeCheck'){
+    const withCard = eff.consume ? 'มีการ์ดความรู้ในมือ → ใช้รับมือสถานการณ์ (ทิ้ง 1 ใบ)' : 'มีการ์ดความรู้ในมือ → รับมือสถานการณ์ได้ ไม่เสียคะแนน';
+    const without = eff.penaltyIfMissing ? `ไม่มีการ์ดความรู้ → ติดลบ ${eff.penaltyIfMissing} คะแนน` : 'ไม่มีการ์ดความรู้ (ไม่มีบทลงโทษ)';
+    return `${withCard}<br>${without}`;
+  }
+  if(eff.type === 'swapFoodZone'){
+    const to = eff.toZones.map(z=>ZONE_SHORT[z]).join('/');
+    return `แลกการ์ดอาหารโซน${ZONE_SHORT[eff.fromZone]}ทั้งหมด เป็นโซน${to}`;
+  }
+  return eff.type;
+}
+
+/* ---------- preview modal: mirrors the styling used inside the actual game ---------- */
+function openPreviewModal(deckKey, card){
+  const d = DECKS[deckKey];
+  let html = '';
+  if(deckKey === 'mission'){
+    const choices = (card.choices||[]).map(c => `<div class="choice-preview"><b>${c.label}</b><div class="choice-eff">${(c.effects||[]).map(describeEffect).join(' · ')}</div></div>`).join('');
+    html = `
+      <span class="pctype" style="background:${d.color};">🏠 ${card.title}</span>
+      <h3>สถานการณ์</h3>
+      <div class="pdesc">${card.scenario}</div>
+      ${card.instructions ? `<div class="preq">📋 ${card.instructions}</div>` : ''}
+      <div class="pchoices">${choices || '<div class="pdesc">ภารกิจนี้ให้เลือกการ์ดอาหารในมือแทนการเลือกข้อความ</div>'}</div>
+    `;
+  } else if(deckKey === 'obstacle'){
+    const effLines = (card.effects||[]).map(e=>`<div class="peffect">${describeEffect(e)}</div>`).join('');
+    html = `
+      <span class="pctype" style="background:${d.color};">⚠️ การ์ดอุปสรรคหมู่บ้าน (ขึด)</span>
+      <h3>${card.name}</h3>
+      <div class="pdesc">${card.scenario}</div>
+      ${card.scope==='all' ? '<div class="preq">⚠️ อุปสรรคนี้ส่งผลกับผู้เล่นทุกคน</div>' : ''}
+      ${effLines}
+    `;
+  } else if(deckKey === 'support'){
+    const heroBg = card.image?.src ? ` style="background-image:url('${card.image.src}')"` : '';
+    const effLines = (card.effects||[]).map(e=>`<div class="peffect">${describeEffect(e)}</div>`).join('');
+    html = `
+      <div class="phero"${heroBg}><div class="phero-scrim"><span class="pctype" style="background:${d.color};">🏯 การ์ดสนับสนุนชุมชน</span><h3>${card.name}</h3></div></div>
+      <div class="pdesc">${card.scenario}</div>
+      ${card.scope==='all' ? '<div class="preq">🤝 การสนับสนุนนี้ส่งผลกับผู้เล่นทุกคน</div>' : ''}
+      ${effLines}
+    `;
+  } else if(deckKey === 'knowledge'){
+    const img = card.image?.src ? `<img class="pimg" src="${card.image.src}" alt="${card.image.alt||card.name}">` : '';
+    html = `
+      <span class="pctype" style="background:${d.color};">💡 การ์ดความรู้สุขภาพ</span>
+      <h3>${card.name}</h3>
+      ${img}
+      <div class="pdesc">${card.knowledgeFact}</div>
+      ${card.flavorText ? `<div class="peffect" style="font-style:italic;">"${card.flavorText}"</div>` : ''}
+    `;
+  }
+  document.getElementById('preview-body').innerHTML = html;
+  document.getElementById('preview-overlay').classList.add('show');
+}
+function closePreviewModal(){
+  document.getElementById('preview-overlay').classList.remove('show');
+}
+document.getElementById('preview-close').addEventListener('click', closePreviewModal);
+document.getElementById('preview-overlay').addEventListener('click', (e) => {
+  if(e.target.id === 'preview-overlay') closePreviewModal();
+});
+document.addEventListener('keydown', (e) => {
+  if(e.key === 'Escape') closePreviewModal();
+});
+document.getElementById('grid').addEventListener('click', (e) => {
+  const btn = e.target.closest('.view-btn');
+  if(!btn) return;
+  const card = lastRendered[Number(btn.dataset.idx)];
+  if(card) openPreviewModal(activeDeck, card);
+});
+
+/* ---------- food filter controls ---------- */
+document.getElementById('sort-seg').addEventListener('click', (e) => {
+  const btn = e.target.closest('button[data-sort]');
+  if(!btn) return;
+  foodSort = btn.dataset.sort;
+  [...e.currentTarget.children].forEach(b => b.classList.toggle('active', b === btn));
+  renderCurrent();
+});
+document.getElementById('zone-seg').addEventListener('click', (e) => {
+  const btn = e.target.closest('button[data-zone]');
+  if(!btn) return;
+  foodZone = btn.dataset.zone;
+  [...e.currentTarget.children].forEach(b => b.classList.toggle('active', b === btn));
+  renderCurrent();
+});
 
 document.getElementById('search').addEventListener('input', (e) => {
   searchTerm = e.target.value;

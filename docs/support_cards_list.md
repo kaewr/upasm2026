@@ -1,0 +1,24 @@
+# รายชื่อไฟล์รูปการ์ดสนับสนุนทั้งหมด (20 ใบ)
+
+| # | id | ชื่อการ์ด | ชื่อไฟล์รูป |
+|---|---|---|---|
+| 1 | support_01 | ผู้ใหญ่บ้านประกาศชมเชย | support_01_phuyaiban_chomchoei.jpg |
+| 2 | support_02 | บารมีหลวงพ่อ/เจ้าอาวาส | support_02_luangpho_baramee.jpg |
+| 3 | support_03 | เสียงตามสายกระจายข่าว | support_03_siangtamsai_krajaikhao.jpg |
+| 4 | support_04 | งบกองทุนหมู่บ้านสนับสนุน | support_04_kongthun_muban.jpg |
+| 5 | support_05 | ปราชญ์ชาวบ้านหนุนหลัง | support_05_pratchaoban_nunlang.jpg |
+| 6 | support_06 | พลัง อสม. เพื่อนช่วยเพื่อน | support_06_phuenchuayphuen.jpg |
+| 7 | support_07 | อสม. อาวุโสถ่ายทอดวิชา | support_07_asm_awuso_thaithot.jpg |
+| 8 | support_08 | ล้อมวงเล่าขวัญ | support_08_lomwong_laokwan.jpg |
+| 9 | support_09 | นาทีชีวิต | support_09_nathichiwit.jpg |
+| 10 | support_10 | อสม. ต้นแบบลดเค็มลดโรค | support_10_tonbaeb_lotkhem.jpg |
+| 11 | support_11 | กับข้าวถุงใหญ่จากยายสี | support_11_kapkhao_thungyai.jpg |
+| 12 | support_12 | บ้านนี้ต้อนรับเสมอ | support_12_bannee_tonrap.jpg |
+| 13 | support_13 | ลูกหลานกลับมาช่วยดูแล | support_13_lukhlan_klapma.jpg |
+| 14 | support_14 | นักรบ สยบข่าว | support_14_nakrob_sayobkhao.jpg |
+| 15 | support_15 | ของขวัญแทนคำขอบคุณ | support_15_khongkwan_khobkhun.jpg |
+| 16 | support_16 | งานบุญปลอดเหล้า ตัดวงจรโรค | support_16_nganbun_plodlao.jpg |
+| 17 | support_17 | ตลาดนัดสีเขียว ชุมชนคนรักสุขภาพ | support_17_talad_sikhiao.jpg |
+| 18 | support_18 | ล้อมวงเต้นแอโรบิกหน้า อบต. | support_18_lomwong_aerobic.jpg |
+| 19 | support_19 | ผ้าป่าสุขภาพ | support_19_phapa_sukkhaphap.jpg |
+| 20 | support_20 | กฎหมู่บ้าน | support_20_kotmuban.jpg |

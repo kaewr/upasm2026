@@ -1,0 +1,2404 @@
+{
+  "deckId": "food_menu_deck",
+  "deckName": "การ์ดเมนูอาหารพื้นบ้าน",
+  "totalCards": 99,
+  "cards": [
+    {
+      "id": "food_001",
+      "name": "ข้าวซอยเนื้อ",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_001_khaosoinuea.jpg",
+        "alt": "ข้าวซอยเนื้อ"
+      },
+      "sodium": {
+        "amountMg": 979.0,
+        "zone": "red",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 800.0,
+        "fatG": 45.0,
+        "proteinG": 35.0,
+        "carbG": 50.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "ไม่ควรซดน้ำ และควรตักเส้นกรอบออกเนื่องจากชุ่มน้ำมัน"
+    },
+    {
+      "id": "food_002",
+      "name": "น้ำพริกหนุ่ม",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_002_nampriknum.jpg",
+        "alt": "น้ำพริกหนุ่ม"
+      },
+      "sodium": {
+        "amountMg": 971.0,
+        "zone": "red",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 55.0,
+        "fatG": 0.5,
+        "proteinG": 2.1,
+        "carbG": 10.5
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "รสจัดจ้าน เสียหายต่อไต"
+    },
+    {
+      "id": "food_003",
+      "name": "น้ำพริกแมงดา",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_003_namprikmaengda.jpg",
+        "alt": "น้ำพริกแมงดา"
+      },
+      "sodium": {
+        "amountMg": 2130.0,
+        "zone": "red",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 241.0,
+        "fatG": 17.7,
+        "proteinG": 7.4,
+        "carbG": 11.5
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "กลิ่นหอมชวนหลงใหล แตะแต่น้อยทีละคำ"
+    },
+    {
+      "id": "food_004",
+      "name": "น้ำพริกน้ำปู๋",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_004_nampriknampu.jpg",
+        "alt": "น้ำพริกน้ำปู๋"
+      },
+      "sodium": {
+        "amountMg": 6305.0,
+        "zone": "red",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 105.0,
+        "fatG": 1.2,
+        "proteinG": 9.8,
+        "carbG": 13.7
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "ดื่มน้ำตามเยอะๆ งดเค็มทั้งวัน กินคู่มะเขือเปราะ หน่อไม้"
+    },
+    {
+      "id": "food_005",
+      "name": "ขนมจีนน้ำเงี้ยว",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_005_khanamachinnamngiao.jpg",
+        "alt": "ขนมจีนน้ำเงี้ยว"
+      },
+      "sodium": {
+        "amountMg": 1850.0,
+        "zone": "red",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 380.0,
+        "fatG": 14.5,
+        "proteinG": 18.2,
+        "carbG": 44.1
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "ซุปข้นซ่อนคม ผักกาดดองควรล้างน้ำก่อน"
+    },
+    {
+      "id": "food_006",
+      "name": "ข้าวซอยไก่",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_006_khaosoikai.jpg",
+        "alt": "ข้าวซอยไก่"
+      },
+      "sodium": {
+        "amountMg": 2738.0,
+        "zone": "red",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 506.0,
+        "fatG": 21.0,
+        "proteinG": 23.0,
+        "carbG": 56.2
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "ความนัวระดับตำนาน ซดน้ำ 3 คำพอ เน้นกินหอมแดง"
+    },
+    {
+      "id": "food_007",
+      "name": "แกงแคหมูสามชั้น",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_007_kaengkhaemusamchan.jpg",
+        "alt": "แกงแคหมูสามชั้น"
+      },
+      "sodium": {
+        "amountMg": 1650.0,
+        "zone": "red",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 345.0,
+        "fatG": 26.5,
+        "proteinG": 15.2,
+        "carbG": 11.4
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "กับดักสามชั้น ตักกินเฉพาะเนื้อไม่ติดมัน"
+    },
+    {
+      "id": "food_008",
+      "name": "ตำลาว",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_008_tamlao.jpg",
+        "alt": "ตำลาว"
+      },
+      "sodium": {
+        "amountMg": 1950.0,
+        "zone": "red",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 75.0,
+        "fatG": 0.8,
+        "proteinG": 3.2,
+        "carbG": 13.8
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "ตักแห้ง แซ่บเซฟ ไข่ต้มเพิ่มโปรตีน"
+    },
+    {
+      "id": "food_009",
+      "name": "จิ้นส้ม",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_009_chinsom.jpg",
+        "alt": "จิ้นส้ม"
+      },
+      "sodium": {
+        "amountMg": 1190.0,
+        "zone": "red",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 185.0,
+        "fatG": 11.2,
+        "proteinG": 17.5,
+        "carbG": 3.5
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "หมกไฟปรุงสุก ขิง กระเทียมกินคู่ลดไขมัน"
+    },
+    {
+      "id": "food_010",
+      "name": "แกงโฮ๊ะ",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_010_kaengho.jpg",
+        "alt": "แกงโฮ๊ะ"
+      },
+      "sodium": {
+        "amountMg": 1480.0,
+        "zone": "red",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 190.0,
+        "fatG": 9.5,
+        "proteinG": 11.2,
+        "carbG": 15.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "โซเดียมสะสม ดื่มน้ำตามหลังเยอะๆ"
+    },
+    {
+      "id": "food_011",
+      "name": "ไส้อั่ว",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_011_soai.jpg",
+        "alt": "ไส้อั่ว"
+      },
+      "sodium": {
+        "amountMg": 1480.0,
+        "zone": "red",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 342.0,
+        "fatG": 28.5,
+        "proteinG": 16.8,
+        "carbG": 4.2
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "สมุนไพรแน่นจมูก แต่ความเค็มและไขมันพุ่งชนเพดาน"
+    },
+    {
+      "id": "food_012",
+      "name": "แกงฮังเล",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_012_kaenghangle.jpg",
+        "alt": "แกงฮังเล"
+      },
+      "sodium": {
+        "amountMg": 1250.0,
+        "zone": "red",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 390.0,
+        "fatG": 32.0,
+        "proteinG": 14.5,
+        "carbG": 11.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "เนื้อนุ่มละลายในปาก กินคู่ขิงซอยสด เลี่ยงตักน้ำแกงชุ่มๆ"
+    },
+    {
+      "id": "food_013",
+      "name": "แกงอ่อมหมู",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_013_kaengommu.jpg",
+        "alt": "แกงอ่อมหมู"
+      },
+      "sodium": {
+        "amountMg": 1150.0,
+        "zone": "red",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 165.0,
+        "fatG": 9.8,
+        "proteinG": 17.2,
+        "carbG": 2.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "ให้ตักเน้นเนื้อและผัก ซดน้ำแกงขลุกขลิกแค่พอเคลือบลิ้น"
+    },
+    {
+      "id": "food_014",
+      "name": "น้ำพริกตาแดง",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_014_nampriktadaeng.jpg",
+        "alt": "น้ำพริกตาแดง"
+      },
+      "sodium": {
+        "amountMg": 2340.0,
+        "zone": "red",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 148.0,
+        "fatG": 3.5,
+        "proteinG": 5.8,
+        "carbG": 23.3
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "ใช้แตะปลายช้อน กินคู่กับผักนึ่ง"
+    },
+    {
+      "id": "food_015",
+      "name": "แกงบ่าหนุนใส่กระดูกหมู",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_015_kaengbanunsaikradukmu.jpg",
+        "alt": "แกงบ่าหนุนใส่กระดูกหมู"
+      },
+      "sodium": {
+        "amountMg": 1680.0,
+        "zone": "red",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 210.0,
+        "fatG": 9.0,
+        "proteinG": 18.5,
+        "carbG": 13.8
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "แกงเข้มข้นจากถั่วเน่า/กะปิ ล้างหน่อไม้ 2 น้ำก่อนแกง"
+    },
+    {
+      "id": "food_016",
+      "name": "แกงส้มบะหน่อไม้ส้ม",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_016_kaengtmbanomaisom.jpg",
+        "alt": "แกงส้มบะหน่อไม้ส้ม"
+      },
+      "sodium": {
+        "amountMg": 1320.0,
+        "zone": "red",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 185.0,
+        "fatG": 8.5,
+        "proteinG": 12.0,
+        "carbG": 15.2
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "เน้นเคี้ยวเนื้อขนุนและมะเขือเทศ ส่วนน้ำแกงรสเปรี้ยวเค็มให้ตักราดข้าวพอหายอยาก"
+    },
+    {
+      "id": "food_017",
+      "name": "น้ำพริกปลาฮ้า",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_017_namprikplaha.jpg",
+        "alt": "น้ำพริกปลาฮ้า"
+      },
+      "sodium": {
+        "amountMg": 2850.0,
+        "zone": "red",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 110.0,
+        "fatG": 2.1,
+        "proteinG": 14.8,
+        "carbG": 8.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "จิ้มแค่ปลายช้อน ผักนึ่ง 1 เซ็ต"
+    },
+    {
+      "id": "food_018",
+      "name": "ต๋ำบะหนุน (ตำขนุน)",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_018_tambanun.jpg",
+        "alt": "ต๋ำบะหนุน (ตำขนุน)"
+      },
+      "sodium": {
+        "amountMg": 1820.0,
+        "zone": "red",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 215.0,
+        "fatG": 11.8,
+        "proteinG": 8.5,
+        "carbG": 18.7
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "เมนูมงคล ดื่มน้ำเปล่าตามเพิ่ม 1-2 แก้ว เพิ่มถั่วฝักยาว แตงขวา มะเขือเปราะ"
+    },
+    {
+      "id": "food_019",
+      "name": "แกงผักปลังต้มจืด",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_019_kaengphakplangtamachuet.jpg",
+        "alt": "แกงผักปลังต้มจืด"
+      },
+      "sodium": {
+        "amountMg": 240.0,
+        "zone": "green",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 90.0,
+        "fatG": 3.5,
+        "proteinG": 8.2,
+        "carbG": 6.4
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "ซุปใสลื่นคอ เจลเคลือบลำไส้ ล้างสารตกค้าง"
+    },
+    {
+      "id": "food_020",
+      "name": "คั่วเห็ดถอบ",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_020_khuaetthop.jpg",
+        "alt": "คั่วเห็ดถอบ"
+      },
+      "sodium": {
+        "amountMg": 280.0,
+        "zone": "green",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 145.0,
+        "fatG": 6.5,
+        "proteinG": 9.2,
+        "carbG": 12.4
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "กรุบกรอบดังก๊อบเบาใจ สมุนไพรชูรสแทนน้ำปลา ไตยิ้มร่า"
+    },
+    {
+      "id": "food_021",
+      "name": "แกงผักหวานใส่ไข่มดแดง",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_021_kaengphakwansaikhaimadadaeng.jpg",
+        "alt": "แกงผักหวานใส่ไข่มดแดง"
+      },
+      "sodium": {
+        "amountMg": 320.0,
+        "zone": "green",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 125.0,
+        "fatG": 4.2,
+        "proteinG": 10.5,
+        "carbG": 11.3
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "รสหวานธรรมชาติจากป่าลึก โปรตีนพุ่ง ใยอาหารแน่น สบายไตสุดๆ"
+    },
+    {
+      "id": "food_022",
+      "name": "ส้าผักกาด",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_022_saphakkat.jpg",
+        "alt": "ส้าผักกาด"
+      },
+      "sodium": {
+        "amountMg": 310.0,
+        "zone": "green",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 85.0,
+        "fatG": 3.8,
+        "proteinG": 4.5,
+        "carbG": 8.2
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "กรอบสดชื่นสะท้านลิ้น วิตามินซีเต็มพิกัด พลังงานต่ำเซฟไตขั้นสุด"
+    },
+    {
+      "id": "food_023",
+      "name": "แกงบ่าปลี",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_023_kaengbapli.jpg",
+        "alt": "แกงบ่าปลี"
+      },
+      "sodium": {
+        "amountMg": 290.0,
+        "zone": "green",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 115.0,
+        "fatG": 4.2,
+        "proteinG": 9.5,
+        "carbG": 12.8
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "คลังใยอาหารจากสวนหลังบ้าน รสฝาดหวานละมุน สบายท้อง ดีต่อใจและไต"
+    },
+    {
+      "id": "food_024",
+      "name": "ตำส้มโอใส่ใส่มะแว้ง/ใบชะพลู",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_024_tamsamaosaisaimawaeng.jpg",
+        "alt": "ตำส้มโอใส่ใส่มะแว้ง/ใบชะพลู"
+      },
+      "sodium": {
+        "amountMg": 280.0,
+        "zone": "green",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 110.0,
+        "fatG": 2.2,
+        "proteinG": 3.8,
+        "carbG": 19.5
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "รสเปรี้ยว หวาน ขม ซ่า ทะลวงทุกต่อมรับรส วิตามินซีสูงลิ่ว ดับร้อน ชะล้างโซเดียม"
+    },
+    {
+      "id": "food_025",
+      "name": "แกงเห็ดลม",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_025_kaengetalom.jpg",
+        "alt": "แกงเห็ดลม"
+      },
+      "sodium": {
+        "amountMg": 260.0,
+        "zone": "green",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 75.0,
+        "fatG": 1.5,
+        "proteinG": 5.2,
+        "carbG": 10.2
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "เนื้อสัมผัสหนึบหนับดั่งเนื้อสัตว์ ซุปใสซดคล่องคอ เสริมภูมิคุ้มกัน"
+    },
+    {
+      "id": "food_026",
+      "name": "แกงผักกาดจอ (ไม่ใส่ถั่วเน่า/กะปิ)",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_026_kaengphakkatacho.jpg",
+        "alt": "แกงผักกาดจอ (ไม่ใส่ถั่วเน่า/กะปิ)"
+      },
+      "sodium": {
+        "amountMg": 150.0,
+        "zone": "green",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 110.0,
+        "fatG": 5.0,
+        "proteinG": 7.5,
+        "carbG": 8.8
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "รสเปรี้ยวอมหวานฉ่ำ ไร้กลิ่นคาวกะปิ ใยอาหารและแคลเซียมสูงลิ่ว"
+    },
+    {
+      "id": "food_027",
+      "name": "แกงตูนใส่ปลา",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_027_kaengtunsaipla.jpg",
+        "alt": "แกงตูนใส่ปลา"
+      },
+      "sodium": {
+        "amountMg": 340.0,
+        "zone": "green",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 95.0,
+        "fatG": 1.8,
+        "proteinG": 13.5,
+        "carbG": 6.2
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "ฟองน้ำธรรมชาติ โปรตีนปลาเนื้อแน่น แคลอรี่ต่ำ เซฟไตขั้นสุด"
+    },
+    {
+      "id": "food_028",
+      "name": "ผักเซียงดาผัดไข่",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_028_phaksiangdaphatkhai.jpg",
+        "alt": "ผักเซียงดาผัดไข่"
+      },
+      "sodium": {
+        "amountMg": 290.0,
+        "zone": "green",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 160.0,
+        "fatG": 11.2,
+        "proteinG": 8.5,
+        "carbG": 6.8
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "ราชินีผักพื้นบ้าน รสขมหวานละมุนตัดความมันไข่ สยบน้ำตาลในเลือด"
+    },
+    {
+      "id": "food_029",
+      "name": "แกงสะแลใส่ปลาแห้ง",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_029_kaengsalaesaiplaaeng.jpg",
+        "alt": "แกงสะแลใส่ปลาแห้ง"
+      },
+      "sodium": {
+        "amountMg": 234.0,
+        "zone": "green",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 65.0,
+        "fatG": 0.8,
+        "proteinG": 5.2,
+        "carbG": 9.2
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "ผักป่าหายาก เนื้อสัมผัสกรุบมันนัวซุปใส รสเปรี้ยวกลมกล่อมทดแทนความเค็ม"
+    },
+    {
+      "id": "food_030",
+      "name": "แกงผักเสี้ยวป่า",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_030_kaengphaksiaopa.jpg",
+        "alt": "แกงผักเสี้ยวป่า"
+      },
+      "sodium": {
+        "amountMg": 280.0,
+        "zone": "green",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 90.0,
+        "fatG": 1.5,
+        "proteinG": 12.8,
+        "carbG": 6.5
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "รสเปรี้ยวฝาดตามธรรมชาติ แคลอรี่ต่ำ ไม่บวมน้ำ"
+    },
+    {
+      "id": "food_031",
+      "name": "ยำชิ้นไก่",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_031_yamchinkai.jpg",
+        "alt": "ยำชิ้นไก่"
+      },
+      "sodium": {
+        "amountMg": 360.0,
+        "zone": "green",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 150.0,
+        "fatG": 4.5,
+        "proteinG": 22.0,
+        "carbG": 5.4
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "มะแขว่น และดีปลี ช่วยกระตุ้นต่อมรับรสทำงานได้ดีโดยไม่ต้องพึ่งความเค็ม"
+    },
+    {
+      "id": "food_032",
+      "name": "หน่ออั่วนึ่ง",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_032_nouanueng.jpg",
+        "alt": "หน่ออั่วนึ่ง"
+      },
+      "sodium": {
+        "amountMg": 340.0,
+        "zone": "green",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 140.0,
+        "fatG": 5.5,
+        "proteinG": 14.2,
+        "carbG": 8.5
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "หน่อไม้มีโพแทสเซียมสูงซึ่งช่วยขับโซเดียมได้ดี"
+    },
+    {
+      "id": "food_033",
+      "name": "แกงบ่าค้อนก่อมใส่ไก่",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_033_kaengbakhonkomsaikai.jpg",
+        "alt": "แกงบ่าค้อนก่อมใส่ไก่"
+      },
+      "sodium": {
+        "amountMg": 310.0,
+        "zone": "green",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 110.0,
+        "fatG": 2.8,
+        "proteinG": 12.5,
+        "carbG": 8.7
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "มะรุมมีสารต้านอนุมูลอิสระและช่วยลดความดันโลหิตสูง บำรุงหัวใจ"
+    },
+    {
+      "id": "food_034",
+      "name": "ตำมะเขือยาวใส่ไก่อกฉีก (ลดปลาร้า",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_034_tammakhueayaosaikaiokchik.jpg",
+        "alt": "ตำมะเขือยาวใส่ไก่อกฉีก (ลดปลาร้า"
+      },
+      "sodium": {
+        "amountMg": 310.0,
+        "zone": "green",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 95.0,
+        "fatG": 1.5,
+        "proteinG": 10.0,
+        "carbG": 11.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "มะเขือยาวเผามีโพแทสเซียมสูง ซึ่งช่วยขับโซเดียมออกจากร่างกาย"
+    },
+    {
+      "id": "food_035",
+      "name": "ยำผักส้ม",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_035_salaep.jpg",
+        "alt": "ยำผักส้ม"
+      },
+      "sodium": {
+        "amountMg": 1044.0,
+        "zone": "red",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 260.0,
+        "fatG": 1.0,
+        "proteinG": 3.0,
+        "carbG": 14.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "เมนูผักล้วนที่ให้พลังงานต่ำมาก เหมาะกับคนลดน้ำหนัก"
+    },
+    {
+      "id": "food_036",
+      "name": "ยำเตา",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_036_yamtao.jpg",
+        "alt": "ยำเตา"
+      },
+      "sodium": {
+        "amountMg": 310.0,
+        "zone": "green",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 90.0,
+        "fatG": 2.0,
+        "proteinG": 6.0,
+        "carbG": 12.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "สาหร่ายน้ำจืดให้แร่ธาตุสูง ปรุงรสด้วยมะเขือแจ้เปรี้ยวเพื่อลดการใช้ปลาร้า"
+    },
+    {
+      "id": "food_037",
+      "name": "นึ่งปลาช่อน จิ้มแจ่วผักนึ่ง",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_037_nuengplachon_chimchaeophaknu.jpg",
+        "alt": "นึ่งปลาช่อน จิ้มแจ่วผักนึ่ง"
+      },
+      "sodium": {
+        "amountMg": 290.0,
+        "zone": "green",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 210.0,
+        "fatG": 3.5,
+        "proteinG": 32.0,
+        "carbG": 12.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "ตักแต่น้อย เน้นผัก"
+    },
+    {
+      "id": "food_038",
+      "name": "แกงบอน",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_038_kaengbon.jpg",
+        "alt": "แกงบอน"
+      },
+      "sodium": {
+        "amountMg": 350.0,
+        "zone": "green",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 140.0,
+        "fatG": 6.0,
+        "proteinG": 8.0,
+        "carbG": 14.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "บอนต้องต้มให้เปื่อยเพื่อลดสารกาลเซียมออกซาเลต รสชาติเปรี้ยวลดเค็ม"
+    },
+    {
+      "id": "food_039",
+      "name": "ส้ามมะเขือฝอย",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_039_sammakhueafoi.jpg",
+        "alt": "ส้ามมะเขือฝอย"
+      },
+      "sodium": {
+        "amountMg": 280.0,
+        "zone": "green",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 85.0,
+        "fatG": 2.5,
+        "proteinG": 5.0,
+        "carbG": 11.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "ข่าอ่อนซอย และ ใบขิงฝอย เพิ่มความเผ็ดร้อน ช่วยให้ลดเค็ม"
+    },
+    {
+      "id": "food_040",
+      "name": "ข้าวกั้นจิ้น",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_040_khaokanchin.jpg",
+        "alt": "ข้าวกั้นจิ้น"
+      },
+      "sodium": {
+        "amountMg": 580.0,
+        "zone": "yellow",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 310.0,
+        "fatG": 9.0,
+        "proteinG": 13.0,
+        "carbG": 44.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "ทานคู่กับหอมแดงสดและแตงกวาเยอะๆ เพื่อใช้โพแทสเซียมในผักช่วยขับโซเดียม"
+    },
+    {
+      "id": "food_041",
+      "name": "ยำผักเฮือด",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_041_yamphakhueat.jpg",
+        "alt": "ยำผักเฮือด"
+      },
+      "sodium": {
+        "amountMg": 450.0,
+        "zone": "yellow",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 140.0,
+        "fatG": 6.0,
+        "proteinG": 9.0,
+        "carbG": 13.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "เน้นรสเปรี้ยวอมฝาดของตัวผักเฮือด เปรี้ยวจากมะเขือเทศ เพื่อลดปริมาณกะปิ"
+    },
+    {
+      "id": "food_042",
+      "name": "น้ำพริกอ๋อง",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_042_namprikong.jpg",
+        "alt": "น้ำพริกอ๋อง"
+      },
+      "sodium": {
+        "amountMg": 520.0,
+        "zone": "yellow",
+        "servingNote": "ลดกะปิ น้ำปลา"
+      },
+      "nutrition": {
+        "energyKcal": 160.0,
+        "fatG": 7.0,
+        "proteinG": 14.0,
+        "carbG": 11.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "มะเขือเทศผ่านความร้อน บำรุงหัวใจและหลอดเลือด"
+    },
+    {
+      "id": "food_043",
+      "name": "น้ำพริกอีเก๋",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_043_namprikike.jpg",
+        "alt": "น้ำพริกอีเก๋"
+      },
+      "sodium": {
+        "amountMg": 480.0,
+        "zone": "yellow",
+        "servingNote": "ลดกะปิ น้ำปลา"
+      },
+      "nutrition": {
+        "energyKcal": 65.0,
+        "fatG": 1.0,
+        "proteinG": 3.0,
+        "carbG": 11.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "รสเปรี้ยวจากมะเขือขื่นและน้ำมะนาว/มะขามเปียกมาช่วยตัดรส"
+    },
+    {
+      "id": "food_044",
+      "name": "แกงหยวกใส่ไก่",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_044_kaengyuaksaikai.jpg",
+        "alt": "แกงหยวกใส่ไก่"
+      },
+      "sodium": {
+        "amountMg": 460.0,
+        "zone": "yellow",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 160.0,
+        "fatG": 4.0,
+        "proteinG": 16.0,
+        "carbG": 15.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "หยวกกล้วย กระตุ้นการขับถ่าย ลดระดับน้ำตาล"
+    },
+    {
+      "id": "food_045",
+      "name": "ผัดเซียงดาใส่ไข่",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_045_phatsiangdasaikhai.jpg",
+        "alt": "ผัดเซียงดาใส่ไข่"
+      },
+      "sodium": {
+        "amountMg": 430.0,
+        "zone": "yellow",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 180.0,
+        "fatG": 11.0,
+        "proteinG": 10.0,
+        "carbG": 9.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "ใบเซียงดามีสารลดระดับน้ำตาล ผัดด้วยน้ำหรือใช้น้ำมันรำข้าว ช่วยลดไขมัน"
+    },
+    {
+      "id": "food_046",
+      "name": "แอ๊บปลา (ลดเกลือและกะปิ)",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_046_aeppla.jpg",
+        "alt": "แอ๊บปลา (ลดเกลือและกะปิ)"
+      },
+      "sodium": {
+        "amountMg": 490.0,
+        "zone": "yellow",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 140.0,
+        "fatG": 3.5,
+        "proteinG": 22.0,
+        "carbG": 5.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "เน้นทานเนื้อปลาด้านใน"
+    },
+    {
+      "id": "food_047",
+      "name": "แกงผักกาดตงใส่ปลาแห้ง",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_047_kaengphakkatatongsaiplaaeng.jpg",
+        "alt": "แกงผักกาดตงใส่ปลาแห้ง"
+      },
+      "sodium": {
+        "amountMg": 440.0,
+        "zone": "yellow",
+        "servingNote": "กะปิเหลือ 1 ช้อนชา"
+      },
+      "nutrition": {
+        "energyKcal": 105.0,
+        "fatG": 1.0,
+        "proteinG": 14.0,
+        "carbG": 10.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "เลือกใช้ปลาแห้งย่างที่ไม่ผ่านการหมักเกลือ เพื่อป้องกันโซเดียมแฝง"
+    },
+    {
+      "id": "food_048",
+      "name": "อ๊อกปลานิล",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_048_okplanin.jpg",
+        "alt": "อ๊อกปลานิล"
+      },
+      "sodium": {
+        "amountMg": 460.0,
+        "zone": "yellow",
+        "servingNote": "ลดกะปิ"
+      },
+      "nutrition": {
+        "energyKcal": 165.0,
+        "fatG": 4.5,
+        "proteinG": 24.0,
+        "carbG": 7.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "ปลามีโอเมก้า 3 บำรุงสมอง พริกแกงมีฤทธิ์ต้านการอักเสบ"
+    },
+    {
+      "id": "food_049",
+      "name": "ลาบคั่วเหนือ",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_049_lapkhuaenue.jpg",
+        "alt": "ลาบคั่วเหนือ"
+      },
+      "sodium": {
+        "amountMg": 620.0,
+        "zone": "yellow",
+        "servingNote": "งดใส่เลือด ใช้ซีอิ๊วขาวแทนน้ำปลา"
+      },
+      "nutrition": {
+        "energyKcal": 220.0,
+        "fatG": 10.0,
+        "proteinG": 26.0,
+        "carbG": 4.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "ผักแพว เล็บครุฑ คาวตอง ช่วยจับโซเดียม"
+    },
+    {
+      "id": "food_050",
+      "name": "แกงผักขี้หูด",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_050_kaengphakkhiut.jpg",
+        "alt": "แกงผักขี้หูด"
+      },
+      "sodium": {
+        "amountMg": 430.0,
+        "zone": "yellow",
+        "servingNote": "กะปิเหลือ 1 ช้อนชา ไม่เติมเกลือ"
+      },
+      "nutrition": {
+        "energyKcal": 110.0,
+        "fatG": 1.5,
+        "proteinG": 15.0,
+        "carbG": 9.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "ผักขี้หูดล้างพิษในตับ ลดมะเร็ง"
+    },
+    {
+      "id": "food_051",
+      "name": "แกงคั่วหอยขม (ลดกะปิ)",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_051_kaengkhuahoikhom.jpg",
+        "alt": "แกงคั่วหอยขม (ลดกะปิ)"
+      },
+      "sodium": {
+        "amountMg": 490.0,
+        "zone": "yellow",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 135.0,
+        "fatG": 2.5,
+        "proteinG": 14.0,
+        "carbG": 12.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "หอยขมบำรุงเลือด ใบชะพลู ชะอมบำรุงกระดูกและสายตา"
+    },
+    {
+      "id": "food_052",
+      "name": "ไข่ป่าม",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_052_khaipam.jpg",
+        "alt": "ไข่ป่าม"
+      },
+      "sodium": {
+        "amountMg": 420.0,
+        "zone": "yellow",
+        "servingNote": "ซีอิ๊วขาว 1 ช้อนชา"
+      },
+      "nutrition": {
+        "energyKcal": 155.0,
+        "fatG": 10.0,
+        "proteinG": 13.0,
+        "carbG": 3.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "ไข่ ใช้รักษามวลกล้ามเนื้อ"
+    },
+    {
+      "id": "food_053",
+      "name": "แกงกระด้าง",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_053_kaengkradang.jpg",
+        "alt": "แกงกระด้าง"
+      },
+      "sodium": {
+        "amountMg": 510.0,
+        "zone": "yellow",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 190.0,
+        "fatG": 11.0,
+        "proteinG": 19.0,
+        "carbG": 3.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "วุ้นธรรมชาติ บำรุงเนื้อเยื่อ ข้อต่อ ผิวพรรณ"
+    },
+    {
+      "id": "food_054",
+      "name": "แกงผักกูดใส่ปลาย่าง",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_054_kaengphakkutsaiplayang.jpg",
+        "alt": "แกงผักกูดใส่ปลาย่าง"
+      },
+      "sodium": {
+        "amountMg": 420.0,
+        "zone": "yellow",
+        "servingNote": "ลดกะปิ ใส่ซีอิ๊วแทนน้ำปลา"
+      },
+      "nutrition": {
+        "energyKcal": 115.0,
+        "fatG": 1.5,
+        "proteinG": 15.0,
+        "carbG": 10.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "ผักกูดบำรุงสายตา บำรุงโลหิต คุมความดันโลหิต"
+    },
+    {
+      "id": "food_055",
+      "name": "แกงหน่อไม้ปลาดุก",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_055_kaengnomaipladuk.jpg",
+        "alt": "แกงหน่อไม้ปลาดุก"
+      },
+      "sodium": {
+        "amountMg": 540.0,
+        "zone": "yellow",
+        "servingNote": "น้ำปลาร้า 1 ชช. ลดกะปิ"
+      },
+      "nutrition": {
+        "energyKcal": 195.0,
+        "fatG": 7.0,
+        "proteinG": 21.0,
+        "carbG": 12.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "น้ำใบย่านาง มีฤทธิ์เย็น ช่วยดับร้อน ผู้ป่วยเก๊าต์ไม่ควรกิน"
+    },
+    {
+      "id": "food_056",
+      "name": "ไก่นึ่งสมุนไพร",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_056_kainuengsamunprai.jpg",
+        "alt": "ไก่นึ่งสมุนไพร"
+      },
+      "sodium": {
+        "amountMg": 480.0,
+        "zone": "yellow",
+        "servingNote": "ใช้ซีอิ๊วขาว 1 ช้อนชา"
+      },
+      "nutrition": {
+        "energyKcal": 180.0,
+        "fatG": 6.0,
+        "proteinG": 28.0,
+        "carbG": 4.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "ขมิ้นสดต้านการอักเสบ บำรุงระบบทางเดินอาหาร"
+    },
+    {
+      "id": "food_057",
+      "name": "คั่วแห้งไก่",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_057_khuaaengkai.jpg",
+        "alt": "คั่วแห้งไก่"
+      },
+      "sodium": {
+        "amountMg": 530.0,
+        "zone": "yellow",
+        "servingNote": "ลดกะปิ ใช้ซีอิ๊ว"
+      },
+      "nutrition": {
+        "energyKcal": 190.0,
+        "fatG": 7.0,
+        "proteinG": 26.0,
+        "carbG": 5.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "มะแขว่นลดท้องอืด ท้องเฝ้อ"
+    },
+    {
+      "id": "food_058",
+      "name": "ทอดไข่ใส่มดแดง",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_058_thotkhaisaimadadaeng.jpg",
+        "alt": "ทอดไข่ใส่มดแดง"
+      },
+      "sodium": {
+        "amountMg": 440.0,
+        "zone": "yellow",
+        "servingNote": "ใช้ซีอิ๊วขาว 1 ช้อนชา"
+      },
+      "nutrition": {
+        "energyKcal": 440.0,
+        "fatG": 13.0,
+        "proteinG": 16.0,
+        "carbG": 3.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "ทอดไม่ให้ไข่ไม่ชุ่มน้ำมัน ลดไขมันในเลือด"
+    },
+    {
+      "id": "food_059",
+      "name": "ตำมะเขือ",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_059_tammakhuea.jpg",
+        "alt": "ตำมะเขือ"
+      },
+      "sodium": {
+        "amountMg": 450.0,
+        "zone": "yellow",
+        "servingNote": "ลดกะปิ/ปลาร้าเหลือ ½ ช้อนชา"
+      },
+      "nutrition": {
+        "energyKcal": 95.0,
+        "fatG": 1.5,
+        "proteinG": 4.0,
+        "carbG": 16.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "มะเขือยาวลดคลอเลสเตอรอล ขยายหลอดเลือด"
+    },
+    {
+      "id": "food_060",
+      "name": "ข้าวแคบ (รสเค็ม/งา)",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_060_khaokhaep.jpg",
+        "alt": "ข้าวแคบ (รสเค็ม/งา)"
+      },
+      "sodium": {
+        "amountMg": 120.0,
+        "zone": "green",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 70.0,
+        "fatG": 1.0,
+        "proteinG": 2.0,
+        "carbG": 13.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "แผ่นแป้งบางกรอบ แคลอรีต่ำและโซเดียมน้อย แต่ต้องระวังอย่าเคี้ยวเพลินหมดเป็นปึก"
+    },
+    {
+      "id": "food_061",
+      "name": "ข้าวควบ (ข้าวโป่ง) สูตรดั้งเดิม",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_061_khaokhuap.jpg",
+        "alt": "ข้าวควบ (ข้าวโป่ง) สูตรดั้งเดิม"
+      },
+      "sodium": {
+        "amountMg": 180.0,
+        "zone": "green",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 110.0,
+        "fatG": 0.5,
+        "proteinG": 2.0,
+        "carbG": 24.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "ข้าวเหนียวตำแผ่ปิ้งจนพองโต หอมกลิ่นไหม้จางๆ เค็มปะแล่มกำลังดี เป็นของว่างที่ปลอดภัย"
+    },
+    {
+      "id": "food_062",
+      "name": "ข้าวนุกงา (ข้าวหนุกงา)",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_062_khaonuknga.jpg",
+        "alt": "ข้าวนุกงา (ข้าวหนุกงา)"
+      },
+      "sodium": {
+        "amountMg": 240.0,
+        "zone": "green",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 220.0,
+        "fatG": 5.0,
+        "proteinG": 4.0,
+        "carbG": 40.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "ข้าวเหนียวใหม่นวดผสมงาขี้ม้อน มีโพแทสเซียมสูงจากงา ซึ่งช่วยขับโซเดียมออกจากร่างกายได้ดี"
+    },
+    {
+      "id": "food_063",
+      "name": "ข้าวแต๋นน้ำแตงโม (หน้าธัญพืช)",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_063_khaotaennamtaengmo.jpg",
+        "alt": "ข้าวแต๋นน้ำแตงโม (หน้าธัญพืช)"
+      },
+      "sodium": {
+        "amountMg": 350.0,
+        "zone": "yellow",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 190.0,
+        "fatG": 8.0,
+        "proteinG": 3.0,
+        "carbG": 26.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "กรุบกรอบหอมหวานอมเค็มจากน้ำตาลเคี่ยว หักห้ามใจกินแค่แผ่นเดียวพอ เพราะมีโซเดียมและไขมันจากการทอด"
+    },
+    {
+      "id": "food_064",
+      "name": "ขนมจ๊อก (ไส้เค็ม)",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_064_khanomchok.jpg",
+        "alt": "ขนมจ๊อก (ไส้เค็ม)"
+      },
+      "sodium": {
+        "amountMg": 580.0,
+        "zone": "yellow",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 210.0,
+        "fatG": 7.0,
+        "proteinG": 4.0,
+        "carbG": 33.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "ขนมเทียนไส้เค็มเนื้อนุ่มหนึบ แต่ไส้ข้างในผัดพริกไทยเกลือเข้มข้น แนะนำให้ตักแบ่งกินเพื่อลดการรับโซเดียม"
+    },
+    {
+      "id": "food_065",
+      "name": "ข้าวต้มหัวหงอก (จิ้มมะพร้าวเกลือ)",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_065_khaotmuangok.jpg",
+        "alt": "ข้าวต้มหัวหงอก (จิ้มมะพร้าวเกลือ)"
+      },
+      "sodium": {
+        "amountMg": 650.0,
+        "zone": "red",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 280.0,
+        "fatG": 10.0,
+        "proteinG": 4.0,
+        "carbG": 44.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "ตัวอันตรายอยู่ที่เกลือที่คลุกมากับมะพร้าวขูด ควรเขี่ยเกลือออก หรือหลีกเลี่ยงการจิ้มน้ำตาลผสมเกลือเพิ่ม"
+    },
+    {
+      "id": "food_066",
+      "name": "ขนมเกลือ (หนมเกลือ)",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_066_khanomkelue.jpg",
+        "alt": "ขนมเกลือ (หนมเกลือ)"
+      },
+      "sodium": {
+        "amountMg": 780.0,
+        "zone": "red",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 180.0,
+        "fatG": 8.0,
+        "proteinG": 2.0,
+        "carbG": 25.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "ขนมโบราณเนื้อนุ่มที่ทำจากแป้งและกะทิ ชื่อบอกชัดเจนว่าขนมเกลือ มีโซเดียมสูงมาก ไม่เหมาะกับผู้ป่วยโรคไต"
+    },
+    {
+      "id": "food_067",
+      "name": "ข้าวเหนียวหน้าปลาแห้ง",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_067_khaoheninaplaaeng.jpg",
+        "alt": "ข้าวเหนียวหน้าปลาแห้ง"
+      },
+      "sodium": {
+        "amountMg": 890.0,
+        "zone": "red",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 360.0,
+        "fatG": 12.0,
+        "proteinG": 8.0,
+        "carbG": 55.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "ข้าวเหนียวมูนมันเยิ้ม โดนโซเดียมคูณสองจากทั้งน้ำกะทิที่ใช้มูนข้าวและปลาแห้งป่นรสเค็มจัดด้านบน"
+    },
+    {
+      "id": "food_068",
+      "name": "ข้าวตอกน้ำกะทิ (สูตรใส่เกลือตัดหวาน)",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_068_khaotoknamkathi.jpg",
+        "alt": "ข้าวตอกน้ำกะทิ (สูตรใส่เกลือตัดหวาน)"
+      },
+      "sodium": {
+        "amountMg": 610.0,
+        "zone": "red",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 290.0,
+        "fatG": 14.0,
+        "proteinG": 2.0,
+        "carbG": 39.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "ข้าวตอกคั่วหอมๆ มักถูกราดด้วยน้ำกะทิเคี่ยวที่ใส่เกลือปริมาณมากเพื่อตัดรสหวานให้กลมกล่อม โซเดียมแฝงสูงจากกะทิและเกลือปรุงรส"
+    },
+    {
+      "id": "food_069",
+      "name": "ข้าวเหนียวหัวหงอก (จิ้มมะพร้าวขูดโรยเกลือ)",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_069_khaoheniuangok.jpg",
+        "alt": "ข้าวเหนียวหัวหงอก (จิ้มมะพร้าวขูดโรยเกลือ)"
+      },
+      "sodium": {
+        "amountMg": 680.0,
+        "zone": "red",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 320.0,
+        "fatG": 9.0,
+        "proteinG": 4.0,
+        "carbG": 56.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "ข้าวเหนียวนึ่งสุกนำมาคลุกหรือจิ้มกินกับมะพร้าวขูดขาว (ที่ดูเหมือนหัวหงอก) ตัวอันตรายอยู่ที่การสาดเกลือป่นลงไปคลุกกับมะพร้าวเพื่อให้มีรสเค็มมัน ยิ่งกินเพลินไตยิ่งทำงานหนัก"
+    },
+    {
+      "id": "food_070",
+      "name": "ข้าวหนมแป้น (ขนมแป้นสูตรโบราณ)",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_070_khaoonmpaen.jpg",
+        "alt": "ข้าวหนมแป้น (ขนมแป้นสูตรโบราณ)"
+      },
+      "sodium": {
+        "amountMg": 380.0,
+        "zone": "yellow",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 190.0,
+        "fatG": 6.0,
+        "proteinG": 3.0,
+        "carbG": 31.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "ขนมแป้งข้าวเหนียวห่อไส้มะพร้าวขูดคลุกน้ำตาลอ้อย แม้ตัวไส้จะหวาน แต่ในแป้งสูตรโบราณมักนวดผสมเกลือเพื่อตัดรสชาติให้กลมกล่อมและไม่เลี่ยน"
+    },
+    {
+      "id": "food_071",
+      "name": "ขนมปังปี๊บไส้สับปะรด (ขนมยอดฮิตติดบ้าน)",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_071_khanamapangpipsaisappant.jpg",
+        "alt": "ขนมปังปี๊บไส้สับปะรด (ขนมยอดฮิตติดบ้าน)"
+      },
+      "sodium": {
+        "amountMg": 720.0,
+        "zone": "red",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 340.0,
+        "fatG": 12.0,
+        "proteinG": 4.0,
+        "carbG": 54.0
+      },
+      "warningIcons": [
+        "salt",
+        "sugar"
+      ],
+      "flavorText": "ตัวร้ายในคราบของว่าง! ตัวแครกเกอร์โรยเกลือเม็ดเป้งให้รสเค็มจัด ส่วนไส้สับปะรดกวนก็หวานเจี๊ยบ กินเพลินจนเบาหวานและไตถามหาพร้อมกัน"
+    },
+    {
+      "id": "food_072",
+      "name": "โรตีทอดนมข้น-น้ำตาล",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_072_rotithotnamakhon_namtan.jpg",
+        "alt": "โรตีทอดนมข้น-น้ำตาล"
+      },
+      "sodium": {
+        "amountMg": 590.0,
+        "zone": "red",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 450.0,
+        "fatG": 22.0,
+        "proteinG": 6.0,
+        "carbG": 57.0
+      },
+      "warningIcons": [
+        "salt",
+        "sugar"
+      ],
+      "flavorText": "หวานมันเค็มครบสูตร แป้งโรตีมีส่วนผสมของเกลือและเนยมาการีนจำนวนมาก นำไปทอดน้ำมันท่วมแล้วราดนมข้นหวานซ้ำ เป็นเมนูที่ อสม. ต้องสั่งห้ามผู้ป่วยความดันและเบาหวานเด็ดขาด"
+    },
+    {
+      "id": "food_073",
+      "name": "ขนมขาไก่ (รสเค็มดั้งเดิม)",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_073_khanomkhakai.jpg",
+        "alt": "ขนมขาไก่ (รสเค็มดั้งเดิม)"
+      },
+      "sodium": {
+        "amountMg": 840.0,
+        "zone": "red",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 290.0,
+        "fatG": 11.0,
+        "proteinG": 5.0,
+        "carbG": 43.0
+      },
+      "warningIcons": [
+        "salt",
+        "sugar"
+      ],
+      "flavorText": "ขนมขบเคี้ยวที่ละลายทรัพย์สุขภาพ แป้งกรอบๆ เคลือบด้วยน้ำตาลเคี่ยวปรุงรสซีอิ๊วและเกลือป่น เค็มๆ หวานๆ กินสี่ห้าชิ้น โซเดียมพุ่งทะลุหลอด"
+    },
+    {
+      "id": "food_074",
+      "name": "กล้วยฉาบ (รสเค็ม-หวาน)",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_074_kluaichap.jpg",
+        "alt": "กล้วยฉาบ (รสเค็ม-หวาน)"
+      },
+      "sodium": {
+        "amountMg": 390.0,
+        "zone": "yellow",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 260.0,
+        "fatG": 9.0,
+        "proteinG": 2.0,
+        "carbG": 43.0
+      },
+      "warningIcons": [
+        "salt",
+        "sugar"
+      ],
+      "flavorText": "ของฝากรถเข็นที่ดูเหมือนธรรมชาติ แต่ผ่านการทอดและคลุกเคล้าน้ำเชื่อมผสมเกลือป่น เพื่อให้ได้รสชาติหวานมันเค็มเคลือบตัวกล้วย"
+    },
+    {
+      "id": "food_075",
+      "name": "ข้าวเกรียบปลาทอด",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_075_khaokeripplathot.jpg",
+        "alt": "ข้าวเกรียบปลาทอด"
+      },
+      "sodium": {
+        "amountMg": 790.0,
+        "zone": "red",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 320.0,
+        "fatG": 15.0,
+        "proteinG": 6.0,
+        "carbG": 40.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "ขนมขบเคี้ยวขวัญใจเด็กๆ และผู้ใหญ่ตอนดูทีวี แป้งผสมเนื้อปลาที่มีเกลือสูงอยู่แล้ว แถมยังปรุงรสด้วยผงชูรสและน้ำตาลเพิ่ม หวานเค็มกลมกล่อมแต่ไตพัง"
+    },
+    {
+      "id": "food_076",
+      "name": "ขนมเปี๊ยะโบราณ (ไส้ถั่วไข่เค็ม)",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_076_khanompiaboran.jpg",
+        "alt": "ขนมเปี๊ยะโบราณ (ไส้ถั่วไข่เค็ม)"
+      },
+      "sodium": {
+        "amountMg": 480.0,
+        "zone": "yellow",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 290.0,
+        "fatG": 11.0,
+        "proteinG": 5.0,
+        "carbG": 42.0
+      },
+      "warningIcons": [
+        "salt",
+        "sugar"
+      ],
+      "flavorText": "ขนมไหว้และของฝากยอดนิยม ไส้ถั่วกวนหวานละมุนตัดรสด้วยไข่แดงเค็มชิ้นโต โซเดียมส่วนใหญ่มาจากไข่เค็มและแป้งชั้นนอกที่มีส่วนผสมของเกลือ"
+    },
+    {
+      "id": "food_077",
+      "name": "พัฟเค้กสอดไส้ครีมคัสตาร์ด",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_077_phapkheksotsaikhrimkhattat.jpg",
+        "alt": "พัฟเค้กสอดไส้ครีมคัสตาร์ด"
+      },
+      "sodium": {
+        "amountMg": 320.0,
+        "zone": "yellow",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 200.0,
+        "fatG": 9.0,
+        "proteinG": 3.0,
+        "carbG": 27.0
+      },
+      "warningIcons": [
+        "salt",
+        "sugar"
+      ],
+      "flavorText": "ขนมยอดฮิตที่ลูกหลานชอบซื้อมาฝากผู้สูงอายุเพราะเนื้อนุ่มเคี้ยวง่าย แต่ระวังโซเดียมแฝงจากผงฟูและเกลือในเนื้อแป้ง รวมถึงน้ำตาลปริมาณสูงในไส้ครีม"
+    },
+    {
+      "id": "food_078",
+      "name": "ขนมตระกูลทอง (ทองหยิบ-หยอด-ฝอยทอง)",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_078_khanomtrakunthong.jpg",
+        "alt": "ขนมตระกูลทอง (ทองหยิบ-หยอด-ฝอยทอง)"
+      },
+      "sodium": {
+        "amountMg": 520.0,
+        "zone": "red",
+        "servingNote": "หมายเหตุ: โซเดียมมาจากไข่แดงและน้ำเชื่อมปรุงรส"
+      },
+      "nutrition": {
+        "energyKcal": 380.0,
+        "fatG": 14.0,
+        "proteinG": 7.0,
+        "carbG": 56.0
+      },
+      "warningIcons": [
+        "salt",
+        "sugar"
+      ],
+      "flavorText": "ขนมไทยภาคกลางที่แพร่หลายไปทั่วประเทศ มักซื้อไปทำบุญหรือจัดงานเลี้ยง เนื้อนุ่มฉ่ำน้ำเชื่อม หวานเจี๊ยบจนแสบคอ และมีโซเดียมแฝงเข้มข้นจากการใช้ไข่แดงล้วนและเทคนิคการแต่งรสน้ำเชื่อม"
+    },
+    {
+      "id": "food_079",
+      "name": "ขนมบ้าบิ่นมะพร้าวอ่อน",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_079_khanombabinmapraoon.jpg",
+        "alt": "ขนมบ้าบิ่นมะพร้าวอ่อน"
+      },
+      "sodium": {
+        "amountMg": 390.0,
+        "zone": "yellow",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 280.0,
+        "fatG": 11.0,
+        "proteinG": 3.0,
+        "carbG": 42.0
+      },
+      "warningIcons": [
+        "salt",
+        "sugar"
+      ],
+      "flavorText": "ขนมยอดนิยมตามกาดนัด แป้งเหนียวนุ่มหนึบหอมมะพร้าว แต่แม่ค้ามักใส่เกลือป่นค่อนข้างหนักมือในขั้นตอนการผสมแป้งและกะทิ เพื่อตัดรสให้หวานมันเข้มข้นสะใจ"
+    },
+    {
+      "id": "food_080",
+      "name": "ขนมตะโก้ (ไส้เผือก)",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_080_khanamatako.jpg",
+        "alt": "ขนมตะโก้ (ไส้เผือก)"
+      },
+      "sodium": {
+        "amountMg": 380.0,
+        "zone": "yellow",
+        "servingNote": "ต่อกระทงขนาดกลาง 2-3 กระทง"
+      },
+      "nutrition": {
+        "energyKcal": 240.0,
+        "fatG": 9.0,
+        "proteinG": 2.0,
+        "carbG": 38.0
+      },
+      "warningIcons": [
+        "salt",
+        "sugar"
+      ],
+      "flavorText": "ขนมตลาดนัดเนื้อนุ่มตักทานง่าย หน้ากะทิเน้นความเค็มมันเข้มข้นสะใจ ส่วนตัวแป้งด้านล่างหวานจัด เป็นคู่หูโซเดียมและน้ำตาลที่ผู้ป่วยความดันและเบาหวานต้องจำกัดปริมาณ"
+    },
+    {
+      "id": "food_081",
+      "name": "หมูปิ้งนมสด",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_081_mupingnamasot.jpg",
+        "alt": "หมูปิ้งนมสด"
+      },
+      "sodium": {
+        "amountMg": 780.0,
+        "zone": "red",
+        "servingNote": "ต่อ 3 ไม้"
+      },
+      "nutrition": {
+        "energyKcal": 390.0,
+        "fatG": 24.0,
+        "proteinG": 21.0,
+        "carbG": 22.0
+      },
+      "warningIcons": [
+        "salt",
+        "sugar"
+      ],
+      "flavorText": "อาหารเช้าสุดฮิตที่ซ่อนอันตราย หมักด้วยซีอิ๊ว น้ำปลา ผงชูรส และน้ำตาลปี๊บจนเนื้อนุ่ม หวานเค็มเข้มข้นแทรกซึมทุกอนูเนื้อ"
+    },
+    {
+      "id": "food_082",
+      "name": "ไส้กรอกอีสานย่าง",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_082_sakairokisanyang.jpg",
+        "alt": "ไส้กรอกอีสานย่าง"
+      },
+      "sodium": {
+        "amountMg": 890.0,
+        "zone": "red",
+        "servingNote": "ต่อ 1 ไม้/ชุดเล็ก"
+      },
+      "nutrition": {
+        "energyKcal": 320.0,
+        "fatG": 25.0,
+        "proteinG": 12.0,
+        "carbG": 12.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "มีขายทุกตลาดนัด รสชาติเปรี้ยวเค็มมัน แต่โซเดียมพุ่งทะลุจอจากทั้งเกลือหมักและผงชูรส ควรทานแกล้มผักสดเยอะๆ เพื่อช่วยขับโซเดียม"
+    },
+    {
+      "id": "food_083",
+      "name": "แกงพะโล้ขาหมู",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_083_kaengphalokhamu.jpg",
+        "alt": "แกงพะโล้ขาหมู"
+      },
+      "sodium": {
+        "amountMg": 950.0,
+        "zone": "red",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 480.0,
+        "fatG": 32.0,
+        "proteinG": 26.0,
+        "carbG": 22.0
+      },
+      "warningIcons": [
+        "salt",
+        "sugar"
+      ],
+      "flavorText": "เมนูกับข้าวยอดนิยมในร้านข้าวแกง น้ำซุปสีเข้มเกิดจากการเคี่ยวน้ำตาลปี๊บผสมซีอิ๊วดำและเกลือ หวานเจี๊ยบเค็มข้น ไม่ควรตักน้ำราดข้าวมากเกินไป"
+    },
+    {
+      "id": "food_084",
+      "name": "ไข่ต้มซีอิ๊วพะโล้",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_084_khataimsiiophalo.jpg",
+        "alt": "ไข่ต้มซีอิ๊วพะโล้"
+      },
+      "sodium": {
+        "amountMg": 460.0,
+        "zone": "yellow",
+        "servingNote": "ต่อ 1 ฟอง"
+      },
+      "nutrition": {
+        "energyKcal": 150.0,
+        "fatG": 10.0,
+        "proteinG": 12.0,
+        "carbG": 3.0
+      },
+      "warningIcons": [
+        "salt",
+        "sugar"
+      ],
+      "flavorText": "ไข่ต้มเคี่ยวจนเนื้อหนึบ รสเค็มหวานซึมลึกเข้าไปถึงเนื้อไข่แดง กินง่ายสำหรับผู้สูงอายุ แต่โซเดียมและคอเลสเตอรอลไม่น้อยเลย"
+    },
+    {
+      "id": "food_085",
+      "name": "ลูกชิ้นทอด น้ำจิ้มรสเด็ด",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_085_lukchinthot_namchimrasadet.jpg",
+        "alt": "ลูกชิ้นทอด น้ำจิ้มรสเด็ด"
+      },
+      "sodium": {
+        "amountMg": 980.0,
+        "zone": "red",
+        "servingNote": "ต่อ 4-5 ไม้"
+      },
+      "nutrition": {
+        "energyKcal": 380.0,
+        "fatG": 18.0,
+        "proteinG": 14.0,
+        "carbG": 40.0
+      },
+      "warningIcons": [
+        "salt",
+        "sugar"
+      ],
+      "flavorText": "ตัวลูกชิ้นมีโซเดียมแฝงจากสารบอแรกซ์และเกลืออยู่แล้ว เมื่อราดน้ำจิ้มมะขามเปียกสูตรโบราณที่หวานจัดเค็มจัด ยิ่งทำให้ร่างกายได้รับโซเดียมพุ่งกระฉูด"
+    },
+    {
+      "id": "food_086",
+      "name": "หมูหวาน",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_086_muwan.jpg",
+        "alt": "หมูหวาน"
+      },
+      "sodium": {
+        "amountMg": 750.0,
+        "zone": "red",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 410.0,
+        "fatG": 25.0,
+        "proteinG": 18.0,
+        "carbG": 28.0
+      },
+      "warningIcons": [
+        "salt",
+        "sugar"
+      ],
+      "flavorText": "เมนูกับข้าวตักที่เด็กๆ และผู้สูงอายุนิยม เพราะเคี้ยวง่าย รสชาติหวานนำเค็มตาม อุดมไปด้วยน้ำตาลทราย ซีอิ๊วขาว และน้ำมันเยิ้ม"
+    },
+    {
+      "id": "food_087",
+      "name": "ปลาทูต้มเค็มหวานโบราณ",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_087_plathutamakhemwanboran.jpg",
+        "alt": "ปลาทูต้มเค็มหวานโบราณ"
+      },
+      "sodium": {
+        "amountMg": 1100.0,
+        "zone": "red",
+        "servingNote": "ต่อปลา 1 ตัว"
+      },
+      "nutrition": {
+        "energyKcal": 260.0,
+        "fatG": 12.0,
+        "proteinG": 24.0,
+        "carbG": 14.0
+      },
+      "warningIcons": [
+        "salt",
+        "sugar"
+      ],
+      "flavorText": "ปลาทูที่ต้มเคี่ยวกับน้ำตาลอ้อย ซีอิ๊ว และมะขามเปียกจนก้างนิ่มทานได้ทั้งตัว อร่อยนุ่มลิ้นแต่โซเดียมสูงปรี๊ดจากน้ำต้มที่งวดจนเค็มจัด"
+    },
+    {
+      "id": "food_088",
+      "name": "ผัดกะเพราหมูสับ",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_088_phatkapheramusap.jpg",
+        "alt": "ผัดกะเพราหมูสับ"
+      },
+      "sodium": {
+        "amountMg": 1200.0,
+        "zone": "red",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 350.0,
+        "fatG": 22.0,
+        "proteinG": 24.0,
+        "carbG": 8.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "เมนูสิ้นคิดยอดฮิตในตลาด ร้านค้ามักสาดน้ำมันหอย ซีอิ๊วขาว น้ำปลา และผงชูรส เพื่อให้ได้รสชาติเค็มเผ็ดสะใจ โซเดียมสูงติดอันดับต้นๆ ของอาหารตามสั่ง"
+    },
+    {
+      "id": "food_089",
+      "name": "หมูแดดเดียวทอด",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_089_mudaetdiaothot.jpg",
+        "alt": "หมูแดดเดียวทอด"
+      },
+      "sodium": {
+        "amountMg": 850.0,
+        "zone": "red",
+        "servingNote": "ต่อจานเล็ก"
+      },
+      "nutrition": {
+        "energyKcal": 380.0,
+        "fatG": 26.0,
+        "proteinG": 32.0,
+        "carbG": 4.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "ของกิ๋นลำคู่ข้าวเหนียวอุ่นๆ การถนอมอาหารด้วยการหมักเกลือ ซอส และผงชูรสปริมาณมาก ก่อนนำไปตากและทอด ทำให้โซเดียมเข้มข้นสูงมาก"
+    },
+    {
+      "id": "food_090",
+      "name": "ทอดมันปลากราย",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_090_thotmanplakrai.jpg",
+        "alt": "ทอดมันปลากราย"
+      },
+      "sodium": {
+        "amountMg": 580.0,
+        "zone": "yellow",
+        "servingNote": "ต่อ 4-5 ชิ้น"
+      },
+      "nutrition": {
+        "energyKcal": 240.0,
+        "fatG": 14.0,
+        "proteinG": 18.0,
+        "carbG": 10.0
+      },
+      "warningIcons": [
+        "salt",
+        "sugar"
+      ],
+      "flavorText": "เนื้อปลาเหนียวนุ่มเคี้ยวหนึบ ปรุงรสด้วยพริกแกงที่มีเกลือสูง มักทานคู่กับน้ำจิ้มอาจาดที่หวานนำ ทำให้ได้รับทั้งน้ำตาลและโซเดียมเพิ่มขึ้น"
+    },
+    {
+      "id": "food_091",
+      "name": "กุนเชียงหมูทอด",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_091_kunchiangmuthot.jpg",
+        "alt": "กุนเชียงหมูทอด"
+      },
+      "sodium": {
+        "amountMg": 810.0,
+        "zone": "red",
+        "servingNote": "ต่อ 1 แท่ง/จานแบ่ง"
+      },
+      "nutrition": {
+        "energyKcal": 360.0,
+        "fatG": 28.0,
+        "proteinG": 14.0,
+        "carbG": 12.0
+      },
+      "warningIcons": [
+        "salt",
+        "sugar"
+      ],
+      "flavorText": "อาหารแปรรูปยอดนิยมที่รสชาติหวานนำเค็มตาม อัดแน่นไปด้วยเกลือเพื่อการถนอมอาหารและน้ำตาลทรายปริมาณมาก รวมถึงไขมันอิ่มตัวสูง"
+    },
+    {
+      "id": "food_092",
+      "name": "แหนมชุบไข่ทอด",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_092_aenmchupkhathait.jpg",
+        "alt": "แหนมชุบไข่ทอด"
+      },
+      "sodium": {
+        "amountMg": 930.0,
+        "zone": "red",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 290.0,
+        "fatG": 22.0,
+        "proteinG": 18.0,
+        "carbG": 5.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "แหนมเปรี้ยวเค็มนำไปชุบไข่ทอดจนหอมฉุย โซเดียมสูงมากจากเกลือป่นและดินประสิวที่ใช้ในกระบวนการหมักแหนมดิบ"
+    },
+    {
+      "id": "food_093",
+      "name": "ยำไข่เค็ม",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_093_yamkhaikhem.jpg",
+        "alt": "ยำไข่เค็ม"
+      },
+      "sodium": {
+        "amountMg": 1150.0,
+        "zone": "red",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 320.0,
+        "fatG": 20.0,
+        "proteinG": 12.0,
+        "carbG": 22.0
+      },
+      "warningIcons": [
+        "salt",
+        "sugar"
+      ],
+      "flavorText": "เมนูกับแกล้มหรือทานกับข้าวต้ม โซเดียมคูณสามจากไข่เค็ม บวกกับน้ำยำสามรสที่สาดทั้งน้ำปลาและน้ำตาลทรายแบบจัดเต็ม"
+    },
+    {
+      "id": "food_094",
+      "name": "ต้มซุปเปอร์ขาไก่",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_094_tomsuppoekhakai.jpg",
+        "alt": "ต้มซุปเปอร์ขาไก่"
+      },
+      "sodium": {
+        "amountMg": 1350.0,
+        "zone": "red",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 220.0,
+        "fatG": 10.0,
+        "proteinG": 28.0,
+        "carbG": 4.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "น้ำซุปรสแซ่บจัดจ้าน เผ็ดเปรี้ยวเค็มสะใจที่คนชอบซดร้อนๆ แท้จริงแล้วอัดแน่นไปด้วยน้ำปลา เกลือป่น และผงชูรสในปริมาณมหาศาลเพื่อกลบความคาว"
+    },
+    {
+      "id": "food_095",
+      "name": "แกงไตปลา (สูตรเข้มข้น)",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_095_kaengtapaila.jpg",
+        "alt": "แกงไตปลา (สูตรเข้มข้น)"
+      },
+      "sodium": {
+        "amountMg": 1450.0,
+        "zone": "red",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 180.0,
+        "fatG": 4.0,
+        "proteinG": 22.0,
+        "carbG": 14.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "ซุปเผ็ดร้อนจัดจ้าน โซเดียมพุ่งสูงริบจากการใช้พุงปลาหมักเกลือเข้มข้นและกะปิ แนะนำให้ทานเนื้อปลาและผัก เขี่ยน้ำแกงออกห้ามซดเด็ดขาด"
+    },
+    {
+      "id": "food_096",
+      "name": "ข้าวหมูแดง-หมูกรอบ",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_096_khaomudaeng_mukrop.jpg",
+        "alt": "ข้าวหมูแดง-หมูกรอบ"
+      },
+      "sodium": {
+        "amountMg": 1050.0,
+        "zone": "red",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 560.0,
+        "fatG": 24.0,
+        "proteinG": 22.0,
+        "carbG": 64.0
+      },
+      "warningIcons": [
+        "salt",
+        "sugar"
+      ],
+      "flavorText": "ตัวร้ายอยู่ที่ \"น้ำราดสีแดง\" ที่เคี่ยวจากน้ำตาลปี๊บ ซีอิ๊ว และผงพวงปรุงรสจนหวานเค็มข้นหนืด ยิ่งราดฉ่ำ เบาหวานและไตยิ่งทำงานหนักควบคู่กัน"
+    },
+    {
+      "id": "food_097",
+      "name": "ขนมจีนน้ำยาป่า",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_097_khanamachinnamyapa.jpg",
+        "alt": "ขนมจีนน้ำยาป่า"
+      },
+      "sodium": {
+        "amountMg": 1180.0,
+        "zone": "red",
+        "servingNote": null
+      },
+      "nutrition": {
+        "energyKcal": 320.0,
+        "fatG": 12.0,
+        "proteinG": 14.0,
+        "carbG": 38.0
+      },
+      "warningIcons": [
+        "salt"
+      ],
+      "flavorText": "น้ำยาขนมจีนเข้มข้นด้วยปลาและพริกแกงที่มีส่วนผสมของกะปิและเกลือป่นปริมาณมาก ผสมผงชูรสเพื่อความนัว ไม่ควรตักน้ำราดจนท่วมเส้น"
+    },
+    {
+      "id": "food_098",
+      "name": "ซาลาเปาไส้หมูสับไข่เค็ม",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_098_salapaosaimusapkhaikhem.jpg",
+        "alt": "ซาลาเปาไส้หมูสับไข่เค็ม"
+      },
+      "sodium": {
+        "amountMg": 490.0,
+        "zone": "yellow",
+        "servingNote": "ต่อ 1 ลูกใหญ่"
+      },
+      "nutrition": {
+        "energyKcal": 260.0,
+        "fatG": 8.0,
+        "proteinG": 10.0,
+        "carbG": 37.0
+      },
+      "warningIcons": [
+        "salt",
+        "sugar"
+      ],
+      "flavorText": "แป้งซาลาเปานุ่มๆ มีน้ำตาลแฝงสูง ส่วนไส้หมูสับข้างในปรุงรสด้วยน้ำมันหอย ซีอิ๊วขาว และมักใส่ไข่เค็มเพิ่มรสชาติ ทำให้เป็นของว่างเคี้ยวง่ายที่โซเดียมไม่เบาเลย"
+    },
+    {
+      "id": "food_099",
+      "name": "ยำแหนมคลุกข้าวทอด",
+      "region": "พะเยา",
+      "image": {
+        "src": "assets/food/food_099_yamaenmkhlukkhaothot.jpg",
+        "alt": "ยำแหนมคลุกข้าวทอด"
+      },
+      "sodium": {
+        "amountMg": 1250.0,
+        "zone": "red",
+        "servingNote": "ต่อชุดเล็ก 1 ถุง"
+      },
+      "nutrition": {
+        "energyKcal": 410.0,
+        "fatG": 22.0,
+        "proteinG": 15.0,
+        "carbG": 38.0
+      },
+      "warningIcons": [
+        "salt",
+        "sugar"
+      ],
+      "flavorText": "เมนูกับแกล้มและของกินเล่นยอดฮิต โซเดียมคูณสามจาก \"ข้าวทอด\" ที่ปรุงรสใส่พริกแกงและเกลือ, \"แหนมดิบ\" ที่หมักด้วยเกลือและดินประสิว และ \"น้ำยำ\" ที่สาดน้ำปลา ผงชูรส และน้ำตาลทรายเพื่อตัดรสชาติให้แซ่บนัว อร่อยกรุบกรอบแต่ไตกรีดร้อง"
+    }
+  ]
+}

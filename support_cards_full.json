@@ -1,0 +1,369 @@
+{
+  "deckId": "support_deck",
+  "deckName": "การ์ดสนับสนุนชุมชน",
+  "totalCards": 20,
+  "effectSchema_note": "effects reuse the same vocabulary as mission/obstacle cards (score / drawCard). scope:\"all\" applies the effects to every player instead of just whoever drew the card (matches the source sheet's \"(เกิดกับผู้เล่นทุกคน)\" / \"คนละ\" wording).",
+  "cards": [
+    {
+      "id": "support_01",
+      "order": 1,
+      "name": "ผู้ใหญ่บ้านประกาศชมเชย",
+      "scenario": "ผู้ใหญ่บ้านเห็นความตั้งใจจริงของคุณ จึงประกาศชมเชยผ่านเสียงตามสาย",
+      "scope": "self",
+      "effects": [
+        {
+          "type": "score",
+          "operation": "add",
+          "value": 150
+        }
+      ],
+      "image": {
+        "src": "assets/support/support_01_phuyaiban_chomchoei.jpg",
+        "alt": "ผู้ใหญ่บ้านประกาศชมเชย"
+      }
+    },
+    {
+      "id": "support_02",
+      "order": 2,
+      "name": "บารมีหลวงพ่อ/เจ้าอาวาส",
+      "scenario": "หลวงพ่อช่วยพูดให้สติชาวบ้านในวันพระ ทำให้ชาวบ้านหันมาให้ความร่วมมือกับ อสม.",
+      "scope": "self",
+      "effects": [
+        {
+          "type": "score",
+          "operation": "add",
+          "value": 100
+        }
+      ],
+      "image": {
+        "src": "assets/support/support_02_luangpho_baramee.jpg",
+        "alt": "บารมีหลวงพ่อ/เจ้าอาวาส"
+      }
+    },
+    {
+      "id": "support_03",
+      "order": 3,
+      "name": "เสียงตามสายกระจายข่าว",
+      "scenario": "คณะกรรมการหมู่บ้านเปิดสปอตโฆษณาความรู้สุขภาพที่คุณเตรียมไว้ ให้ชาวบ้านฟังทั้งสัปดาห์",
+      "scope": "all",
+      "effects": [
+        {
+          "type": "drawCard",
+          "cardType": "knowledge",
+          "count": 1
+        }
+      ],
+      "image": {
+        "src": "assets/support/support_03_siangtamsai_krajaikhao.jpg",
+        "alt": "เสียงตามสายกระจายข่าว"
+      }
+    },
+    {
+      "id": "support_04",
+      "order": 4,
+      "name": "งบกองทุนหมู่บ้านสนับสนุน",
+      "scenario": "คณะกรรมการกองทุนเห็นความสำคัญของโครงการสุขภาพ จึงอนุมัติงบซื้อเครื่องวัดความดัน เครื่องวัดความเค็มให้",
+      "scope": "all",
+      "effects": [
+        {
+          "type": "score",
+          "operation": "add",
+          "value": 50
+        }
+      ],
+      "image": {
+        "src": "assets/support/support_04_kongthun_muban.jpg",
+        "alt": "งบกองทุนหมู่บ้านสนับสนุน"
+      }
+    },
+    {
+      "id": "support_05",
+      "order": 5,
+      "name": "ปราชญ์ชาวบ้านหนุนหลัง",
+      "scenario": "หมอยาพื้นบ้านช่วยอธิบายสรรพคุณมะนาว ใบบัวบก กระเจี๊ยบแดง ขิง ข่า ตะไคร้ ใบมะกรูด ขึ้นฉ่าย ตัดเค็ม ลดความดัน",
+      "scope": "self",
+      "effects": [
+        {
+          "type": "drawCard",
+          "cardType": "knowledge",
+          "count": 1
+        }
+      ],
+      "image": {
+        "src": "assets/support/support_05_pratchaoban_nunlang.jpg",
+        "alt": "ปราชญ์ชาวบ้านหนุนหลัง"
+      }
+    },
+    {
+      "id": "support_06",
+      "order": 6,
+      "name": "พลัง อสม. เพื่อนช่วยเพื่อน",
+      "scenario": "คุณท้อใจเพราะชาวบ้านดื้อ ไม่ยอมลดเค็ม/กินยาคุมความดัน เพื่อน อสม. จึงรีบเข้ามาช่วยอธิบาย และยกเคสอัมพฤกษ์ในอดีตมาช่วยเตือนสติจนชาวบ้านยอมฟัง",
+      "scope": "all",
+      "effects": [
+        {
+          "type": "score",
+          "operation": "add",
+          "value": 150
+        }
+      ],
+      "image": {
+        "src": "assets/support/support_06_phuenchuayphuen.jpg",
+        "alt": "พลัง อสม. เพื่อนช่วยเพื่อน"
+      }
+    },
+    {
+      "id": "support_07",
+      "order": 7,
+      "name": "อสม. อาวุโสถ่ายทอดวิชา",
+      "scenario": "ป้า อสม. รุ่นใหญ่ที่อยู่มา 20 ปี เดินมาบอกเคล็ดลับการเข้าหาบ้านที่คุยยาก",
+      "scope": "all",
+      "effects": [
+        {
+          "type": "drawCard",
+          "cardType": "knowledge",
+          "count": 1
+        }
+      ],
+      "image": {
+        "src": "assets/support/support_07_asm_awuso_thaithot.jpg",
+        "alt": "อสม. อาวุโสถ่ายทอดวิชา"
+      }
+    },
+    {
+      "id": "support_08",
+      "order": 8,
+      "name": "ล้อมวงเล่าขวัญ",
+      "scenario": "อสม. ล้อมวงกินส้มตำช่วงพักเที่ยง แลกเปลี่ยนเคสคนไข้ความดันสูงที่แอบกินเค็ม-ละเลยยา จนปิ๊งไอเดียแก้ทางพฤติกรรมเสี่ยงเพื่อกันโรคหลอดเลือดสมอง",
+      "scope": "all",
+      "effects": [
+        {
+          "type": "drawCard",
+          "cardType": "knowledge",
+          "count": 1
+        }
+      ],
+      "image": {
+        "src": "assets/support/support_08_lomwong_laokwan.jpg",
+        "alt": "ล้อมวงเล่าขวัญ"
+      }
+    },
+    {
+      "id": "support_09",
+      "order": 9,
+      "name": "นาทีชีวิต",
+      "scenario": "คุณพบผู้ป่วยความดันสูงมีอาการปากเบี้ยว แขนขาอ่อนแรง จึงรีบประสานทีมกู้ชีพนัดแนะเส้นทางลัด ส่งโรงพยาบาลได้ทันเวลาอย่างปลอดภัย",
+      "scope": "self",
+      "effects": [
+        {
+          "type": "drawCard",
+          "cardType": "knowledge",
+          "count": 1
+        }
+      ],
+      "image": {
+        "src": "assets/support/support_09_nathichiwit.jpg",
+        "alt": "นาทีชีวิต"
+      }
+    },
+    {
+      "id": "support_10",
+      "order": 10,
+      "name": "อสม. ต้นแบบลดเค็มลดโรค",
+      "scenario": "คุณได้รับรางวัล อสม. ดีเด่น จากผลงานขับเคลื่อน 'ชุมชนต้นแบบลดโซเดียม' จนอัตราผู้ป่วยสโตรก (Stroke) ในพื้นที่ลดลงอย่างน่าชื่นชม",
+      "scope": "self",
+      "effects": [
+        {
+          "type": "score",
+          "operation": "add",
+          "value": 200
+        }
+      ],
+      "image": {
+        "src": "assets/support/support_10_tonbaeb_lotkhem.jpg",
+        "alt": "อสม. ต้นแบบลดเค็มลดโรค"
+      }
+    },
+    {
+      "id": "support_11",
+      "order": 11,
+      "name": "กับข้าวถุงใหญ่จากยายสี",
+      "scenario": "คุณไปตรวจเบาหวานให้คุณยาย ยายซาบซึ้งใจเลยฝากแกงและกล้วยน้ำว้าเครือใหญ่มาให้",
+      "scope": "self",
+      "effects": [
+        {
+          "type": "score",
+          "operation": "add",
+          "value": 150
+        }
+      ],
+      "image": {
+        "src": "assets/support/support_11_kapkhao_thungyai.jpg",
+        "alt": "กับข้าวถุงใหญ่จากยายสี"
+      }
+    },
+    {
+      "id": "support_12",
+      "order": 12,
+      "name": "บ้านนี้ต้อนรับเสมอ",
+      "scenario": "ชาวบ้านเห็นเสื้อ อสม. รีบกวักมือเรียกให้เข้ามานั่งพักหลบแดดและเอาน้ำเย็นมาต้อนรับ",
+      "scope": "self",
+      "effects": [
+        {
+          "type": "score",
+          "operation": "add",
+          "value": 100
+        }
+      ],
+      "image": {
+        "src": "assets/support/support_12_bannee_tonrap.jpg",
+        "alt": "บ้านนี้ต้อนรับเสมอ"
+      }
+    },
+    {
+      "id": "support_13",
+      "order": 13,
+      "name": "ลูกหลานกลับมาช่วยดูแล",
+      "scenario": "ผู้ป่วยอัมพาตจากโรคหลอดเลือดสมองถูกทิ้งให้อยู่ลำบากข้ามคืน คุณและชาวบ้านไม่นิ่งเฉย ร่วมกันกระจายข่าวในไลน์กลุ่มและกดดันแกมขอร้อง จนลูกหลานตระหนักได้ รีบเคลียร์งานจากกรุงเทพฯ บึ่งรถกลับมาดูแลพ่อทันที",
+      "scope": "all",
+      "effects": [
+        {
+          "type": "drawCard",
+          "cardType": "knowledge",
+          "count": 1
+        }
+      ],
+      "image": {
+        "src": "assets/support/support_13_lukhlan_klapma.jpg",
+        "alt": "ลูกหลานกลับมาช่วยดูแล"
+      }
+    },
+    {
+      "id": "support_14",
+      "order": 14,
+      "name": "นักรบ สยบข่าว",
+      "scenario": "ชาวบ้านฮิตแชร์คลิป 'กินน้ำหมักเทวดา รักษาความดันหายขาดไม่ต้องกินยาหมอ' จนเกือบพากันเทยาโรงพยาบาลทิ้ง ดีที่คุณจับสังเกตได้ทัน รีบส่งข้อมูลให้ พยาบาลชุมชน/รพ.สต. ช่วยยืนยันความจริง และอธิบายให้ชาวบ้านฟังจนตาสว่าง",
+      "scope": "self",
+      "effects": [
+        {
+          "type": "drawCard",
+          "cardType": "knowledge",
+          "count": 1
+        }
+      ],
+      "image": {
+        "src": "assets/support/support_14_nakrob_sayobkhao.jpg",
+        "alt": "นักรบ สยบข่าว"
+      }
+    },
+    {
+      "id": "support_15",
+      "order": 15,
+      "name": "ของขวัญแทนคำขอบคุณ",
+      "scenario": "ชาวบ้านรวมเงินกันซื้อหน้ากากอนามัยและเจลล้างมือมามอบให้ อสม. ไว้ใช้ทำงาน",
+      "scope": "all",
+      "effects": [
+        {
+          "type": "drawCard",
+          "cardType": "knowledge",
+          "count": 1
+        }
+      ],
+      "image": {
+        "src": "assets/support/support_15_khongkwan_khobkhun.jpg",
+        "alt": "ของขวัญแทนคำขอบคุณ"
+      }
+    },
+    {
+      "id": "support_16",
+      "order": 16,
+      "name": "งานบุญปลอดเหล้า ตัดวงจรโรค",
+      "scenario": "แกนนำและ อสม. ร่วมกันผลักดันให้งานประจำปีของวัดเป็นงานปลอดเหล้าสำเร็จ ช่วยลดความเสี่ยงให้กลุ่มผู้ป่วยความดันสูงในชุมชน ไม่ให้เส้นเลือดสมองแตก (Stroke) คาวงเหล้าจากฤทธิ์แอลกอฮอล์",
+      "scope": "all",
+      "effects": [
+        {
+          "type": "drawCard",
+          "cardType": "knowledge",
+          "count": 1
+        }
+      ],
+      "image": {
+        "src": "assets/support/support_16_nganbun_plodlao.jpg",
+        "alt": "งานบุญปลอดเหล้า ตัดวงจรโรค"
+      }
+    },
+    {
+      "id": "support_17",
+      "order": 17,
+      "name": "ตลาดนัดสีเขียว ชุมชนคนรักสุขภาพ",
+      "scenario": "ชุมชนเปิดตลาดนัดขยายเครือข่ายผักปลอดสารพิษ ชาวบ้านเข้าถึงอาหารดีๆ",
+      "scope": "all",
+      "effects": [
+        {
+          "type": "drawCard",
+          "cardType": "food",
+          "count": 1,
+          "zone": "green"
+        }
+      ],
+      "image": {
+        "src": "assets/support/support_17_talad_sikhiao.jpg",
+        "alt": "ตลาดนัดสีเขียว ชุมชนคนรักสุขภาพ"
+      }
+    },
+    {
+      "id": "support_18",
+      "order": 18,
+      "name": "ล้อมวงเต้นแอโรบิกหน้า อบต.",
+      "scenario": "เย็นนี้ชาวบ้านทุกเพศทุกวัยมารวมตัวกันเต้นแอโรบิกอย่างคึกคักตามคำชวนของคุณ",
+      "scope": "all",
+      "effects": [
+        {
+          "type": "score",
+          "operation": "add",
+          "value": 100
+        }
+      ],
+      "image": {
+        "src": "assets/support/support_18_lomwong_aerobic.jpg",
+        "alt": "ล้อมวงเต้นแอโรบิกหน้า อบต."
+      }
+    },
+    {
+      "id": "support_19",
+      "order": 19,
+      "name": "ผ้าป่าสุขภาพ",
+      "scenario": "ชาวบ้านร่วมกันทอดผ้าป่าสามัคคี ได้เงินสมทบทุนซื้อเครื่องวัดความดันและเครื่องตรวจน้ำตาลในเลือดเพิ่ม",
+      "scope": "all",
+      "effects": [
+        {
+          "type": "drawCard",
+          "cardType": "knowledge",
+          "count": 1
+        }
+      ],
+      "image": {
+        "src": "assets/support/support_19_phapa_sukkhaphap.jpg",
+        "alt": "ผ้าป่าสุขภาพ"
+      }
+    },
+    {
+      "id": "support_20",
+      "order": 20,
+      "name": "กฎหมู่บ้าน",
+      "scenario": "ผู้นำชุมชนและ อสม. ร่วมกันประชาคมตั้งกฎหมู่บ้าน 'ให้ร้านอาหารทุกแห่งยกขวดน้ำปลาและพวงเครื่องปรุงออกจากโต๊ะ ไปวางไว้ที่จุดกลางจุดเดียว' เพื่อให้ชาวบ้านต้องเดินมาตัก และชิมก่อนปรุงทุกครั้ง",
+      "scope": "all",
+      "effects": [
+        {
+          "type": "drawCard",
+          "cardType": "knowledge",
+          "count": 1
+        }
+      ],
+      "image": {
+        "src": "assets/support/support_20_kotmuban.jpg",
+        "alt": "กฎหมู่บ้าน"
+      }
+    }
+  ]
+}

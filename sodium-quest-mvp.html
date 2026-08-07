@@ -1,0 +1,2019 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>คุ้มครองชีวิต พิชิตโซเดียม — Alpha</title>
+<style>
+  :root{
+    /* ---- theme variables (overridden per data-theme below) ---- */
+    /* default = "ขาว" — plain white background, chosen as the base for
+       maximum contrast and readability for older players */
+    --bg:#FFFFFF;
+    --surface:#FFFFFF;
+    --surface2:#EDE8DA;
+    --deep:#E3DDC9;
+    --border:#8a8370;
+    --accent:#C98A2C;
+    --accent-text:#7a4f18;
+    --accent-dim:#8a6a2a;
+    --text:#1a1a16;
+    --text-dim:#4a473e;
+    --warn-text:#8a4a1f;
+    /* ---- fixed (never themed) — physical game-piece colors ---- */
+    --paper:#F1E6C9;
+    --on-accent:#28221a;
+    /* ---- tile-type accent colors (same across themes) ---- */
+    --teal:#1E8E3E;
+    --ochre:#F2A900;
+    --brick:#D32F2F;
+    --house:#1565C0;
+    --purple:#8E24AA;
+    --modal-font-size:16px;
+    font-family: "Sarabun","Noto Sans Thai","Leelawadee UI","Tahoma",sans-serif;
+  }
+  html{font-size:17px;}
+  /* ธีมดำ — neutral black/charcoal */
+  html[data-theme="dark"]{
+    --bg:#141414; --surface:#1e1e1e; --surface2:#2a2a2a; --deep:#0a0a0a; --border:#5a5a5a;
+    --accent:#E0A72E; --accent-text:#F2C14E; --accent-dim:#8C6A1F;
+    --text:#FFFFFF; --text-dim:#D0CCC0; --warn-text:#f0b868;
+  }
+  /* ธีมเขียว — fresher, richer emerald chrome */
+  html[data-theme="green"]{
+    --bg:#0A2418; --surface:#123626; --surface2:#1B4A34; --deep:#081c12; --border:#5c8a71;
+    --accent:#F2C14E; --accent-text:#FFD670; --accent-dim:#9C7A24;
+    --text:#FFFFFF; --text-dim:#dbe6db; --warn-text:#ffcf8a;
+  }
+  /* ธีมแดง — deep wine/maroon chrome */
+  html[data-theme="red"]{
+    --bg:#2A0E0E; --surface:#3D1414; --surface2:#4F1C1C; --deep:#1c0808; --border:#9a5a5a;
+    --accent:#F2C14E; --accent-text:#FFD670; --accent-dim:#9C7A24;
+    --text:#FFFFFF; --text-dim:#f0d9d3; --warn-text:#ffcf8a;
+  }
+  /* ธีมขาว — explicit selection of the same high-contrast white base */
+  html[data-theme="light"]{
+    --bg:#FFFFFF; --surface:#FFFFFF; --surface2:#EDE8DA; --deep:#E3DDC9; --border:#8a8370;
+    --accent:#C98A2C; --accent-text:#7a4f18; --accent-dim:#8a6a2a;
+    --text:#1a1a16; --text-dim:#4a473e; --warn-text:#8a4a1f;
+  }
+  /* ธีมฟ้า — deep ocean-night chrome */
+  html[data-theme="blue"]{
+    --bg:#0E1B2E; --surface:#152A45; --surface2:#1D3A5C; --deep:#0a1524; --border:#5a7aa8;
+    --accent:#F2B84E; --accent-text:#FFCD70; --accent-dim:#9C7A24;
+    --text:#FFFFFF; --text-dim:#cfe0ec; --warn-text:#ffcf8a;
+  }
+  /* ธีม Colorful — vivid violet chrome with a bright orange accent */
+  html[data-theme="colorful"]{
+    --bg:#2A1240; --surface:#3D1A5C; --surface2:#4E2378; --deep:#1c0c30; --border:#a06fd0;
+    --accent:#FF8A50; --accent-text:#FFB27A; --accent-dim:#c65a2c;
+    --text:#FFFFFF; --text-dim:#ecdcf7; --warn-text:#ffcf8a;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);min-height:100vh;}
+  h1,h2,h3{font-weight:800;letter-spacing:.3px;margin:0 0 8px;}
+  button{font-family:inherit;cursor:pointer;border:none;border-radius:10px;font-weight:700;}
+  button:disabled{opacity:.4;cursor:not-allowed;}
+  .screen{min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px;}
+  .hidden{display:none !important;}
+
+  /* ---------- Theme switcher ---------- */
+  .theme-switcher{display:flex;align-items:center;gap:8px;}
+  .theme-switcher label{font-size:14px;color:var(--text-dim);}
+  .theme-switcher select{background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:15px;font-family:inherit;font-weight:700;min-height:44px;}
+
+  /* game screen fills the viewport exactly — nothing scrolls except the log */
+  #game-screen.screen{height:100vh;height:100dvh;overflow:hidden;padding:10px;box-sizing:border-box;}
+  #game-screen .game-wrap{height:100%;max-height:100%;}
+
+  /* ---------- Setup screen ---------- */
+  .setup-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:28px;max-width:680px;width:100%;box-shadow:0 12px 30px rgba(0,0,0,.2);}
+  .setup-card .setup-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;}
+  .setup-card h1{color:var(--accent-text);font-size:30px;}
+  .version-tag{font-size:13px;font-weight:700;color:var(--text-dim);background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:2px 8px;vertical-align:middle;margin-left:6px;white-space:nowrap;}
+  .setup-card p.sub{color:var(--text-dim);margin-top:0;margin-bottom:20px;font-size:16px;line-height:1.6;}
+  .player-row{position:relative;display:flex;gap:10px;align-items:center;margin-bottom:14px;background:var(--surface2);padding:12px;border-radius:12px;}
+  .player-row input[type=text]{flex:1;padding:13px 14px;border-radius:8px;border:1px solid var(--border);background:var(--deep);color:var(--text);font-size:17px;font-family:inherit;min-height:48px;}
+  .icon-select-btn{width:56px;height:56px;flex:none;border-radius:10px;background:var(--deep);border:2px solid var(--border);font-size:28px;display:flex;align-items:center;justify-content:center;}
+  .icon-panel{position:absolute;top:100%;right:0;z-index:30;background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:12px;margin-top:6px;box-shadow:0 10px 26px rgba(0,0,0,.4);min-width:250px;}
+  .icon-group{margin-bottom:10px;}
+  .icon-group:last-child{margin-bottom:0;}
+  .icon-group-label{font-size:13px;color:var(--text-dim);margin-bottom:6px;font-weight:800;letter-spacing:.3px;}
+  .icon-group-row{display:flex;gap:8px;}
+  .icon-group-row .icon-opt{width:44px;height:44px;border-radius:8px;background:var(--deep);display:flex;align-items:center;justify-content:center;font-size:23px;border:2px solid transparent;}
+  .icon-group-row .icon-opt:hover{border-color:var(--accent);}
+  .count-btns{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap;}
+  .count-btns button{padding:13px 20px;background:var(--surface2);color:var(--text);border-radius:10px;font-size:17px;min-height:48px;}
+  .count-btns button.selected{background:var(--accent);color:var(--on-accent);}
+  .primary-btn{background:var(--accent);color:var(--on-accent);padding:18px 22px;font-size:19px;border-radius:12px;width:100%;margin-top:10px;min-height:56px;}
+  .secondary-btn{background:transparent;color:var(--text-dim);padding:13px 16px;border:1px solid var(--border);border-radius:10px;font-size:15px;min-height:44px;}
+  .note{font-size:14px;color:var(--text-dim);margin-top:14px;line-height:1.65;}
+
+  /* ---------- Game screen ---------- */
+  .game-wrap{width:100%;max-width:1900px;margin:0 auto;display:flex;flex-direction:column;gap:8px;min-height:0;}
+  .topbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;flex:none;}
+  .topbar h2{color:var(--accent-text);font-size:21px;margin:0;}
+  .topbar .actions{display:flex;gap:8px;align-items:center;}
+  .topbar .actions button{padding:11px 16px;font-size:15px;background:var(--surface2);color:var(--text);min-height:44px;}
+  .village-progress{display:flex;gap:6px;align-items:center;margin-top:4px;}
+  .vdot{width:30px;height:30px;border-radius:50%;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--text-dim);border:2px solid var(--border);font-weight:700;}
+  .vdot.done{background:var(--teal);border-color:var(--teal);color:#fff;}
+  .vdot.active{background:var(--accent);border-color:var(--accent);color:var(--on-accent);font-weight:800;}
+
+  .hand-panel{flex:none;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:10px 16px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+  .hand-panel .hp-title{font-size:14px;color:var(--text-dim);margin-right:2px;font-weight:700;}
+  .hand-panel .hp-item{display:flex;align-items:baseline;gap:5px;font-size:22px;font-weight:800;color:var(--text);}
+  .hand-panel .hp-item small{font-size:12px;color:var(--text-dim);font-weight:600;}
+
+  .board-area{flex:1 1 auto;min-height:0;background:var(--surface);border-radius:18px;padding:12px;position:relative;border:1px solid var(--border);display:flex;flex-direction:column;}
+  .board-bg{position:absolute;inset:12px;border-radius:14px;pointer-events:none;opacity:0.13;filter:grayscale(30%);background-repeat:repeat;background-size:220px 220px;z-index:0;}
+  svg#board-svg{width:100%;flex:1 1 auto;min-height:0;display:block;}
+  .tile-marker{position:absolute;transform:translate(-50%,-50%);width:54px;height:54px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 4px 10px rgba(0,0,0,.4);border:2px solid rgba(255,255,255,.25);}
+  .tile-marker .tnum{position:absolute;top:-10px;left:-10px;background:rgba(0,0,0,.65);color:#fff;font-size:11px;font-weight:700;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.4);}
+  .tile-house{background:var(--house);}
+  .tile-clinic{background:var(--teal);}
+  .tile-market{background:var(--ochre);}
+  .tile-headman{background:var(--purple);}
+  .tile-khuen{background:var(--brick);}
+  .tile-start{background:#FFFFFF;border:2px solid #6b6250;}
+  .tile-finish-line{background:#2E7D32;border-color:#eafbea;}
+  .tile-waiting-pavilion{background:#6D4C2C;border-color:#e9dcc8;}
+  .tile-caption{position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:4px;font-size:11px;font-weight:800;white-space:nowrap;background:rgba(0,0,0,.6);color:#fff;padding:2px 7px;border-radius:6px;pointer-events:none;}
+  .tile-marker.active-highlight{outline:3px solid var(--accent);animation:pulseTile .8s ease-in-out infinite;}
+  @keyframes pulseTile{0%,100%{box-shadow:0 0 0 0 rgba(224,167,46,.5);}50%{box-shadow:0 0 0 10px rgba(224,167,46,0);}}
+
+  .token{position:absolute;width:26px;height:26px;border-radius:50%;background:var(--paper);display:flex;align-items:center;justify-content:center;font-size:15px;border:2px solid var(--on-accent);transition:left .48s ease, top .48s ease;box-shadow:0 3px 6px rgba(0,0,0,.5);z-index:5;}
+
+  .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:14px;color:var(--text-dim);margin-top:8px;flex:none;font-weight:600;}
+  .legend span{display:inline-flex;align-items:center;gap:6px;}
+  .legend i{width:14px;height:14px;border-radius:4px;display:inline-block;}
+
+  .bottom-panels{display:flex;gap:10px;flex-wrap:wrap;flex:none;}
+  .players-panel{flex:1;min-width:280px;background:var(--surface);border-radius:16px;padding:12px 16px;border:1px solid var(--border);}
+  #players-list{display:grid;grid-template-columns:repeat(auto-fit, minmax(210px, 1fr));gap:8px;}
+  .player-card{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:10px;background:var(--surface2);}
+  .player-card.current{outline:2px solid var(--accent);}
+  .player-card .pi{font-size:23px;}
+  .player-card .pname{font-weight:700;font-size:16px;flex:1;}
+  .player-card .pscore{font-size:16px;color:var(--accent-text);font-weight:800;}
+  .player-card .phand{font-size:13px;color:var(--text-dim);}
+  .player-card .pstatus{font-size:13px;color:var(--warn-text);font-weight:700;}
+  .view-hand-btn{background:var(--accent);color:var(--on-accent);border:1px solid var(--accent);border-radius:8px;padding:8px 12px;font-size:16px;flex:none;font-weight:800;min-height:40px;}
+  .hand-panel .hp-view{margin-left:auto;background:var(--accent);color:var(--on-accent);padding:9px 16px;border-radius:8px;font-size:14px;font-weight:800;min-height:40px;}
+
+  .dice-panel{width:230px;flex:none;background:var(--surface);border-radius:16px;padding:14px;display:flex;flex-direction:column;align-items:center;border:1px solid var(--border);}
+  #dice{width:72px;height:72px;background:var(--paper);border-radius:14px;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);padding:11px;gap:5px;margin-bottom:12px;box-shadow:0 6px 14px rgba(0,0,0,.5);}
+  #dice.rolling{animation:diceShake .12s infinite;}
+  @keyframes diceShake{0%{transform:rotate(0deg);}25%{transform:rotate(6deg);}75%{transform:rotate(-6deg);}100%{transform:rotate(0deg);}}
+
+  .celebrate-layer{position:fixed;inset:0;pointer-events:none;z-index:9999;overflow:hidden;}
+  .celebrate-emoji{position:absolute;font-size:32px;opacity:0;animation:celebratePop 1.1s ease-out forwards;}
+  @keyframes celebratePop{
+    0%{opacity:0;transform:translateY(10px) scale(.5);}
+    30%{opacity:1;transform:translateY(-10px) scale(1.15);}
+    100%{opacity:0;transform:translateY(-70px) scale(1);}
+  }
+  .firework{position:absolute;width:7px;height:7px;border-radius:50%;opacity:0;animation:fireworkBurst 1s ease-out forwards;}
+  @keyframes fireworkBurst{
+    0%{opacity:1;transform:translate(0,0) scale(1);}
+    100%{opacity:0;transform:translate(var(--fx),var(--fy)) scale(.3);}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .celebrate-emoji, .firework{animation:none;opacity:0;}
+  }
+  .pip{border-radius:50%;background:transparent;}
+  .pip.on{background:var(--on-accent);}
+  #roll-btn{background:var(--accent);color:var(--on-accent);padding:14px 22px;border-radius:12px;font-size:18px;width:100%;min-height:52px;}
+  .roll-hint{font-size:14px;color:var(--text-dim);margin-top:9px;text-align:center;font-weight:600;}
+
+  .log-wrap{flex:none;width:100%;}
+  .log-header{display:flex;justify-content:space-between;align-items:center;background:var(--surface2);padding:8px 16px;border-radius:12px 12px 0 0;font-size:13px;font-weight:700;color:var(--text-dim);cursor:pointer;border:1px solid var(--border);border-bottom:none;}
+  .log-wrap.collapsed .log-panel{display:none;}
+  .log-wrap.collapsed .log-header{border-radius:12px;}
+  .log-panel{flex:none;width:100%;background:var(--deep);border-radius:0 0 14px 14px;padding:9px 16px;height:84px;overflow-y:auto;font-size:13px;color:var(--text-dim);border:1px solid var(--border);}
+  .log-panel div{margin-bottom:4px;}
+  .log-panel .lg-good{color:#2e8b3f;font-weight:700;}
+  .log-panel .lg-bad{color:#c0392b;font-weight:700;}
+
+  /* ---------- Responsive: narrow / mobile screens ---------- */
+  @media (max-width: 720px){
+    #game-screen.screen{padding:6px;}
+    .game-wrap{gap:6px;}
+    .topbar h2{font-size:17px;}
+    .village-progress{gap:4px;}
+    .vdot{width:24px;height:24px;font-size:11px;}
+    .hand-panel{padding:7px 12px;gap:8px;}
+    .hand-panel .hp-item{font-size:17px;}
+    .hand-panel .hp-item small{font-size:10px;}
+    .hand-panel .hp-title{font-size:12px;width:100%;}
+    .hand-panel .hp-view{font-size:12px;padding:6px 10px;}
+    .bottom-panels{flex-direction:column;}
+    .dice-panel{width:100%;flex-direction:row;justify-content:center;gap:12px;padding:8px;}
+    #dice{margin-bottom:0;width:54px;height:54px;}
+    #roll-btn{width:auto;padding:11px 20px;font-size:16px;}
+    #players-list{grid-template-columns:1fr;}
+    .legend{font-size:11px;gap:8px;}
+    .log-panel{height:60px;font-size:11px;}
+    .theme-switcher label{display:none;}
+  }
+
+  /* ---------- Card Modal (always a light "paper card", regardless of theme) ---------- */
+  .overlay{position:fixed;inset:0;background:rgba(10,16,13,.75);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px;}
+  .card-modal{background:var(--paper);color:#231d12;border-radius:18px;max-width:625px;width:100%;padding:24px 24px 0 24px;position:relative;box-shadow:0 20px 50px rgba(0,0,0,.5);font-size:var(--modal-font-size);max-height:calc(100vh - 32px);max-height:calc(100dvh - 32px);overflow-y:auto;}
+  .modal-font-controls{display:flex;justify-content:flex-end;align-items:center;gap:8px;margin-bottom:12px;}
+  .modal-font-controls span{font-size:0.75em;color:#6b6250;font-weight:600;}
+  .modal-font-controls button{width:38px;height:38px;border-radius:8px;background:#e7dcc0;color:#28221a;font-weight:800;font-size:15px;border:1px solid #cabb92;}
+  .card-modal .ctype{display:inline-block;padding:5px 14px;border-radius:20px;font-size:0.8em;font-weight:800;color:#fff;margin-bottom:12px;}
+  .card-modal h3{font-size:1.35em;margin-bottom:10px;}
+  .card-modal .scenario{font-size:1em;line-height:1.7;margin-bottom:14px;color:#3a3020;}
+  .card-modal .effect-line{font-size:0.95em;background:#e7dcc0;padding:10px 12px;border-radius:8px;margin-bottom:7px;font-weight:700;}
+  .card-modal .req-box{background:#fff6e0;border:1px dashed var(--ochre);padding:12px;border-radius:10px;font-size:0.95em;margin-bottom:14px;}
+  .card-modal .choice-row{display:flex;gap:10px;margin-top:14px;}
+  /* Sticky action footer: choice-list / btn-ack are always the last thing in
+     a card-modal, so pinning them to the bottom of the modal's own scroll
+     area (not the page) means the player never has to scroll past a long
+     scenario or hand summary just to reach the button they need. Full-bleed
+     to the modal's edges with matching bottom corner radius so it reads as
+     one seamless panel rather than a floating bar. */
+  .choice-list{display:flex;flex-direction:column;gap:9px;position:sticky;bottom:0;background:var(--paper);margin:12px -24px 0 -24px;padding:0 24px 24px 24px;border-radius:0 0 18px 18px;box-shadow:0 -10px 16px -8px rgba(0,0,0,.35);}
+  .mc-choice-btn{background:#e7dcc0;color:#28221a;border:2px solid transparent;border-radius:10px;padding:13px 15px;font-size:0.95em;font-weight:700;text-align:left;line-height:1.4;min-height:48px;}
+  .mc-choice-btn:hover{border-color:var(--accent);background:#f0e6c8;}
+  .mc-choice-btn:active{background:var(--accent);color:var(--on-accent);}
+  .card-view-btn{background:var(--accent);color:var(--on-accent);border-radius:8px;padding:7px 11px;font-size:0.78em;font-weight:800;flex:none;white-space:nowrap;}
+  /* A plain full-width accent button for use INSIDE a .choice-list footer
+     when a modal needs more than one final action (e.g. "save results" +
+     "close") — .choice-list already supplies the sticky/full-bleed footer
+     treatment, so these just need the .btn-ack look without re-doing it. */
+  .btn-plain{background:var(--accent);color:var(--on-accent);padding:14px;border-radius:10px;font-size:1em;font-weight:700;min-height:52px;}
+  .btn-plain.secondary{background:var(--surface2);color:var(--text);}
+  /* Support-card hero image: fills the width of the card at a large, fixed
+     height with the title overlaid on a gradient scrim — rather than a
+     small thumbnail above the text like food/knowledge cards use. Falls
+     back to a plain purple panel (still showing the title) when a card has
+     no image yet, so an empty assets/support/ folder never looks broken. */
+  .support-hero{position:relative;width:100%;height:210px;border-radius:14px;overflow:hidden;margin-bottom:14px;background-size:cover;background-position:center;background-color:var(--purple);}
+  .support-hero .hero-scrim{position:absolute;left:0;right:0;bottom:0;padding:16px 16px 12px;background:linear-gradient(to top, rgba(20,10,30,.88) 0%, rgba(20,10,30,.5) 65%, rgba(20,10,30,0) 100%);}
+  .support-hero .hero-scrim h3{color:#fff;margin:0;text-shadow:0 2px 8px rgba(0,0,0,.7);}
+  .support-hero .ctype{margin:0 0 6px;}
+  .card-modal .choice-row button{flex:1;padding:14px;border-radius:10px;font-size:1em;min-height:52px;}
+  .btn-success{background:var(--teal);color:#fff;}
+  .btn-fail{background:var(--brick);color:#fff;}
+  .btn-ack{background:var(--accent);color:var(--on-accent);width:calc(100% + 48px);padding:14px 24px;font-size:1em;min-height:52px;position:sticky;bottom:0;margin:10px -24px 0 -24px;padding-bottom:24px;border-radius:0 0 18px 18px;box-shadow:0 -10px 16px -8px rgba(0,0,0,.35);}
+  .result-banner{font-size:0.95em;font-weight:700;padding:12px;border-radius:10px;margin-bottom:10px;}
+  .result-good{background:#dcefdf;color:#1e5c2b;}
+  .result-bad{background:#f6dad3;color:#7a2a1c;}
+</style>
+</head>
+<body>
+
+<!-- ============ SETUP SCREEN ============ -->
+<div id="setup-screen" class="screen">
+  <div class="setup-card">
+    <div class="setup-top">
+      <div>
+        <h1>🌾 คุ้มครองชีวิต พิชิตโซเดียม <span class="version-tag" id="version-tag"></span></h1>
+        <p class="sub">Alpha — เวอร์ชันทดสอบภายในทีม เพื่อค้นหาจุดผิดพลาดก่อนเผยแพร่จริง</p>
+      </div>
+      <div class="theme-switcher">
+        <label for="theme-select-setup">🎨 ธีม</label>
+        <select id="theme-select-setup" onchange="applyTheme(this.value)">
+          <option value="light">ขาว (แนะนำ)</option>
+          <option value="dark">ดำ</option>
+          <option value="green">เขียว</option>
+          <option value="red">แดง</option>
+          <option value="blue">ฟ้า</option>
+          <option value="colorful">Colorful 🌈</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="margin-bottom:14px;">
+      <div style="font-size:13px;margin-bottom:8px;color:var(--text-dim);">จำนวนผู้เล่น (สูงสุด 5 คน)</div>
+      <div class="count-btns" id="count-btns"></div>
+    </div>
+
+    <div id="player-rows"></div>
+
+    <button class="primary-btn" id="start-btn">เริ่มเกม 🎲</button>
+    <button class="secondary-btn" id="load-file-btn" style="width:100%;margin-top:8px;">📂 โหลดเกมจากไฟล์...</button>
+    <input type="file" id="load-file-input" accept="application/json,.json" class="hidden">
+
+    <div class="note">
+      ⚠️ นี่คือเวอร์ชัน Alpha สำหรับทดสอบภายในทีม: กลไกและเนื้อหาการ์ดอาจยังมีจุดผิดพลาดหรือไม่สมบูรณ์ ช่วยกันทดลองเล่นและแจ้งปัญหาที่พบ เพื่อนำไปแก้ไขก่อนเผยแพร่จริง
+    </div>
+  </div>
+</div>
+
+<!-- ============ GAME SCREEN ============ -->
+<div id="game-screen" class="screen hidden">
+  <div class="game-wrap">
+    <div class="topbar">
+      <div>
+        <h2 id="village-title">🏞️ หมู่บ้าน 1: เข้าถึง</h2>
+        <div class="village-progress" id="village-progress"></div>
+      </div>
+      <div class="actions">
+        <div class="theme-switcher">
+          <label for="theme-select-game">🎨</label>
+          <select id="theme-select-game" onchange="applyTheme(this.value)">
+            <option value="light">ขาว</option>
+            <option value="dark">ดำ</option>
+            <option value="green">เขียว</option>
+            <option value="red">แดง</option>
+            <option value="blue">ฟ้า</option>
+            <option value="colorful">Colorful 🌈</option>
+          </select>
+        </div>
+        <button id="download-save-btn">💾 บันทึกเกม (ดาวน์โหลดไฟล์)</button>
+        <button id="reset-btn">🔄 เกมใหม่</button>
+        <button id="save-score-btn" class="hidden">🏆 บันทึกคะแนน (CSV)</button>
+      </div>
+    </div>
+
+    <div class="hand-panel" id="hand-panel"></div>
+
+    <div class="board-area">
+      <div id="board-bg" class="board-bg"></div>
+      <svg id="board-svg" viewBox="0 0 1000 520" preserveAspectRatio="xMidYMid meet">
+        <path id="trail-path" fill="none" stroke="#3a5a4a" stroke-width="26"
+          stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="2 20"/>
+      </svg>
+      <div id="tiles-layer"></div>
+      <div id="tokens-layer"></div>
+      <div class="legend">
+        <span><i style="background:var(--purple)"></i> บ้านป้อหลวง</span>
+        <span><i style="background:var(--house)"></i> บ้านชาวบ้าน (ภารกิจ)</span>
+        <span><i style="background:var(--teal)"></i> รพ.สต. (ความรู้)</span>
+        <span><i style="background:var(--ochre)"></i> กาดนัด (อาหาร)</span>
+        <span><i style="background:var(--brick)"></i> ขึด (อุปสรรค)</span>
+        <span><i style="background:linear-gradient(145deg,#FFD25A,#E0A72E)"></i> ศาลาประชาคม (จุดจบเกม)</span>
+        <span><i style="background:#fff;border:1px solid var(--border);"></i> จุดเริ่มต้น</span>
+        <span><i style="background:#2E7D32"></i> เส้นชัย (หมู่บ้านสุดท้าย)</span>
+      </div>
+    </div>
+
+    <div class="bottom-panels">
+      <div class="players-panel">
+        <h3 style="font-size:16px;color:var(--accent-text);">ผู้เล่น</h3>
+        <div id="players-list"></div>
+      </div>
+      <div class="dice-panel">
+        <div id="dice">
+          <div class="pip"></div><div class="pip"></div><div class="pip"></div>
+          <div class="pip"></div><div class="pip"></div><div class="pip"></div>
+          <div class="pip"></div><div class="pip"></div><div class="pip"></div>
+        </div>
+        <button id="roll-btn">🎲 ทอยลูกเต๋า</button>
+        <div class="roll-hint" id="roll-hint">รอผู้เล่นทอยลูกเต๋า</div>
+      </div>
+    </div>
+
+    <div class="log-wrap" id="log-wrap">
+      <div class="log-header" onclick="toggleLog()">
+        <span>📝 บันทึกการเล่น</span>
+        <span id="log-toggle-icon">ซ่อน ▾</span>
+      </div>
+      <div class="log-panel" id="log-panel"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ CARD MODAL ============ -->
+<div id="card-overlay" class="overlay hidden">
+  <div class="card-modal">
+    <div class="modal-font-controls">
+      <span>ขนาดตัวอักษร</span>
+      <button type="button" onclick="adjustModalFont(-1)">A−</button>
+      <button type="button" onclick="adjustModalFont(1)">A+</button>
+    </div>
+    <div id="card-modal-content"></div>
+  </div>
+</div>
+
+<script>
+/* ================= SAFE LOCALSTORAGE ================= */
+// localStorage.getItem/setItem can THROW (not just fail silently) — e.g.
+// Firefox raises SecurityError for file:// pages ("opaque origin"), and
+// private-browsing/quota/policy restrictions can do the same in other
+// browsers. Since this game is normally opened as a bare local HTML file,
+// an unguarded call here at page-load (theme init, before anything else
+// runs) used to abort the ENTIRE script — every button on the page used
+// to silently stop working with it. Used only for the theme/font-size
+// preferences now — game saves are file-based (see SAVE / LOAD below).
+function safeLocalGet(key){
+  try { return localStorage.getItem(key); } catch(e) { return null; }
+}
+function safeLocalSet(key, value){
+  try { localStorage.setItem(key, value); return true; } catch(e) { return false; }
+}
+
+/* ================= THEME ================= */
+const THEME_KEY = 'sodium_quest_theme';
+function applyTheme(name){
+  document.documentElement.setAttribute('data-theme', name);
+  safeLocalSet(THEME_KEY, name);
+  ['theme-select-setup','theme-select-game'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.value = name;
+  });
+}
+(function initTheme(){
+  const saved = safeLocalGet(THEME_KEY) || 'light';
+  applyTheme(saved);
+})();
+
+/* ================= MODAL FONT SIZE (+/-) ================= */
+const MODAL_FONT_KEY = 'sodium_quest_modal_font';
+function setModalFontSize(px){
+  px = Math.max(13, Math.min(28, px));
+  document.documentElement.style.setProperty('--modal-font-size', px+'px');
+  safeLocalSet(MODAL_FONT_KEY, px);
+}
+function adjustModalFont(direction){
+  const current = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--modal-font-size')) || 16;
+  setModalFontSize(current + direction*2);
+}
+(function initModalFont(){
+  const saved = parseInt(safeLocalGet(MODAL_FONT_KEY)) || 16;
+  setModalFontSize(saved);
+})();
+
+/* ================= AUDIO ENGINE (Web Audio API — synthesized, no files) ================= */
+// Guarded the same way as localStorage above: some browsers/policies expose
+// no AudioContext at all (or throw constructing one), and an unguarded
+// `new AudioCtx()` at top level would abort the whole script before it
+// ever reaches the setup-screen wiring. Game is fully playable silently
+// if this fails — every sound function below just no-ops when actx is null.
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let actx = null;
+try { if(AudioCtx) actx = new AudioCtx(); } catch(e) {}
+
+function tone(freq, dur, type='sine', vol=0.18, delay=0, glideTo=null){
+  if(!actx) return;
+  const t0 = actx.currentTime + delay;
+  const osc = actx.createOscillator();
+  const gain = actx.createGain();
+  osc.type = type;
+  osc.frequency.setValueAtTime(freq, t0);
+  if(glideTo) osc.frequency.exponentialRampToValueAtTime(glideTo, t0+dur);
+  gain.gain.setValueAtTime(0.0001, t0);
+  gain.gain.exponentialRampToValueAtTime(vol, t0+0.015);
+  gain.gain.exponentialRampToValueAtTime(0.0001, t0+dur);
+  osc.connect(gain).connect(actx.destination);
+  osc.start(t0); osc.stop(t0+dur+0.05);
+}
+function noiseBurst(dur, vol=0.15, delay=0){
+  if(!actx) return;
+  const t0 = actx.currentTime + delay;
+  const bufferSize = actx.sampleRate * dur;
+  const buffer = actx.createBuffer(1, bufferSize, actx.sampleRate);
+  const data = buffer.getChannelData(0);
+  for(let i=0;i<bufferSize;i++) data[i] = (Math.random()*2-1) * (1 - i/bufferSize);
+  const src = actx.createBufferSource();
+  src.buffer = buffer;
+  const gain = actx.createGain();
+  gain.gain.setValueAtTime(vol, t0);
+  gain.gain.exponentialRampToValueAtTime(0.001, t0+dur);
+  src.connect(gain).connect(actx.destination);
+  src.start(t0);
+}
+function playDiceRollSound(){
+  for(let i=0;i<7;i++) noiseBurst(0.07, 0.1, i*0.09);
+}
+function playDiceLandSound(){
+  tone(180,0.12,'square',0.15,0); noiseBurst(0.05,0.12,0);
+}
+function playFootstepSound(i){
+  tone(90 + (i%3)*10, 0.09, 'triangle', 0.12, 0);
+}
+function playLandingSound(tileType){
+  switch(tileType){
+    case 'house':    tone(330,0.25,'sine',0.16); tone(392,0.25,'sine',0.12,0.06); break; // mission - neutral warm
+    case 'clinic':   tone(523,0.18,'triangle',0.16); tone(659,0.22,'triangle',0.14,0.09); tone(784,0.25,'triangle',0.12,0.18); break; // knowledge - bright ascending
+    case 'market':   tone(440,0.12,'square',0.1); tone(550,0.1,'square',0.09,0.07); tone(660,0.14,'square',0.08,0.14); break; // food - plucky
+    case 'headman':  tone(196,0.5,'sine',0.18); tone(294,0.5,'sine',0.1,0.05); break; // support - warm gong
+    case 'khuen':    tone(110,0.5,'sawtooth',0.15,0,90); noiseBurst(0.3,0.1,0.05); break; // obstacle - ominous
+  }
+}
+function playSuccessSound(){ tone(523,0.15,'sine',0.16); tone(659,0.15,'sine',0.16,0.1); tone(784,0.22,'sine',0.16,0.2); }
+function playFailSound(){ tone(220,0.3,'sawtooth',0.15,0,110); }
+// Short cheer: one player reaching the final village on their own — brief,
+// so it doesn't overpower the shared board while other players are still
+// mid-turn elsewhere.
+function playCheerShort(){
+  tone(523,0.12,'sine',0.18); tone(659,0.12,'sine',0.18,0.08); tone(880,0.2,'sine',0.18,0.16);
+}
+// Long fanfare: the whole game just ended for everyone — deliberately
+// bigger/longer than any other sound in the game to mark the one moment
+// that only happens once per session.
+function playCheerBig(){
+  [523,659,784,880,1047,1319].forEach((f,i)=> tone(f,0.3,'sine',0.2,i*0.1));
+  noiseBurst(0.4,0.13,0.05);
+  noiseBurst(0.4,0.13,0.55);
+  noiseBurst(0.4,0.13,1.05);
+}
+// Small celebration: a few emoji pop up near the player list and fade —
+// cheap enough to fire every time a player privately finishes their run.
+function showSmallCelebration(){
+  const layer = document.createElement('div');
+  layer.className = 'celebrate-layer';
+  const emojis = ['🎉','✨','🎊'];
+  for(let i=0;i<5;i++){
+    const span = document.createElement('span');
+    span.className = 'celebrate-emoji';
+    span.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+    span.style.left = (30+Math.random()*40)+'%';
+    span.style.top = '55%';
+    span.style.animationDelay = (i*0.06)+'s';
+    layer.appendChild(span);
+  }
+  document.body.appendChild(layer);
+  setTimeout(()=>layer.remove(), 1300);
+}
+// Big celebration: several staggered firework bursts across the screen —
+// reserved for the one moment every player has finished the whole game.
+// Calls onDone once the show is over so the final-results modal (with the
+// "save score" button) appears right after, not on top of, the fireworks.
+function showBigCelebration(onDone){
+  const layer = document.createElement('div');
+  layer.className = 'celebrate-layer';
+  document.body.appendChild(layer);
+  const colors = ['#F2C14E','#E0A72E','#8E24AA','#1E8E3E','#1565C0','#D32F2F'];
+  function burst(cx, cy){
+    for(let i=0;i<18;i++){
+      const p = document.createElement('span');
+      p.className = 'firework';
+      const angle = (Math.PI*2*i)/18;
+      const dist = 60 + Math.random()*60;
+      p.style.setProperty('--fx', Math.cos(angle)*dist+'px');
+      p.style.setProperty('--fy', Math.sin(angle)*dist+'px');
+      p.style.left = cx+'%'; p.style.top = cy+'%';
+      p.style.background = colors[Math.floor(Math.random()*colors.length)];
+      layer.appendChild(p);
+    }
+  }
+  const bursts = [[30,40],[70,30],[50,55],[20,60],[80,50]];
+  bursts.forEach(([cx,cy],i)=> setTimeout(()=>burst(cx,cy), i*350));
+  setTimeout(()=>{ layer.remove(); if(onDone) onDone(); }, bursts.length*350 + 1000);
+}
+
+/* ================= GAME DATA ================= */
+const ICON_GROUPS = [
+  { label: 'คน',     icons: ['👩','👨','🧑','👵','👴'] },
+  { label: 'สัตว์',   icons: ['🐘','🐄','🐓','🐕','🐈'] },
+  { label: 'สิ่งของ', icons: ['🎩','👒','🧢','🕶️','👑'] },
+  { label: 'ดอกไม้', icons: ['🌸','🌹','🌻','🌺','🌼'] },
+];
+const ALL_ICONS = ICON_GROUPS.flatMap(g=>g.icons);
+
+const VILLAGES = [
+  {name:'บ้านเปิดใจ๋', hl:'เข้าถึง'},
+  {name:'บ้านผางแจ้ง', hl:'เข้าใจ'},
+  {name:'บ้านจ่างถาม', hl:'ไต่ถาม'},
+  {name:'บ้านแป๋งใจ๋', hl:'ตัดสินใจ'},
+  {name:'บ้านปันใจ้', hl:'นำไปใช้'},
+];
+// 12 ช่องต่อด่าน (อ้างอิงลำดับตามเอกสารต้นฉบับ "วิจัย Bord Game"):
+// บ้านชาวบ้าน 8, รพ.สต. 1, กาดนัด 1, บ้านป้อหลวง 1, ขึด 1 — ขึดปิดท้ายช่อง 12
+// เสมอทุกหมู่บ้าน รวมถึงหมู่บ้านสุดท้าย (ผ่านขึดใบนั้นแล้วจึงถึงศาลาประชาคม)
+function buildTileSequence(villageIdx){
+  const isLastVillage = villageIdx === VILLAGES.length-1;
+  return [
+    {type:'house',   label:'บ้านชาวบ้าน'},
+    {type:'clinic',  label:'รพ.สต. (อนามัย)'},
+    {type:'house',   label:'บ้านชาวบ้าน'},
+    {type:'house',   label:'บ้านชาวบ้าน'},
+    {type:'market',  label:'กาดนัด'},
+    {type:'house',   label:'บ้านชาวบ้าน'},
+    {type:'house',   label:'บ้านชาวบ้าน'},
+    {type:'headman', label:'บ้านป้อหลวง'},
+    {type:'house',   label:'บ้านชาวบ้าน'},
+    {type:'house',   label:'บ้านชาวบ้าน'},
+    {type:'house',   label:'บ้านชาวบ้าน'},
+    {type:'khuen',   label: isLastVillage ? 'ขึด (ด่านสุดท้ายก่อนศาลาประชาคม 🏁)' : 'ขึด (จุดผ่านด่าน 🚩)'},
+  ];
+}
+let TILE_SEQUENCE = buildTileSequence(0);
+const TILE_ICON = {house:'🏠', clinic:'➕', market:'🧺', headman:'🏯', khuen:'⚠️'};
+const TILE_CLASS = {house:'tile-house', clinic:'tile-clinic', market:'tile-market', headman:'tile-headman', khuen:'tile-khuen'};
+
+// --- full card pools (mirrors *_cards_full.json in the project root) ---
+const MISSIONS = [{"id": "mission_v1_01", "village": 1, "title": "มื้อนี้...โซเดียมเท่าไหร่?", "scenario": "อสม. เดินไปเยี่ยมป้าแก้วที่บ้านหลังกินข้าวเสร็จพอดี ป้าแก้วอวดว่ามื้อนี้ลำขนาด กินข้าวกับ แกงฮังเล และ น้ำพริกหนุ่ม ไปอย่างละหนึ่่งถ้วย อยากรู้ว่ามื้อนี้กินโซเดียมไประดับไหน", "challengeType": "multiple_choice", "instructions": "นำภาพแกงฮังเล 1 ภาพ ภาพน้ำพริกหนุ่ม 1 ภาพ แล้วบอกว่า รับประทานอาหารทั้ง 2 เมนู ระดับปริมาณโซเดียมระดับใด \nเลือก 1 สูง \nเลือก 2 ปานกลาง \nเลือก 3 ต่ำ", "choices": [{"id": 1, "label": "สูง", "effects": [{"type": "score", "operation": "add", "value": 300}]}, {"id": 2, "label": "ปานกลาง", "effects": [{"type": "score", "operation": "add", "value": 0}]}, {"id": 3, "label": "ต่ำ", "effects": [{"type": "score", "operation": "add", "value": 0}]}], "referenceFoodCards": ["food_012", "food_002"]}, {"id": "mission_v1_02", "village": 1, "title": "ชุดใหญ่จัดเต็ม บ่เข็ดตึงบ่จำ", "scenario": "น้องนนท์ วัยรุ่นตัวจี๊ดประจำซอยจัดหนัก ตำลาวกับลูกชิ้นทอดน้ำจิ้มมะขามเปียก อสม. เข้าไปเตือน แต่น้องยักไหล่กลับ: 'ผมแข็งแรงป้า! ถ้าป้าแน่จริง คิดโซเดียมเซ็ตนี้ให้ได้ ผมยอมกินน้ำเปล่าแทนน้ำอัดลมเลย", "challengeType": "multiple_choice", "instructions": "ให้แสดงรูปอาหาร ส้มตำและลูกชิ้นทอด แล้วให้คำนวณคะแนนโซเดียมจากการ์ดแต่ละใบ \nเลือก 1 โซเดียม 2,930\nเลือก 2 โซเดียม 1,930", "choices": [{"id": 1, "label": "โซเดียม 2,930", "effects": [{"type": "score", "operation": "add", "value": 500}]}, {"id": 2, "label": "โซเดียม 1,930", "effects": [{"type": "score", "operation": "add", "value": 0}, {"type": "skipTurn", "value": 1}]}], "referenceFoodCards": ["food_008", "food_085"]}, {"id": "mission_v1_03", "village": 1, "title": "ปฏิบัติการยึดขวดน้ำปลาจากพ่ออุ๊ย", "scenario": "พ่ออุ๊ยเป็นความดันสูง หมอสั่งเข้มห้ามกินเค็ม! แต่พอ อสม. เผลอ พ่ออุ๊ยแอบหยิบขวดน้ำปลา/ผงชูรสมาซ่อนไว้ใต้โต๊ะ เตรียมจะ “เท” ใส่กับข้าว อสม. ต้องรีบสแกนหาอาหารโซเดียมต่ำมาแทนด่วน", "challengeType": "food_card_select_threshold", "instructions": "เลือก \"การ์ดเมนูอาหาร\" 1 ใบจากในมือ ที่มีโซเดียมไม่เกิน 400 มิลลิกรัม มานำเสนอ", "cardSelectRule": {"count": 1, "condition": "sodium_max_each", "thresholdMg": 400}, "outcomes": {"hasValidCardAndPicksCorrectly": {"effects": [{"type": "score", "operation": "add", "value": 300}]}, "hasValidCardButPicksWrong": {"effects": [{"type": "score", "operation": "subtract", "value": 100}]}, "noValidCardAvailable": {"effects": [{"type": "score", "operation": "subtract", "value": 50}]}}}, {"id": "mission_v1_04", "village": 1, "title": "ปฏิบัติการ \"แอปสู้ฝุ่น\"", "scenario": "เช้าวันหยุด อากาศดูขมุกขมัวคล้ายหมอกลง ลุงมีกับป้ามาเตรียมออกไปปั่นจักรยานชิลๆ อสม. ต้องรีบเบรก งดกิจกรรมกลางแจ้ง พร้อมสอนสแกนภัยเงียบ PM2.5 ก่อนหลอดเลือดสมองอักเสบ", "challengeType": "multiple_choice", "instructions": "เลือก 1 พาลุง/ป้า โหลดแอปเช๊คฝุ่น เลือก 2 ปั่นจักรยานได้แต่ต้องใส่หน้ากากอนามัยกันลม", "choices": [{"id": 1, "label": "พาลุง/ป้า โหลดแอปเช๊คฝุ่น", "effects": [{"type": "score", "operation": "add", "value": 200}]}, {"id": 2, "label": "ปั่นจักรยานได้แต่ต้องใส่หน้ากากอนามัยกันลม", "effects": [{"type": "score", "operation": "subtract", "value": 100}]}]}, {"id": "mission_v1_05", "village": 1, "title": "เปิดโซนอันตราย ทลายภัยเงียบ", "scenario": "อสม.ต้องไปวัดความดันผู้ป่วยหลังจากกลับมาจากรพ. 3 บ้าน บ้านแรก ความดัน 100/70 บ้านสอง ความดัน 130/85  บ้านหลังสุดท้ายความดัน 150/100 อสม.จะเยี่ยมบ้านไหนก่อนดี", "challengeType": "multiple_choice", "instructions": "เลือก 1 บ้านแรก เลือก 2 บ้านสอง เลือก 3 บ้านสุดท้าย", "choices": [{"id": 1, "label": "บ้านแรก", "effects": [{"type": "score", "operation": "add", "value": 0}, {"type": "discardCard", "cardType": "food", "count": 1, "random": true}]}, {"id": 2, "label": "บ้านสอง", "effects": [{"type": "score", "operation": "add", "value": 0}, {"type": "discardCard", "cardType": "food", "count": 1, "random": true}]}, {"id": 3, "label": "บ้านสุดท้าย", "effects": [{"type": "score", "operation": "add", "value": 300}]}]}, {"id": "mission_v1_06", "village": 1, "title": "หมุดปักพิทักษ์หัวใจ", "scenario": "ลุงมี ย้้ายกลับจากกรุงเทพ อยู่บ้านตามลำพัง เป็นความดันโลหิตสูงและเบาหวานมีแผลที่เท้า เน่าเปื่อย มารับยาที่รพ.สต. ไม่ได้  อสม.จะช่วยลุงมีอย่างไร", "challengeType": "multiple_choice", "instructions": "เลือก 1. อสม. พาลุงมีไปรพ.สต. หรือ เลือก 2. พาพยาบาลจากรพ.สต.ไปหาลุงมีที่่บ้าน", "choices": [{"id": 1, "label": "อสม. พาลุงมีไปรพ.สต. หรือ", "effects": [{"type": "score", "operation": "add", "value": 50}]}, {"id": 2, "label": "พาพยาบาลจากรพ.สต.ไปหาลุงมีที่่บ้าน", "effects": [{"type": "score", "operation": "add", "value": 200}]}]}, {"id": "mission_v1_07", "village": 1, "title": "ข่าวลวง", "scenario": "มีข่าวแชร์ในไลน์กลุ่ม กินกาแฟซองม่วง ลดความดันและเบาหวานได้ อสม.จะรู้ได้อย่างไรว่าข่าวชัวร์หรือมั่วนิ่ม", "challengeType": "multiple_choice", "instructions": "เลือก 1  ไปถามเพื่อนอสม. เลือก 2 เข้าไปค้นข้อมูลใน Smart อสม.ของกรมสนับสนุนบริการ", "choices": [{"id": 1, "label": "ไปถามเพื่อนอสม", "effects": [{"type": "score", "operation": "add", "value": 0}]}, {"id": 2, "label": "เข้าไปค้นข้อมูลใน Smart อสม.ของกรมสนับสนุนบริการ", "effects": [{"type": "score", "operation": "add", "value": 200}]}]}, {"id": "mission_v1_08", "village": 1, "title": "น้ำหวานท้ายซอย", "scenario": "ป้าศรี ผู้ป่วยเบาหวานชอบแอบกินน้ำหวาน บ่นเวียนหัวตื้อและตาพร่ามัวมาทั้งวัน...อสม. เดินมาเจอพอดี แต่ไม่แน่ใจว่าอาการตาพร่า/เวียนหัวนี้ มาจาก \"น้ำตาลตก\" หรือเป็น \"สัญญาณเตือนโรคหลอดเลือดสมอง (Stroke)\" กันแน่ อสม.ควรทำอย่างไร", "challengeType": "multiple_choice", "instructions": "เลือก 1 เปิดคู่มือการคัดกรอง Stroke เลือก 2 ดูประวัติการแพ้ยาในระบบ", "choices": [{"id": 1, "label": "เปิดคู่มือการคัดกรอง Stroke", "effects": [{"type": "score", "operation": "add", "value": 100}]}, {"id": 2, "label": "ดูประวัติการแพ้ยาในระบบ", "effects": [{"type": "score", "operation": "add", "value": 0}, {"type": "skipTurn", "value": 1}]}]}, {"id": "mission_v2_01", "village": 2, "title": "รหัสลับ \"นัวแต่เน้นๆ\"", "scenario": "อุ้ยมั่นสายแซ่บ กิ๋นน้ำพริกกะปิ ถั่วเน่าเมอะ แกงอ่อมปลาฮ้าตึงวัน แกบอกว่า ของพื้นบ้านธรรมชาติ ปลอดภัยชัวร์ บ่เกี่ยวกับอัมพฤกษ์ อสม.สายเจรจาจะบอก อุ้ยอย่างไร", "challengeType": "food_card_select_threshold", "instructions": "ให้เลือกการ์ดเมนูอาหารในมือ 2 ใบ เพื่อแนะนำอุ้ยมั่ย โดยรวมโซเดียมต้องไม่เกิน 2,000 มิลลิกรัม", "cardSelectRule": {"count": 2, "condition": "sodium_sum_max", "thresholdMg": 2000}, "outcomes": {"underThreshold": {"effects": [{"type": "score", "operation": "add", "value": 300}]}, "overThreshold": {"effects": [{"type": "score", "operation": "subtract", "value": 100}]}}}, {"id": "mission_v2_02", "village": 2, "title": "แม่ค้าสาดนัว เส้นลวดหัวตึงต๊องเบรก", "scenario": "เจ๊ติ๋มใส่ผงชูรสกับน้ำปลาร้าหนักมือมาก พอลูกค้าทัก แกก็สวนว่า \"ไม่เค็มไม่นัว ก็ขายไม่ได้ดิ \" อสม. จะบอกเจ๊ติ๊มอย่างไร", "challengeType": "multiple_choice", "instructions": "เลือก 1 เจ๊ตำนัวจริง ถ้าลดผงนัวหน่อย จะดีต่อสุขภาพลูกค้า เลือก 2 ลองคิดดู ถ้าไม่ลลดเค็ม ลูกค้าเส้นเลือดแตก ร้านก็เงียบเลยเด้อ", "choices": [{"id": 1, "label": "เจ๊ตำนัวจริง ถ้าลดผงนัวหน่อย จะดีต่อสุขภาพลูกค้า", "effects": [{"type": "score", "operation": "add", "value": 300}]}, {"id": 2, "label": "ลองคิดดู ถ้าไม่ลลดเค็ม ลูกค้าเส้นเลือดแตก ร้านก็เงียบเลยเด้อ", "effects": [{"type": "score", "operation": "add", "value": 0}]}]}, {"id": "mission_v2_03", "village": 2, "title": "เข้าใจผิด", "scenario": "ป้าอินบ่นกวาดบ้าน ถูบ้าน จ่ายตลาดทั้งวันก็เหนื่อยจะแย่แล้ว ถือว่าออกกำลังกายครบแล้ว จะให้ไปเดินออกกำลังกายเพิ่มทำไมอีก อสม.จะอธิบายอย่างไรให้ป้าร้อง อ๋อ", "challengeType": "multiple_choice", "instructions": "เลือก 1 ป้าอินขยันมาก แต่งานบ้านแค่ กวาดขยะช้าๆ หัวใจสูบฉีดไม่แรงพอ เลือก 2งานบ้านไม่ใช่การออกกำลังกาย อย่าขี้เกียจ", "choices": [{"id": 1, "label": "ป้าอินขยันมาก แต่งานบ้านแค่ กวาดขยะช้าๆ หัวใจสูบฉีดไม่แรงพอ", "effects": [{"type": "score", "operation": "add", "value": 200}]}, {"id": 2, "label": "งานบ้านไม่ใช่การออกกำลังกาย อย่าขี้เกียจ", "effects": [{"type": "score", "operation": "add", "value": 0}]}]}, {"id": "mission_v2_04", "village": 2, "title": "หวานตัดเปรี้ยว", "scenario": "ลุงบุญนั่งโซ้ยข้าวเหนียวมะม่วง ตบท้ายด้วยนมเปรี้ยว แกเชื่อมั่นว่านมเปรี้ยวมีประโยชน์ ส่วนข้าวเหนียวก็คือข้าว  อสม.หัวจะปวด บอกลุงไงดี", "challengeType": "multiple_choice", "instructions": "เลือก 1 ข้าวเหนียวและนมเปรี้ยว น้ำตาลสูง ยิ่งกินคู่น้ำตาลพุ่ง เลือก 2 ข้าวเหนียวจะเปลี่ยนเป็นแป้ง นมเปรี้ยวน้ำตาลสูง กินคู่ เลือดข้น กลายเป็นไขมันเกาะหลอดเลือด", "choices": [{"id": 1, "label": "ข้าวเหนียวและนมเปรี้ยว น้ำตาลสูง ยิ่งกินคู่น้ำตาลพุ่ง", "effects": [{"type": "score", "operation": "add", "value": 0}, {"type": "discardCard", "cardType": "food", "count": 1, "random": true}]}, {"id": 2, "label": "ข้าวเหนียวจะเปลี่ยนเป็นแป้ง นมเปรี้ยวน้ำตาลสูง กินคู่ เลือดข้น กลายเป็นไขมันเกาะหลอดเลือด", "effects": [{"type": "score", "operation": "add", "value": 200}]}]}, {"id": "mission_v2_05", "village": 2, "title": "บ้านนี้วุ่น", "scenario": "พ่อกินแกงหน่อไม่ใส่กะทิ แม่จะลดพุง  ลูกกินเฟรน์ฟรายส์ อสม.จะจัดเมนูอย่างไร ไม่ให้บ้านนี้ไดพัง", "challengeType": "multiple_choice", "instructions": "เลือก 1 แกงพ่อไม่ซดน้ำ น้ำสลัดใสให้แม่  เฟนรน์ฟรายไม่ใส่เกลือ เลือก 2 ห้ามกินให้กลับมากินน้ำพริก ผักต้ม", "choices": [{"id": 1, "label": "แกงพ่อไม่ซดน้ำ น้ำสลัดใสให้แม่  เฟนรน์ฟรายไม่ใส่เกลือ", "effects": [{"type": "score", "operation": "add", "value": 100}, {"type": "drawCard", "cardType": "knowledge", "count": 1}]}, {"id": 2, "label": "ห้ามกินให้กลับมากินน้ำพริก ผักต้ม", "effects": [{"type": "score", "operation": "subtract", "value": 100}]}]}, {"id": "mission_v2_06", "village": 2, "title": "ใจดีผิดๆ", "scenario": "ตาดี ช่วงนี้หัวเบา สบายดีแล้ว เลยแบ่งยาให้เพื่อนข้างบ้านกิน อสม.จะบอกอย่างไร", "challengeType": "multiple_choice", "instructions": "เลือก 1 ตาทำแบบนี้ได้ไง เดี๋ยวตายคู่หรอก เลือก 2 ยาความดันเหมือน เสื้อตัวเฉพาะตัว ของใครของคนนั้น", "choices": [{"id": 1, "label": "ตาทำแบบนี้ได้ไง เดี๋ยวตายคู่หรอก", "effects": [{"type": "score", "operation": "add", "value": 0}]}, {"id": 2, "label": "ยาความดันเหมือน เสื้อตัวเฉพาะตัว ของใครของคนนั้น", "effects": [{"type": "score", "operation": "add", "value": 100}]}]}, {"id": "mission_v2_07", "village": 2, "title": "เหงื่อออก ไม่ใช่น้ำตาลลด", "scenario": "ลุงชมเป็นเบาหวาน นั่งสานตะกร้าจนเหงื่อท่วมตัว แกดีใจว่า เหงื่อเยอะขนาดนี้ น้ำตาลในเลือดละลายออกหมดแล้ว วันนี้กินลอดช่องหวานได้สบาย อสม. ต้องรีบดึงสติตลุงด่วน", "challengeType": "multiple_choice", "instructions": "เลือก 1 เหงื่อออกน้ำลด เลือดยิ่งข้น กินหวานไปเพิ่ม เลือดจะไปอุดสมอง เลือก 2คิดเอาเองแบบนั้นไม่ได้นะ เลิกกินซะ", "choices": [{"id": 1, "label": "เหงื่อออกน้ำลด เลือดยิ่งข้น กินหวานไปเพิ่ม เลือดจะไปอุดสมอง", "effects": [{"type": "score", "operation": "add", "value": 200}]}, {"id": 2, "label": "คิดเอาเองแบบนั้นไม่ได้นะ เลิกกินซะ", "effects": [{"type": "score", "operation": "add", "value": 0}]}]}, {"id": "mission_v2_08", "village": 2, "title": "สู่ขวัญกิ๋นดี ลำดีไตบ่พัง", "scenario": "ป้าใจปากเบี้ยว แขนอ่อนแรง ลุงนึกว่า ลมจับ เลยชงยาหอมให้ดื่ม แถมเอาช้อนงัดปาก อสม. ต้องรีบบอกอย่างไร ก่อนจะสายเกินแก้", "challengeType": "multiple_choice", "instructions": "เลือก 1 ลุงทำอะไรเนี่ย เอาช้อนงัดปากเดี๋ยวฟันหักติดคอตายพอดี เลือก 2 ป้อนยา เดี๋ยว สำลักติดคอ รีบโทร 1669", "choices": [{"id": 1, "label": "ลุงทำอะไรเนี่ย เอาช้อนงัดปากเดี๋ยวฟันหักติดคอตายพอดี", "effects": [{"type": "score", "operation": "add", "value": 0}, {"type": "discardCard", "cardType": "food", "count": 1, "random": true}]}, {"id": 2, "label": "ป้อนยา เดี๋ยว สำลักติดคอ รีบโทร 1669", "effects": [{"type": "score", "operation": "add", "value": 500}]}]}, {"id": "mission_v3_01", "village": 3, "title": "เช็กก่อนแชร์ แน่ใจก่อนเชื่อ", "scenario": "ลุงมั่นได้รับข้อความในไลน์กลุ่มส่งต่อกันมาว่า \"กินน้ำต้มหนานเฉาเหว่ยเข้มข้นจะช่วยล้างไขมันในหลอดเลือดสมองได้ 100%\" ลุงมั่นถามว่าแกควรกินไหม อสม.ควรทำอย่างไรเป็นลำดับแรก", "challengeType": "multiple_choice", "instructions": "เลือก 1 ชื่นชมที่ลงเดินมาถามก่อน เลือก 2 บอกว่าไม่มีงานวิจัยบอกว่าหนานเฉาเหว่ยได้ผล เลือก 3 เชื่อซิ ออกกำลังกาย คุมอาหารดีกว่า", "choices": [{"id": 1, "label": "ชื่นชมที่ลงเดินมาถามก่อน", "effects": [{"type": "score", "operation": "add", "value": 300}]}, {"id": 2, "label": "บอกว่าไม่มีงานวิจัยบอกว่าหนานเฉาเหว่ยได้ผล", "effects": [{"type": "score", "operation": "add", "value": 200}]}, {"id": 3, "label": "เชื่อซิ ออกกำลังกาย คุมอาหารดีกว่า", "effects": [{"type": "score", "operation": "add", "value": 100}]}]}, {"id": "mission_v3_02", "village": 3, "title": "โพยลับ อุ้ยก๋ำศออู้จา", "scenario": "ตาดีเป็นคนขี้เกรงใจ เวลาไปโรงพยาบาลเจอหมอตรวจ แกจะไม่กล้าซักถามอะไรเลย หมอจ่ายยาอะไรก็รับกลับมาแต่ครั้งนี้แกบ่นว่าแกมีอาการชาที่มือและเท้า อสม.จะช่วยตาดีอย่างไร", "challengeType": "multiple_choice", "instructions": "เลือก ข้อ 1.แนะนำให้ตาดีบอกหมอ เลือก 2.ช่วยฝึกซ้อมตาดีเตรียมคำถาม ก่อนไปพบแพทย์", "choices": [{"id": 1, "label": "แนะนำให้ตาดีบอกหมอ", "effects": [{"type": "score", "operation": "add", "value": 50}]}, {"id": 2, "label": "ช่วยฝึกซ้อมตาดีเตรียมคำถาม ก่อนไปพบแพทย์", "effects": [{"type": "score", "operation": "add", "value": 500}]}]}, {"id": "mission_v3_03", "village": 3, "title": "เอ๊ะก่อนกิน", "scenario": "ยายมาลีปวดหัวตึบๆ ยามบ่าย หลงซื้อ ยาเทวดาแก้ปวดหายไว จากรถเร่มา แต่เริ่มเอ๊ะใจ เลยถือซองยามาถาม อสม. ก่อนกิน \n\nภารกิจ อสม.คุณต้องใช้วิธีการที่ถูกต้องในการสแกน \"ยาอันตราย\" เพื่อเซฟชีวิตยายมาลี", "challengeType": "multiple_choice", "instructions": "เลือก ข้อ 1. อสม.ถามยายว่า ได้ถามคนขายไหม ยานี้ชื่อไร สรรพคุณอย่างไร  2. อสม. ริบซองยาไว้ดู ตรวจเลข อย. ถ่ายรูปถามพยาบาล", "choices": [{"id": 1, "label": "อสม.ถามยายว่า ได้ถามคนขายไหม ยานี้ชื่อไร สรรพคุณอย่างไร", "effects": [{"type": "score", "operation": "subtract", "value": 100}]}, {"id": 2, "label": "อสม. ริบซองยาไว้ดู ตรวจเลข อย. ถ่ายรูปถามพยาบาล", "effects": [{"type": "score", "operation": "add", "value": 100}]}]}, {"id": "mission_v3_04", "village": 3, "title": "แครกเกอร์หวานซ่อนเค็ม อุ้ยเอ๊ะใจ๋ฟั่งถาม", "scenario": "แม่อุ้ยศรีชอบกิ๋นกาแฟคู่กับขนมเค้กสอดไส้ครีมตึงวัน แกตึ๊ดใจ๋จำตี่ อสม. เคยเตือนเรื่องโซเดียมแฝงได้ แกตึงถือซองขนมมาถาม อสม. หน้ามุ่ยว่า “ขนมตึงหวานตึงมันขนาดนี้ มันจะไปมีเกลือหื้อเส้นลวดสมองแตกได้จะไดหย๋า”  อสม. ต้องฟั่งอธิบายเรื่องผงฟูกับสารกันบูดด่วน", "challengeType": "multiple_choice", "instructions": "เลือก 1 ขนมบ่เค็ม บ่ได้แปลว่าบ่มีเกลือเน้อ เลือก 2 กินได้เจ้า กินพอหายยาก กินวันละนิด", "choices": [{"id": 1, "label": "ขนมบ่เค็ม บ่ได้แปลว่าบ่มีเกลือเน้อ", "effects": [{"type": "score", "operation": "add", "value": 200}]}, {"id": 2, "label": "กินได้เจ้า กินพอหายยาก กินวันละนิด", "effects": [{"type": "score", "operation": "add", "value": 0}]}]}, {"id": "mission_v3_05", "village": 3, "title": "คลินิกไขข้อข้องใจเรื่องยา", "scenario": "ผู้ป่วยความดันโลหิตสูงหลายคนในซอย บ่นเบื่อที่ต้องกินยาทุกวัน บางคนบอกจะหยุดยาเอง อสม. จึงตั้งวง เปิดใจ ตอบข้อสงสัยและย้ำเตือนภัยหากหยุดยาเอง", "challengeType": "multiple_choice", "instructions": "เลือก 1 กินยาไว้เป็นเกราะป้องกันสมองแตกเน้อ เลือก 2 บ่มีอาการ บ่ได้แปลว่าหายดี หยุดยาเอง หลอดเลือดแตกใครก็ช่วยไม่ทัน", "choices": [{"id": 1, "label": "กินยาไว้เป็นเกราะป้องกันสมองแตกเน้อ", "effects": [{"type": "score", "operation": "add", "value": 200}]}, {"id": 2, "label": "บ่มีอาการ บ่ได้แปลว่าหายดี หยุดยาเอง หลอดเลือดแตกใครก็ช่วยไม่ทัน", "effects": [{"type": "score", "operation": "subtract", "value": 100}, {"type": "discardCard", "cardType": "food", "count": 1, "random": true}]}]}, {"id": "mission_v3_06", "village": 3, "title": "3 คำถามชี้ขาดนาทีชีวิต", "scenario": "อสม. รับแจ้งว่า ป้าใจ ล้มฟุบอยู่ในครัว แกยังรู้สึกตัวดีแต่ดูมึนงง ญาติบอกว่าแค่เป็นลมแดดธรรมดา ดมยา นอนพักพอ อสม.จะทำอย่างไรต่อไป", "challengeType": "multiple_choice", "instructions": "มีตัวเลือก 2 ข้อ 1. บอกญาติให้ป้าใจพักผ่อนเยอะๆ 2. สอบถามอาการที่บ่งชี้ถึงอาการ stroke", "choices": [{"id": 1, "label": "บอกญาติให้ป้าใจพักผ่อนเยอะๆ", "effects": [{"type": "score", "operation": "subtract", "value": 100}]}, {"id": 2, "label": "สอบถามอาการที่บ่งชี้ถึงอาการ stroke", "effects": [{"type": "score", "operation": "add", "value": 100}]}]}, {"id": "mission_v3_07", "village": 3, "title": "นักสืบยาลูกกลอนปริศนา", "scenario": "ยายมา เป็นเบาหวานร่วมกับความดันสูง บอก อสม.ว่าช่วงนี้ชาปลายมือ อสม.ต้องถามอะไรต่อ", "challengeType": "multiple_choice", "instructions": "เลือก 1 มีอาการพูดไม่ชัด แขนขาอ่อนแรงด้วยหรือไม่ เลือก 2 วันนี้กินข้าวแล้วหรือยัง", "choices": [{"id": 1, "label": "มีอาการพูดไม่ชัด แขนขาอ่อนแรงด้วยหรือไม่", "effects": [{"type": "score", "operation": "add", "value": 200}]}, {"id": 2, "label": "วันนี้กินข้าวแล้วหรือยัง", "effects": [{"type": "score", "operation": "add", "value": 0}]}]}, {"id": "mission_v3_08", "village": 3, "title": "อย่าพลาดนัดสำคัญ", "scenario": "ป้าสายใจบอก กินยาตามหมอบอกทุกวัน แต่น้ำตาลยังสูงอยู่ อสม.ควรถามอะไรต่อดี", "challengeType": "multiple_choice", "instructions": "เลือก 1 ช่วงนี้กินผลไม้อะไรบ้าง เลือก 2 ป้ากินยาจริงป่ะ", "choices": [{"id": 1, "label": "ช่วงนี้กินผลไม้อะไรบ้าง", "effects": [{"type": "score", "operation": "add", "value": 200}]}, {"id": 2, "label": "ป้ากินยาจริงป่ะ", "effects": [{"type": "score", "operation": "subtract", "value": 100}]}]}, {"id": "mission_v4_01", "village": 4, "title": "เดิมพันหักดิบ พ่ออุ้ยอินท้าดวลบุหรี่", "scenario": "ลุงคำยังคงกินอาหารเค็มจัด สูบบุหรี่และไม่ออกกำลังกาย แม้จะเคยได้รับคำแนะนำมาแล้วหลายครั้ง อสม.จะทำอย่างไรลำดับแรก", "challengeType": "multiple_choice", "instructions": "เลือก 1 บ่น เลือก 2 เลิกยุ่งกับลุงคำ เลือก 3 หาสาเหตุปัญหา อุปสรรคและช่วยเหลือ", "choices": [{"id": 1, "label": "บ่น", "effects": [{"type": "score", "operation": "add", "value": 0}, {"type": "skipTurn", "value": 1}]}, {"id": 2, "label": "เลิกยุ่งกับลุงคำ", "effects": [{"type": "score", "operation": "subtract", "value": 200}]}, {"id": 3, "label": "หาสาเหตุปัญหา อุปสรรคและช่วยเหลือ", "effects": [{"type": "score", "operation": "add", "value": 300}]}]}, {"id": "mission_v4_02", "village": 4, "title": "หักดิบ... ลาขาดน้ำปลาพริก", "scenario": "อสม.ไปเจาะน้ำตาลปลายนิ้ว ได้ 400 ผู้ป่วยบอกว่าไม่เป็นไร เดินไหวอยู่ อสม.จะทำอย่างไรต่อ", "challengeType": "multiple_choice", "instructions": "เลือก 1 ให้กลับบ้าน หากมีอะไรให้ญาติมาตาม เลือก 2 บอกว่า พรุ่งนี้จะมาวัดน้ำตาลปลายนิ้วซ้ำ เลือก 3  ส่งต่อผู้ป่วยให้รพ.สต ทันที", "choices": [{"id": 1, "label": "ให้กลับบ้าน หากมีอะไรให้ญาติมาตาม", "effects": [{"type": "score", "operation": "subtract", "value": 100}]}, {"id": 2, "label": "บอกว่า พรุ่งนี้จะมาวัดน้ำตาลปลายนิ้วซ้ำ", "effects": [{"type": "score", "operation": "add", "value": 0}]}, {"id": 3, "label": "ส่งต่อผู้ป่วยให้รพ.สต ทันที", "effects": [{"type": "score", "operation": "add", "value": 300}]}]}, {"id": "mission_v4_03", "village": 4, "title": "บาสโลบขยับเส้นลบความเสี่ยง", "scenario": "วันนี้อสม.มีเวลาเยี่ยมได้ 1 ราย ผู้ป่วย 3 คนนี้จะเลือกเยี่ยมใครก่อน ก.คนที่น้ำตาลสูงต่อเนื่องแต่ยังมาตามนัด ข.คนไม่กินยา ขาดนัดและชาปลายหน้า", "challengeType": "multiple_choice", "instructions": "เลือก 1 เกรงใจอสม. เลือก 2 เปลี่ยนจากทำตามคำสั่งมาตามใจตัวเอง", "choices": [{"id": 1, "label": "เกรงใจอสม", "effects": [{"type": "score", "operation": "add", "value": 0}]}, {"id": 2, "label": "เปลี่ยนจากทำตามคำสั่งมาตามใจตัวเอง", "effects": [{"type": "score", "operation": "add", "value": 200}]}]}, {"id": "mission_v4_04", "village": 4, "title": "แข่งกับเวลาด้วยหลัก FAST", "scenario": "ป้าคำ พูดไม่ชัดประมาณ 5 นาทีแล้วอาการกลับมาเป็น้ปกติ ป้าคำบอกว่า ตอนนี้หายแล้ว ไม่ต้องไปโรงบาลหรอก อสม.จะตัดสินใจทำอย่างไร", "challengeType": "multiple_choice", "instructions": "เลือก 1 ปล่อยกลับบ้าน เลือก 2 ให้ไปพบหมอทันที", "choices": [{"id": 1, "label": "ปล่อยกลับบ้าน", "effects": [{"type": "score", "operation": "subtract", "value": 500}]}, {"id": 2, "label": "ให้ไปพบหมอทันที", "effects": [{"type": "score", "operation": "add", "value": 500}]}]}, {"id": "mission_v4_05", "village": 4, "title": "ฝ่าวิกฤต 4.5 ชั่วโมงกู้ชีวิต", "scenario": "ผู้ป่วย Stroke ในพื้นที่ห่างไกลต้องรีบส่ง รพ. ใหญ่ให้ทันเวลา 4.5 ชั่วโมง ถ้ารถติดหนัก เวลาใกล้จะหมด คุณจะเลือกการ์ดใบไหนที่จะพาผู้ป่วยไปรพ.ทัน", "challengeType": "multiple_choice", "instructions": "การ์ด 1 นั่งรถกู้ชีพ ไปตามทางปกติ การ์ด 2 ขอเปิดเส้นทางพิเศษกับท้องถิ่นทันที การ์ด 3 แวะส่งผู้ป่วยให้รพ.สต.", "choices": [{"id": 1, "label": "นั่งรถกู้ชีพ ไปตามทางปกติ", "effects": [{"type": "score", "operation": "add", "value": 0}]}, {"id": 2, "label": "ขอเปิดเส้นทางพิเศษกับท้องถิ่นทันที", "effects": [{"type": "score", "operation": "add", "value": 300}]}, {"id": 3, "label": "แวะส่งผู้ป่วยให้รพ.สต", "effects": [{"type": "score", "operation": "subtract", "value": 100}]}]}, {"id": "mission_v4_06", "village": 4, "title": "ทางแยกอารมณ์", "scenario": "พ่อหลวงบ้านโกรธจัดที่ลูกบ้านไม่มาประชุม หน้าดำคร่ำเครียด ความดันน่าจะพุ่ง อสม.เห็นถ้าไม่ดี จึงชวนพ่อหลวงบ้านให้ทำสิ่งนี้ทันที", "challengeType": "multiple_choice", "instructions": "เลือก 1 ข่มอารมณ์ ประชุมต่อ เลือก 2 หยุดพูด นับ 1-10", "choices": [{"id": 1, "label": "ข่มอารมณ์ ประชุมต่อ", "effects": [{"type": "score", "operation": "add", "value": 0}]}, {"id": 2, "label": "หยุดพูด นับ 1-10", "effects": [{"type": "score", "operation": "add", "value": 200}]}]}, {"id": "mission_v4_07", "village": 4, "title": "ชั่งใจ", "scenario": "ป้าเขียวชอบกินส้มตำปูปลาร้าจัด วันนี้แกกำลังลังเลว่าจะสั่งเมนูเดิม หรือเปลี่ยนเป็น ส้มตำไทยไม่ใส่ปูไม่ใส่ผงชูรส อสม.จะเลือกข้อมูลใดให้ป้าเขียวตัดสินใจ", "challengeType": "multiple_choice", "instructions": "เลือก 1 บอกให้เลิกกิน กินต้มจืดแทน เลือก 2 ปลาร้า โซเดียมเกิน ตำไทยไม่ใส่ผงชูรส ลดความดันครึ่งต่อครึ่ง", "choices": [{"id": 1, "label": "บอกให้เลิกกิน กินต้มจืดแทน", "effects": [{"type": "score", "operation": "add", "value": 0}]}, {"id": 2, "label": "ปลาร้า โซเดียมเกิน ตำไทยไม่ใส่ผงชูรส ลดความดันครึ่งต่อครึ่ง", "effects": [{"type": "score", "operation": "add", "value": 100}]}]}, {"id": "mission_v4_08", "village": 4, "title": "ทำไรก่อนดี", "scenario": "ป้าใจมีอาการหน้าเบี้ยว พูดไม่ชัด แขนขาอ่อนแรง แต่ญาติบอกว่า ไม่มีรถ ไม่มีเงินพาไป อสม.จะตัดสินใจอย่างไร", "challengeType": "multiple_choice", "instructions": "เลือก 1 รอให้ญาติหารถเอง เลือก 2 แนะนำให้พักดูอาการ เลือก 3  โทร 1669 ทันที", "choices": [{"id": 1, "label": "รอให้ญาติหารถเอง", "effects": [{"type": "score", "operation": "subtract", "value": 300}]}, {"id": 2, "label": "แนะนำให้พักดูอาการ", "effects": [{"type": "score", "operation": "subtract", "value": 200}]}, {"id": 3, "label": "โทร 1669 ทันที", "effects": [{"type": "score", "operation": "add", "value": 300}]}]}, {"id": "mission_v5_01", "village": 5, "title": "ทำทันที", "scenario": "ทำงานเครียดมาก เพื่อนชวนออกไปสูบบุหรี่ คลายเครียด อสม.ต้องเลือกทักษะที่ทำทันที", "challengeType": "multiple_choice", "instructions": "เลือก 1 พาร่วมโครงการเลิกบุหรี่ในชุมชน เลือก 2 ให้วางบุหรี่ ดื่มน้ำเย็น หายใจเข้าลึก 10 นาที", "choices": [{"id": 1, "label": "พาร่วมโครงการเลิกบุหรี่ในชุมชน", "effects": [{"type": "score", "operation": "subtract", "value": 100}]}, {"id": 2, "label": "ให้วางบุหรี่ ดื่มน้ำเย็น หายใจเข้าลึก 10 นาที", "effects": [{"type": "score", "operation": "add", "value": 300}]}]}, {"id": "mission_v5_02", "village": 5, "title": "ลุกวูบ เสี่ยงล้ม", "scenario": "ขณะเยี่ยมบ้าน ผู้ป่วยความดันโลหิตสูงลุกยืนกระทันหัน เพื่อจะไปหยิบน้ำให้อสม. เกิดอาการเซ หน้ามืด เดินชนเก้าอี้ อสม.จะแนะนำอย่างไรลำดับแรก", "challengeType": "multiple_choice", "instructions": "เลือก 1  สอนวิธีพักก่อนยืน เลือก 2 ประคองนั่งนิ่ง ดื่มน้ำ   เลือก 3 เคลียร์พื้นที่ ย้ายสิ่งกีดขวางทันที", "choices": [{"id": 1, "label": "สอนวิธีพักก่อนยืน", "effects": [{"type": "score", "operation": "add", "value": 100}]}, {"id": 2, "label": "ประคองนั่งนิ่ง ดื่มน้ำ", "effects": [{"type": "score", "operation": "add", "value": 200}]}, {"id": 3, "label": "เคลียร์พื้นที่ ย้ายสิ่งกีดขวางทันที", "effects": [{"type": "score", "operation": "add", "value": 100}]}]}, {"id": "mission_v5_03", "village": 5, "title": "กล่องยา แยกมื้อ", "scenario": "ตาสา เป็นเบาหวานและความดันสูง มักลืมกิน  บางวันกินซ้ำ ความดันพุ่ง 280 mmHg อสม.เยี่ยมบ้านพบ ยารวมอยู่ในถุงเดียวกันมั่วไปหมด อสม.จะทำอย่างไรให้ตาสาช่วยตัวเองระยะยาวได้", "challengeType": "multiple_choice", "instructions": "เลือก 1 จัดยาแยกมื้อ เขียนป้ายโตๆ เลือก 2 ฝึกตาให้หยิบยาด้วยตนเอง", "choices": [{"id": 1, "label": "จัดยาแยกมื้อ เขียนป้ายโตๆ", "effects": [{"type": "score", "operation": "add", "value": 100}, {"type": "discardCard", "cardType": "support", "count": 1, "random": true}]}, {"id": 2, "label": "ฝึกตาให้หยิบยาด้วยตนเอง", "effects": [{"type": "score", "operation": "add", "value": 300}]}]}, {"id": "mission_v5_04", "village": 5, "title": "ธาราบำบัด", "scenario": "ผู้สูงอายุกลุ่มโรคเรื้อรังและน้ำหนักเกิน ปวดข้อเข่ารุนแรงจนเดินไม่ไหวแต่อยากออกกำลังกาย \nอสม. เนรมิต \"ลำธารท้ายหมู่บ้าน\" ให้เป็นร่องน้ำตื้นใส  เพื่อให้ผู้สูงอายุออกกำลังกายได้ปลอดภัย อสม.จะพาผู้สูงอายุลงน้ำอย่างไร", "challengeType": "multiple_choice", "instructions": "เลือก 1 ลงลุยน้ำโดยใช้ราวจับไม้ไผ่ เพื่อลดแรงกระแทกเข่า เลือก 2 ยืนจับราว มุมน้ำตกเซาะเพื่อกระตุ้นการไหลเวียนเลือด", "choices": [{"id": 1, "label": "ลงลุยน้ำโดยใช้ราวจับไม้ไผ่ เพื่อลดแรงกระแทกเข่า", "effects": [{"type": "score", "operation": "add", "value": 400}]}, {"id": 2, "label": "ยืนจับราว มุมน้ำตกเซาะเพื่อกระตุ้นการไหลเวียนเลือด", "effects": [{"type": "score", "operation": "subtract", "value": 200}]}]}, {"id": "mission_v5_05", "village": 5, "title": "กู้วิกฤติทางใจ", "scenario": "ตู่ ผู้ป่วยเบาหวานรายใหม่ มีอาการซึมเศร้า เครียดจนนอนไม่หลับเป็นอาทิตย์ ข้าวก็กินได้น้อยลง แต่น้ำตาลในเลือดกลับพุ่งสูงทะลุ 250 mg/dL อสม. ต้องรีบเข้ามาจัดการความเครียดของตู่ด่วน", "challengeType": "multiple_choice", "instructions": "เลือก 1 เตือนให้อึด ฮึด สู้ เลือก 2 รับฟังความกังวล ชวนวางแผนเมนูอาหาร", "choices": [{"id": 1, "label": "เตือนให้อึด ฮึด สู้", "effects": [{"type": "score", "operation": "subtract", "value": 200}]}, {"id": 2, "label": "รับฟังความกังวล ชวนวางแผนเมนูอาหาร", "effects": [{"type": "score", "operation": "add", "value": 0}, {"type": "drawCard", "cardType": "support", "count": 1, "random": true}]}]}, {"id": "mission_v5_06", "village": 5, "title": "คู่หู เซฟชีวิต", "scenario": "ลุงทอง กับ น้าสม สองขาเก๋าความดันสูง ชอบชวนกันไปทำสวน อสม. เลยจับคู่เป็น คู่หู  สอนวิธีเช็กหน้า พูด แขน ทุกครั้งที่เจอ  \nวันหนึ่งในสวน ลุงทองหันไปเห็นน้าสม  ปากเบี้ยว พูดจาฟังไม่รู้เรื่อง  ...ลุงทองต้องตัดสินใจด่วน", "challengeType": "multiple_choice", "instructions": "เลือก 1 ลุงทอง กด 1669 ทันที เลือก 2 ลุงทองให้น้าสม นอนพัก ดื่มน้ำเย็น 30 นาทีค่อยพาไปโรงพยาบาล", "choices": [{"id": 1, "label": "ลุงทอง กด 1669 ทันที", "effects": [{"type": "score", "operation": "add", "value": 100}]}, {"id": 2, "label": "ลุงทองให้น้าสม นอนพัก ดื่มน้ำเย็น 30 นาทีค่อยพาไปโรงพยาบาล", "effects": [{"type": "score", "operation": "add", "value": 0}]}]}, {"id": "mission_v5_07", "village": 5, "title": "ไม่ถึงคราว…ไม่รู้หรอก", "scenario": "หนุ่มวัย 35 น้ำหนักพุ่ง ความดันสูงปรี๊ด!  อสม. ไปเตือนให้เค้าออกกำลังกาย กลับโดนสวนตึ ภารกิจ อสม.  คุณต้องปรับทัศนคติหนุ่มคนนี้ด่วน", "challengeType": "multiple_choice", "instructions": "เลือก 1 ถ้าเหนื่อย คุมอาหารเอาแล้วกัน เลือก 2 ยืนแค่เมื่อย หัวใจไม่แข็งแรง เดินวันละ 10 นาทีช่วยได้", "choices": [{"id": 1, "label": "ถ้าเหนื่อย คุมอาหารเอาแล้วกัน", "effects": [{"type": "score", "operation": "add", "value": 0}]}, {"id": 2, "label": "ยืนแค่เมื่อย หัวใจไม่แข็งแรง เดินวันละ 10 นาทีช่วยได้", "effects": [{"type": "score", "operation": "add", "value": 300}]}]}, {"id": "mission_v5_08", "village": 5, "title": "พลังครอบครัว", "scenario": "ยายวัย 70  บ่น ยาความดันเรอะ...ลืมมั่งกินมั่ง กับข้าวที่ลูกซื้อทิ้งไว้ก็มีแต่แกงกะทิ   อสม. เห็นสัญญาณอันตรายว่า ยายเสี่ยงสโตรกคาบ้านแน่ ภารกิจ อสม. วางแผนให้ครอบครัวร่วมดูแล", "challengeType": "multiple_choice", "instructions": "เลือก 1 รวมญาติยาย วางแผนอาหารและยา เลือก 2 บอกลูกหลาน ยายกินไม่ได้ ให้พายายไปฉีดยา", "choices": [{"id": 1, "label": "รวมญาติยาย วางแผนอาหารและยา", "effects": [{"type": "score", "operation": "add", "value": 200}]}, {"id": 2, "label": "บอกลูกหลาน ยายกินไม่ได้ ให้พายายไปฉีดยา", "effects": [{"type": "score", "operation": "add", "value": 0}]}]}];
+// Effects reuse the mission-card vocabulary (score / skipTurn / discardCard /
+// drawCard) plus two obstacle-specific types: knowledgeCheck (checks the
+// player's own hand.knowledge — consumes 1 card if present when
+// consume:true, otherwise applies penaltyIfMissing points only when the
+// player has none) and swapFoodZone (force-swaps every card the player
+// holds in fromZone for a random card from toZones). scope:"all" applies
+// the effects to every player instead of just whoever drew the card.
+const OBSTACLES = [{"id": "obstacle_01", "name": "ลุงคำยืนกราน... บ่ลำบ่กิน!", "scenario": "คุณแนะนำเมนูต้มจืดเพื่อสุขภาพให้ลุงคำ แต่ลุงคำชิมแล้วส่ายหน้า บอกว่า 'มันจ๋างขนาด!' (มันจืดไป!) แล้วเดินไปหยิบขวดน้ำปลามาเติม", "scope": "self", "effects": [{"type": "knowledgeCheck", "consume": true, "penaltyIfMissing": 20}]}, {"id": "obstacle_02", "name": "ไปเยือนบ้านอื่น", "scenario": "หมู่บ้านจัดงานบุญใหญ่! อาหารในงานมีแต่ของอร่อยๆ อย่างแกงฮังเล, ลาบคั่ว, ไส้อั่ว... คุณในฐานะ อสม. ก็ถูกเชิญให้ร่วมวงด้วย", "scope": "all", "effects": [{"type": "drawCard", "cardType": "food", "count": 1}]}, {"id": "obstacle_03", "name": "ไม่เค็ม ไม่มีแรง", "scenario": "ชาวบ้านที่ไปทำนาทำสวนพากันพูดว่า “ถ้าไม่กินเค็ม จะไปมีแรงทำงานได้ยังไง” ความเชื่อดั้งเดิมนี้ทำให้คำแนะนำเรื่องลดเค็มของคุณกลายเป็นเรื่องตลกในสายตาพวกเขา", "scope": "self", "effects": [{"type": "knowledgeCheck", "consume": false, "penaltyIfMissing": 20}]}, {"id": "obstacle_04", "name": "ตำราเก่าของอุ้ย", "scenario": "ผู้สูงอายุในหมู่บ้านต่างยืนยันเป็นเสียงเดียวกันว่า คนรุ่นก่อนก็กินเค็มกินหมักดองกันมาจนแก่เฒ่า ไม่เห็นมีใครเป็นอะไร ความรู้เรื่องโซเดียมของ อสม. จึงถูกมองว่าเป็นเรื่องตื่นตูม", "scope": "self", "effects": [{"type": "skipTurn", "value": 1}]}, {"id": "obstacle_05", "name": "ของมันต้องมี!", "scenario": "เย็นนี้คุณเลิกงานช้า ไม่มีเวลาปรุงอาหารเอง จึงรีบไปกาดเพื่อหาซื้อแกงถุงสำเร็จรูป แต่แม่ค้าบอกว่า 'วันนี้ต้มจืด แกงเลียง ผักลวก หมดเกลี้ยงเลยจ้ะ เหลือแต่แกงฮังเลเข้มข้น น้ำพริกตาแดง แล้วก็จิ๊นส้มหมก'", "scope": "self", "effects": [{"type": "swapFoodZone", "fromZone": "green", "toZones": ["yellow", "red"]}]}, {"id": "obstacle_06", "name": "\"ลาบงัวดิบซะบ๊ะ\" (ผู้นำชุมชนจัดเต็ม)", "scenario": "ป้อหลวง (ผู้ใหญ่บ้าน) เรียกประชุมหมู่บ้าน แต่พอเลิกประชุมกลับเซอร์ไพรส์ด้วยการเลี้ยง 'ลาบดิบใส่เพี้ย' และ 'ส้มไข่ปลา' รสจัดจ้าน เค็มเย้ายวนใจ ชาวบ้านพากันล้อมวงกินอย่างเอร็ดอร่อย", "scope": "all", "effects": [{"type": "knowledgeCheck", "consume": true, "penaltyIfMissing": 0}]}, {"id": "obstacle_07", "name": "ผงนัวก้นครก... บ่ใส่ก็บ่ลำ", "scenario": "คุณแอบไปดูแม่ค้าส้มตำท้ายซอย พบว่าแกเทผงชูรสและน้ำปลาร้าลงไปแบบไม่ยั้งมือ พอคุณทัก แม่ค้าก็สวนกลับมาว่า 'โอ๊ย... ถ้าไม่ใส่หนักๆ ลูกค้าก็ไม่ซื้อน่ะสิ'", "scope": "self", "effects": [{"type": "knowledgeCheck", "consume": true, "penaltyIfMissing": 50}]}, {"id": "obstacle_08", "name": "ร้านดังคนรุม", "scenario": "คุณเดินตรวจตลาดเจอร้านน้ำพริกหนุ่มเจ้าดังที่มีชาวบ้านยืนต่อคิวมุงซื้อกันจนแน่น เพราะเชื่อกันว่า 'ร้านไหนคนรุมแปลว่าอร่อยชัวร์' แต่ในฐานะ อสม. คุณรู้ดีว่าร้านนี้ประโคมทั้งน้ำปลาและผงชูรสจนโซเดียมพุ่งทะลุเพดาน", "scope": "self", "effects": [{"type": "drawCard", "cardType": "food", "count": 1, "zone": "red"}]}, {"id": "obstacle_09", "name": "อุ่นซ้ำเพราะเสียดาย", "scenario": "หลังงานบุญใหญ่ ชาวบ้านเสียดายกับข้าวที่เหลือ จึงนำแกงฮังเลและหมูทอดมารวมกันเคี่ยวเป็นแกงโฮะหม้อใหญ่ ยิ่งอุ่นซ้ำหลายวันน้ำยิ่งงวด รสชาติยิ่งเค็มจัด แต่ชาวบ้านก็ยังล้อมวงกินกันเพราะเสียดายของ", "scope": "self", "effects": [{"type": "knowledgeCheck", "consume": false, "penaltyIfMissing": 20}]}, {"id": "obstacle_10", "name": "รถพุ่มพวง... บุกถึงหน้าบ้าน", "scenario": "รถกับข้าว (รถพุ่มพวง) เปิดลำโพงเสียงดังเข้ามาจอดกลางหมู่บ้าน บนรถเต็มไปด้วยบะหมี่กึ่งสำเร็จรูป ปลากระป๋อง และขนมขบเคี้ยวโซเดียมสูง โดนใจเด็กๆ และผู้สูงอายุเพราะไม่ต้องเดินทางไปกาด", "scope": "self", "effects": [{"type": "knowledgeCheck", "consume": false, "penaltyIfMissing": 20}]}, {"id": "obstacle_11", "name": "รักหลานจัดเต็ม", "scenario": "ยายรักและเป็นห่วงหลานมาก กลัวหลานจะกินข้าวได้น้อย จึงทำขนมจีนน้ำเงี้ยวหม้อใหญ่ ปรุงรสเข้มข้นใส่ทั้งผงปรุงรสและน้ำปลาแบบจัดหนัก แถมยังให้หลานกินคู่กับแคบหมูติดเค็มทุกวันเพราะเห็นว่าหลานชอบ", "scope": "self", "effects": [{"type": "knowledgeCheck", "consume": false, "penaltyIfMissing": 20}]}, {"id": "obstacle_12", "name": "ข้าวหนุกงาหน้าหนาว", "scenario": "ลมหนาวมาเยือน ชาวบ้านพากันล้อมวงผิงไฟและทำ 'ข้าวหนุกงา' ทานกันอย่างเพลิดเพลิน ด้วยความอยากให้รสชาติเข้มข้น จึงกระหน่ำใส่เกลือป่นลงไปโขลกกับงาขี้ม้อนจนเค็มมัน โดยลืมไปว่ากำลังเติมโซเดียมเข้าสู่ร่างกายทีละคำ", "scope": "self", "effects": [{"type": "skipTurn", "value": 1}]}, {"id": "obstacle_13", "name": "อสม. ฝึกหัด...", "scenario": "มี อสม. มาใหม่ เดินไปบอกชาวบ้านว่า 'เกลือชมพูเกลือดำกินเท่าไหร่ก็ไม่เป็นโรคไต' ทำให้ชาวบ้านเกิดความเข้าใจผิดและกลับไปกระหน่ำกินเค็ม", "scope": "all", "effects": [{"type": "knowledgeCheck", "consume": true, "penaltyIfMissing": 20}]}, {"id": "obstacle_14", "name": "ลองลิ้ม... ชิมเกลือไอโอดีนปลอม", "scenario": "มีพ่อค้าเร่เอาเกลือเม็ดไม่ได้มาตรฐานมาหลอกขายในราคาถูก ชาวบ้านพากันซื้อตุนไว้ดองผักดองปลา โดยไม่รู้ว่าปริมาณโซเดียมสูงปรี๊ดและไม่มีไอโอดีน", "scope": "self", "effects": [{"type": "discardCard", "cardType": "food", "count": 1, "random": true}]}, {"id": "obstacle_15", "name": "ดาราพากิน", "scenario": "ช่วงละครเย็น มีโฆษณาน้ำปลาร้าสำเร็จรูปยี่ห้อดัง ดารานำมาตำส้มตำกินโชว์อย่างน่าอร่อย ชาวบ้านดูแล้วน้ำลายสอ พรุ่งนี้เตรียมไปซื้อตาม", "scope": "self", "effects": [{"type": "knowledgeCheck", "consume": false, "penaltyIfMissing": 20}]}, {"id": "obstacle_16", "name": "กับดักแก้ปวด", "scenario": "ชาวบ้านไปทำนาทำสวนกลับมาแล้วปวดเมื่อย ไม่ยอมไป รพ.สต. แต่เดินไปซื้อ 'ยาชุดแก้ปวด' หรือยาลูกกลอนจากร้านชำ ซึ่งผสมสเตียรอยด์และโซเดียมสูง", "scope": "self", "effects": [{"type": "skipTurn", "value": 1}]}, {"id": "obstacle_17", "name": "กินตามรีวิว", "scenario": "มีคลิปไวรัลในโซเชียลมีเดียรีวิวเมนู 'ทะเลดองซีอิ๊วเค็มๆ นัวๆ' ชวนน้ำลายสอ ชาวบ้านและวัยรุ่นในพื้นที่เห็นแล้วพากันสั่งซื้อออนไลน์และทำกินตามกระแสอย่างคึกคัก", "scope": "self", "effects": [{"type": "knowledgeCheck", "consume": true, "penaltyIfMissing": 50}]}, {"id": "obstacle_18", "name": "ปากท้องต้องมาก่อน", "scenario": "เกิดภาวะเงินเฟ้อ ข้าวของราคาแพงขึ้นทุกอย่าง โดยเฉพาะผักสด เนื้อสัตว์ และวัตถุดิบอาหารสุขภาพที่มีราคาสูงลิ่ว ชาวบ้านจึงหันไปซื้อบะหมี่กึ่งสำเร็จรูป ปลากระป๋อง และอาหารแห้งราคาประหยัดมาตุนไว้ประทังชีวิตแทน ซึ่งอาหารเหล่านี้ล้วนอัดแน่นไปด้วยโซเดียม", "scope": "self", "effects": [{"type": "knowledgeCheck", "consume": false, "penaltyIfMissing": 20}]}, {"id": "obstacle_19", "name": "งานบุญครั้งใหญ่", "scenario": "วัดประจำหมู่บ้านจัดงานฉลองครั้งใหญ่ประจำปี อสม. ทุกคนต้องเข้าวัดไปช่วยงานโรงครัวและร่วมขบวนแห่กันหมด ทำให้สัปดาห์นี้ไม่มีเวลาลงพื้นที่ไปตรวจเยี่ยมบ้านเรือนของชาวบ้านเลย", "scope": "all", "effects": [{"type": "knowledgeCheck", "consume": false, "penaltyIfMissing": 20}]}, {"id": "obstacle_20", "name": "พายุฤดูร้อน... หลังคาปลิว", "scenario": "เกิดพายุฤดูร้อนพัดกระหน่ำหมู่บ้าน หลังคาบ้านเรือนและศาลากลางบ้านเสียหาย ชาวบ้านและ อสม. ต้องเปลี่ยนโหมดไปแจกถุงยังชีพ ซึ่งเต็มไปด้วยอาหารแห้ง อาหารกระป๋อง และบะหมี่สำเร็จรูป", "scope": "self", "effects": [{"type": "skipTurn", "value": 1}]}];
+const KNOWLEDGE = [{"id": "knowledge_01", "name": "ไม่ใช่เรื่องไกลตัว", "knowledgeFact": "โรคหลอดเลือดสมองเป็นสาเหตุการเสียชีวิตอันดับ 2 ของคนไทย รองจากโรคมะเร็ง โดยในปี 2567 มีอัตราเสียชีวิตสูงถึง 20.77%", "flavorText": "อันดับสองที่น่ากลัว อย่ารอให้ตัวเรากลายเป็นสถิติ", "image": {"src": "assets/knowledge/knowledge_01_maichairueangklaitua.jpg", "alt": "ไม่ใช่เรื่องไกลตัว"}}, {"id": "knowledge_02", "name": "วิกฤตสไลด์เดอร์ (Stroke ในคนอายุน้อย)", "knowledgeFact": "โรคหลอดเลือดสมองไม่ใช่เรื่องของผู้สูงอายุอีกต่อไป ปัจจุบันพบคนที่อายุต่ำกว่า 50 ปีป่วยถึง 15%", "flavorText": "เลขอายุแค่ตัวเลข แต่หลอดเลือดเสื่อมลงทุกวัน", "image": {"src": "assets/knowledge/knowledge_02_wikritsidelor.jpg", "alt": "วิกฤตสไลด์เดอร์ (Stroke ในคนอายุน้อย)"}}, {"id": "knowledge_03", "name": "ป่วย 1 คนจนทั้งชาติ", "knowledgeFact": "โรคหลอดเลือดสมองหรือสโตรก ทำให้แต่ละคนเสียเงิน 1 แสนบาทต่อปี ประเทศสูญเสียทางเศรษฐกิจ 1.6 ล้านล้านบาทต่อปี", "flavorText": "ป่วยหนึ่งคน จนทั้งบ้าน สะเทือนถึงระดับชาติ", "image": {"src": "assets/knowledge/knowledge_03_puay1khon.jpg", "alt": "ป่วย 1 คนจนทั้งชาติ"}}, {"id": "knowledge_04", "name": "กลไกโซเดียมกับหลอดเลือด", "knowledgeFact": "ใน 1 วัน ร่างกายไม่ควรได้โซเดียมเกิน 2,000 มิลลิกรัม (เกลือ 1 ช้อนชา) เพราะถ้ากินเกิน โซเดียมจะดึงน้ำเข้าเส้นเลือดจนเลือดตึงเปรี๊ยะเหมือนลูกโป่งที่ถูกเป่าลมจนแน่นเกินไป ทำให้แรงดันสูง เส้นเลือดสมองทำงานหนัก และเสี่ยงที่จะอุดตันหรือแตกโพล๊ะ", "flavorText": "โซเดียมเกินขนาด ดันเลือดพุ่งปรี๊ด เส้นเลือดรับไม่ไหว", "image": {"src": "assets/knowledge/knowledge_04_klaiksodiumluesai.jpg", "alt": "กลไกโซเดียมกับหลอดเลือด"}}, {"id": "knowledge_05", "name": "ชุดความรู้: สู้ผงนัว", "knowledgeFact": "น้ำปลา ซอส ผงชูรส มีโซเดียมสูงมาก ลดการราดผงนัวในน้ำซุปจะช่วยลดโอกาสเส้นเลือดสมองแตกเฉียบพลัน", "flavorText": "ลดสาดผงนัววันนี้ เสี่ยงสมองพังวันหน้า", "image": {"src": "assets/knowledge/knowledge_05_sunphongnua.jpg", "alt": "ชุดความรู้: สู้ผงนัว"}}, {"id": "knowledge_06", "name": "ชุดความรู้: โซเดียมแฝง", "knowledgeFact": "ขนมเค้ก เบเกอรี่ แครกเกอร์ และอาหารสำเร็จรูป มีโซเดียมแฝงปริมาณสูงจากผงฟูและสารกันบูด แม้รสชาติจะไม่เค็มก็ตาม", "flavorText": "รสไม่เค็มใช่ว่าปลอดภัย", "image": {"src": "assets/knowledge/knowledge_06_sodiumfaeng.jpg", "alt": "ชุดความรู้: โซเดียมแฝง"}}, {"id": "knowledge_07", "name": "ชุดความรู้: อันตรายจากยาชุด", "knowledgeFact": "ยาชุด ยาเร่ หรือยาเทวดา มักผสมสารสเตียรอยด์ที่ทำให้ความดันโลหิตพุ่งสูงวิกฤต รวมถึงยาคุมกำเนิดที่มีเอสโตรเจนสูงที่เพิ่มความเสี่ยงสโตรกถึง 2.75 เท่า", "flavorText": "ยาชุดหายไว แต่อันตรายถึงตายด้วยสโตรก", "image": {"src": "assets/knowledge/knowledge_07_antraiyachud.jpg", "alt": "ชุดความรู้: อันตรายจากยาชุด"}}, {"id": "knowledge_08", "name": "ทักษะ: คาถา FAST", "knowledgeFact": "นอกจากอาการ ปากเบี้ยว แขนขาอ่อนแรง พูดไม่ชัด (F.A.S.T) อาการฉับพลันอื่นๆ ได้แก่ เสียสมดุลการเดิน, ปัญหาการมองเห็น, สับสนฉับพลัน, และปวดศีรษะรุนแรงทันที", "flavorText": "ประเมินเร็ว รู้ไว ส่งต่อทันท่วงทีภายในนาทีทอง", "image": {"src": "assets/knowledge/knowledge_08_khathafast.jpg", "alt": "ทักษะ: คาถา FAST"}}, {"id": "knowledge_09", "name": "คัดกรองข่าว", "knowledgeFact": "การตรวจสอบข้อมูลในโซเชียล เช่น ข่าวลือเรื่องการดื่มน้ำสมุนไพรเข้มข้นเพื่อล้างไขมันในหลอดเลือด หากเชื่อโดยไม่เช็กอาจส่งผลให้ไตวายเฉียบพลัน", "flavorText": "เช็กให้ชัวร์ก่อนแชร์ ป้องกันกระแสความเข้าใจผิด", "image": {"src": "assets/knowledge/knowledge_09_khadkrongkhao.jpg", "alt": "คัดกรองข่าว"}}, {"id": "knowledge_10", "name": "อ่านฉลากก่อนซื้อ", "knowledgeFact": "การอ่านข้อมูลโภชนาการข้างซองผลิตภัณฑ์เพื่อดูปริมาณโซเดียมแฝง ช่วยให้ชาวบ้านตัดสินใจเลือกซื้ออาหารได้อย่างถูกต้อง", "flavorText": "อ่านฉลากสักนิด ช่วยชีวิตไตและหลอดเลือด", "image": {"src": "assets/knowledge/knowledge_10_aanchalak.jpg", "alt": "อ่านฉลากก่อนซื้อ"}}, {"id": "knowledge_11", "name": "ชวนหักดิบ", "knowledgeFact": "การใช้จิตวิทยา สื่อรูปภาพ กรณีผู้ป่วยในชุมชน เพื่อเปรียบเปรยให้เห็นโทษของการติดเค็ม เพื่อกระตุ้นให้ชาวบ้านตื่นตัวและตัดสินใจหักดิบ", "flavorText": "คำพูดที่จับใจ จุดประกายไฟแห่งการเปลี่ยนแปลง", "image": {"src": "assets/knowledge/knowledge_11_chuanhakdib.jpg", "alt": "ชวนหักดิบ"}}, {"id": "knowledge_12", "name": "นาทีทอง", "knowledgeFact": "ต้องนำผู้ป่วยส่งโรงพยาบาลเพื่อรับยาละลายลิ่มเลือด ให้ทันภายใน 4.5 ชั่วโมง เพื่อลดความพิการ", "flavorText": "สี่ชั่วโมงครึ่งต่อชีวิต เร็วสักนิดสมองรอดพ้น", "image": {"src": "assets/knowledge/knowledge_12_nathithong.jpg", "alt": "นาทีทอง"}}, {"id": "knowledge_13", "name": "ชูรสชาติสมุนไพร", "knowledgeFact": "ทักษะการปรับเปลี่ยนเมนูอาหารดั้งเดิม โดยลดเกลือ/ผงปรุงรส และหันมาใช้สมุนไพรพื้นบ้าน เช่น ข่า ตะไคร้ ใบมะกรูด มะนาว เพื่อชูรสชาติแทน", "flavorText": "ลดเค็มแต่คงความอร่อย ด้วยพลังสมุนไพรชุมชน", "image": {"src": "assets/knowledge/knowledge_13_churotsamunphrai.jpg", "alt": "ชูรสชาติสมุนไพร"}}, {"id": "knowledge_14", "name": "ตีบกับแตก ต่างกัน", "knowledgeFact": "สโตรกแบ่งเป็น 2 ประเภท: หลอดเลือดสมองตีบและหลอดเลือดสมองแตก มีวิธีการรักษาที่ต่างกันโดยสิ้นเชิง", "flavorText": "รู้ตีบ รู้แตก แยกโรคถูก ทางรอดเพิ่มพูน", "image": {"src": "assets/knowledge/knowledge_14_tiebkaetaek.jpg", "alt": "ตีบกับแตก ต่างกัน"}}, {"id": "knowledge_15", "name": "อย่า หยุดยาเอง", "knowledgeFact": "การรับฟัง ไต่ถาม และชี้แจงความสำคัญของการกินยาควบคุมความดันโลหิตอย่างมีวินัย เพื่อไม่ให้ผู้ป่วยแอบหยุดยาเองจนเกิดภาวะเส้นเลือดสมองแตก", "flavorText": "ไขข้อสงสัย เติมเต็มความมั่นใจในการรักษา", "image": {"src": "assets/knowledge/knowledge_15_yayudyaeng.jpg", "alt": "อย่า หยุดยาเอง"}}, {"id": "knowledge_16", "name": "พกความกลัวไปหาหมอ", "knowledgeFact": "เครื่องมือจดบันทึกอาการ ค่าความดัน และประเด็นคำถาม เพื่อช่วยให้ชาวบ้านที่ขี้เกรงใจกล้าใช้ไต่ถามแพทย์เวลาไปโรงพยาบาล", "flavorText": "จดทุกอาการ พกความกล้าไปหาหมอ", "image": {"src": "assets/knowledge/knowledge_16_phokwamklua.jpg", "alt": "พกความกลัวไปหาหมอ"}}, {"id": "knowledge_17", "name": "ตวงก่อนปรุง", "knowledgeFact": "อุปกรณ์ช่วยตวงวัดปริมาณความเค็มในอาหาร เพื่อควบคุมไม่ให้ร่างกายได้รับโซเดียมเกิน 1 ช้อนชาต่อวัน", "flavorText": "ตวงวัดให้เป๊ะ ควบคุมความเค็มให้อยู่หมัด", "image": {"src": "assets/knowledge/knowledge_17_tuongkonprung.jpg", "alt": "ตวงก่อนปรุง"}}, {"id": "knowledge_18", "name": "ขยายโลกด้วยปลายนิ้ว", "knowledgeFact": "ผู้สูงอายุหลายคนมองไม่เห็น ไม่รู้ข้อมูลสุขภาพ อสม.จึงต้องทำหน้าที่เป็นครูฝึก สอนให้ผู้สูงอายุใช้สมาร์ทโฟนขยายดูฉลากอาหารหรือใช้แอปพลิเคชันเตือนภัยสุขภาพ", "flavorText": "อสม. ฝึกให้ อุ้ยใช้เป็น", "image": {"src": "assets/knowledge/knowledge_18_khayailok.jpg", "alt": "ขยายโลกด้วยปลายนิ้ว"}}, {"id": "knowledge_19", "name": "ชวนขยับ", "knowledgeFact": "การรวมตัวและใช้พลังทางสังคมสร้างกิจกรรมออกกำลังกาย เช่น การเต้นบาสโลบยามเย็น เพื่อลดความเครียดและลดปัจจัยเสี่ยงโรคหลอดเลือดสมองในชุมชน", "flavorText": "หนึ่งคนชวน ขยับทั้งกลุ่ม ชุมชนแข็งแรง", "image": {"src": "assets/knowledge/knowledge_19_chuankhayab.jpg", "alt": "ชวนขยับ"}}, {"id": "knowledge_20", "name": "ล้างลิ้นติดเค็ม", "knowledgeFact": "ต่อมรับรสบนลิ้นของคนเราสามารถปรับตัวได้ หากเราลดกินเค็มลงติดต่อกันอย่างจริงจังเพียง 21 วัน ต่อมรับรสจะไวต่อความเค็มมากขึ้น ทำให้กินอาหารรสจืดลงแล้วรู้สึกอร่อยขึ้นได้เองโดยไม่ต้องพึ่งผงปรุงรสปริมาณมาก", "flavorText": "ฝืนใจแค่สามสัปดาห์ สุขภาพดีกลับมา", "image": {"src": "assets/knowledge/knowledge_20_langlintidkhem.jpg", "alt": "ล้างลิ้นติดเค็ม"}}];
+// Effects reuse the same vocabulary as mission/obstacle cards (score /
+// drawCard). scope:"all" applies the effects to every player instead of
+// just whoever drew the card (matches the source sheet's "(เกิดกับผู้เล่น
+// ทุกคน)" / "คนละ" wording).
+const SUPPORT = [{"id": "support_01", "name": "ผู้ใหญ่บ้านประกาศชมเชย", "scenario": "ผู้ใหญ่บ้านเห็นความตั้งใจจริงของคุณ จึงประกาศชมเชยผ่านเสียงตามสาย", "scope": "self", "effects": [{"type": "score", "operation": "add", "value": 150}], "image": {"src": "assets/support/support_01_phuyaiban_chomchoei.jpg", "alt": "ผู้ใหญ่บ้านประกาศชมเชย"}}, {"id": "support_02", "name": "บารมีหลวงพ่อ/เจ้าอาวาส", "scenario": "หลวงพ่อช่วยพูดให้สติชาวบ้านในวันพระ ทำให้ชาวบ้านหันมาให้ความร่วมมือกับ อสม.", "scope": "self", "effects": [{"type": "score", "operation": "add", "value": 100}], "image": {"src": "assets/support/support_02_luangpho_baramee.jpg", "alt": "บารมีหลวงพ่อ/เจ้าอาวาส"}}, {"id": "support_03", "name": "เสียงตามสายกระจายข่าว", "scenario": "คณะกรรมการหมู่บ้านเปิดสปอตโฆษณาความรู้สุขภาพที่คุณเตรียมไว้ ให้ชาวบ้านฟังทั้งสัปดาห์", "scope": "all", "effects": [{"type": "drawCard", "cardType": "knowledge", "count": 1}], "image": {"src": "assets/support/support_03_siangtamsai_krajaikhao.jpg", "alt": "เสียงตามสายกระจายข่าว"}}, {"id": "support_04", "name": "งบกองทุนหมู่บ้านสนับสนุน", "scenario": "คณะกรรมการกองทุนเห็นความสำคัญของโครงการสุขภาพ จึงอนุมัติงบซื้อเครื่องวัดความดัน เครื่องวัดความเค็มให้", "scope": "all", "effects": [{"type": "score", "operation": "add", "value": 50}], "image": {"src": "assets/support/support_04_kongthun_muban.jpg", "alt": "งบกองทุนหมู่บ้านสนับสนุน"}}, {"id": "support_05", "name": "ปราชญ์ชาวบ้านหนุนหลัง", "scenario": "หมอยาพื้นบ้านช่วยอธิบายสรรพคุณมะนาว ใบบัวบก กระเจี๊ยบแดง ขิง ข่า ตะไคร้ ใบมะกรูด ขึ้นฉ่าย ตัดเค็ม ลดความดัน", "scope": "self", "effects": [{"type": "drawCard", "cardType": "knowledge", "count": 1}], "image": {"src": "assets/support/support_05_pratchaoban_nunlang.jpg", "alt": "ปราชญ์ชาวบ้านหนุนหลัง"}}, {"id": "support_06", "name": "พลัง อสม. เพื่อนช่วยเพื่อน", "scenario": "คุณท้อใจเพราะชาวบ้านดื้อ ไม่ยอมลดเค็ม/กินยาคุมความดัน เพื่อน อสม. จึงรีบเข้ามาช่วยอธิบาย และยกเคสอัมพฤกษ์ในอดีตมาช่วยเตือนสติจนชาวบ้านยอมฟัง", "scope": "all", "effects": [{"type": "score", "operation": "add", "value": 150}], "image": {"src": "assets/support/support_06_phuenchuayphuen.jpg", "alt": "พลัง อสม. เพื่อนช่วยเพื่อน"}}, {"id": "support_07", "name": "อสม. อาวุโสถ่ายทอดวิชา", "scenario": "ป้า อสม. รุ่นใหญ่ที่อยู่มา 20 ปี เดินมาบอกเคล็ดลับการเข้าหาบ้านที่คุยยาก", "scope": "all", "effects": [{"type": "drawCard", "cardType": "knowledge", "count": 1}], "image": {"src": "assets/support/support_07_asm_awuso_thaithot.jpg", "alt": "อสม. อาวุโสถ่ายทอดวิชา"}}, {"id": "support_08", "name": "ล้อมวงเล่าขวัญ", "scenario": "อสม. ล้อมวงกินส้มตำช่วงพักเที่ยง แลกเปลี่ยนเคสคนไข้ความดันสูงที่แอบกินเค็ม-ละเลยยา จนปิ๊งไอเดียแก้ทางพฤติกรรมเสี่ยงเพื่อกันโรคหลอดเลือดสมอง", "scope": "all", "effects": [{"type": "drawCard", "cardType": "knowledge", "count": 1}], "image": {"src": "assets/support/support_08_lomwong_laokwan.jpg", "alt": "ล้อมวงเล่าขวัญ"}}, {"id": "support_09", "name": "นาทีชีวิต", "scenario": "คุณพบผู้ป่วยความดันสูงมีอาการปากเบี้ยว แขนขาอ่อนแรง จึงรีบประสานทีมกู้ชีพนัดแนะเส้นทางลัด ส่งโรงพยาบาลได้ทันเวลาอย่างปลอดภัย", "scope": "self", "effects": [{"type": "drawCard", "cardType": "knowledge", "count": 1}], "image": {"src": "assets/support/support_09_nathichiwit.jpg", "alt": "นาทีชีวิต"}}, {"id": "support_10", "name": "อสม. ต้นแบบลดเค็มลดโรค", "scenario": "คุณได้รับรางวัล อสม. ดีเด่น จากผลงานขับเคลื่อน 'ชุมชนต้นแบบลดโซเดียม' จนอัตราผู้ป่วยสโตรก (Stroke) ในพื้นที่ลดลงอย่างน่าชื่นชม", "scope": "self", "effects": [{"type": "score", "operation": "add", "value": 200}], "image": {"src": "assets/support/support_10_tonbaeb_lotkhem.jpg", "alt": "อสม. ต้นแบบลดเค็มลดโรค"}}, {"id": "support_11", "name": "กับข้าวถุงใหญ่จากยายสี", "scenario": "คุณไปตรวจเบาหวานให้คุณยาย ยายซาบซึ้งใจเลยฝากแกงและกล้วยน้ำว้าเครือใหญ่มาให้", "scope": "self", "effects": [{"type": "score", "operation": "add", "value": 150}], "image": {"src": "assets/support/support_11_kapkhao_thungyai.jpg", "alt": "กับข้าวถุงใหญ่จากยายสี"}}, {"id": "support_12", "name": "บ้านนี้ต้อนรับเสมอ", "scenario": "ชาวบ้านเห็นเสื้อ อสม. รีบกวักมือเรียกให้เข้ามานั่งพักหลบแดดและเอาน้ำเย็นมาต้อนรับ", "scope": "self", "effects": [{"type": "score", "operation": "add", "value": 100}], "image": {"src": "assets/support/support_12_bannee_tonrap.jpg", "alt": "บ้านนี้ต้อนรับเสมอ"}}, {"id": "support_13", "name": "ลูกหลานกลับมาช่วยดูแล", "scenario": "ผู้ป่วยอัมพาตจากโรคหลอดเลือดสมองถูกทิ้งให้อยู่ลำบากข้ามคืน คุณและชาวบ้านไม่นิ่งเฉย ร่วมกันกระจายข่าวในไลน์กลุ่มและกดดันแกมขอร้อง จนลูกหลานตระหนักได้ รีบเคลียร์งานจากกรุงเทพฯ บึ่งรถกลับมาดูแลพ่อทันที", "scope": "all", "effects": [{"type": "drawCard", "cardType": "knowledge", "count": 1}], "image": {"src": "assets/support/support_13_lukhlan_klapma.jpg", "alt": "ลูกหลานกลับมาช่วยดูแล"}}, {"id": "support_14", "name": "นักรบ สยบข่าว", "scenario": "ชาวบ้านฮิตแชร์คลิป 'กินน้ำหมักเทวดา รักษาความดันหายขาดไม่ต้องกินยาหมอ' จนเกือบพากันเทยาโรงพยาบาลทิ้ง ดีที่คุณจับสังเกตได้ทัน รีบส่งข้อมูลให้ พยาบาลชุมชน/รพ.สต. ช่วยยืนยันความจริง และอธิบายให้ชาวบ้านฟังจนตาสว่าง", "scope": "self", "effects": [{"type": "drawCard", "cardType": "knowledge", "count": 1}], "image": {"src": "assets/support/support_14_nakrob_sayobkhao.jpg", "alt": "นักรบ สยบข่าว"}}, {"id": "support_15", "name": "ของขวัญแทนคำขอบคุณ", "scenario": "ชาวบ้านรวมเงินกันซื้อหน้ากากอนามัยและเจลล้างมือมามอบให้ อสม. ไว้ใช้ทำงาน", "scope": "all", "effects": [{"type": "drawCard", "cardType": "knowledge", "count": 1}], "image": {"src": "assets/support/support_15_khongkwan_khobkhun.jpg", "alt": "ของขวัญแทนคำขอบคุณ"}}, {"id": "support_16", "name": "งานบุญปลอดเหล้า ตัดวงจรโรค", "scenario": "แกนนำและ อสม. ร่วมกันผลักดันให้งานประจำปีของวัดเป็นงานปลอดเหล้าสำเร็จ ช่วยลดความเสี่ยงให้กลุ่มผู้ป่วยความดันสูงในชุมชน ไม่ให้เส้นเลือดสมองแตก (Stroke) คาวงเหล้าจากฤทธิ์แอลกอฮอล์", "scope": "all", "effects": [{"type": "drawCard", "cardType": "knowledge", "count": 1}], "image": {"src": "assets/support/support_16_nganbun_plodlao.jpg", "alt": "งานบุญปลอดเหล้า ตัดวงจรโรค"}}, {"id": "support_17", "name": "ตลาดนัดสีเขียว ชุมชนคนรักสุขภาพ", "scenario": "ชุมชนเปิดตลาดนัดขยายเครือข่ายผักปลอดสารพิษ ชาวบ้านเข้าถึงอาหารดีๆ", "scope": "all", "effects": [{"type": "drawCard", "cardType": "food", "count": 1, "zone": "green"}], "image": {"src": "assets/support/support_17_talad_sikhiao.jpg", "alt": "ตลาดนัดสีเขียว ชุมชนคนรักสุขภาพ"}}, {"id": "support_18", "name": "ล้อมวงเต้นแอโรบิกหน้า อบต.", "scenario": "เย็นนี้ชาวบ้านทุกเพศทุกวัยมารวมตัวกันเต้นแอโรบิกอย่างคึกคักตามคำชวนของคุณ", "scope": "all", "effects": [{"type": "score", "operation": "add", "value": 100}], "image": {"src": "assets/support/support_18_lomwong_aerobic.jpg", "alt": "ล้อมวงเต้นแอโรบิกหน้า อบต."}}, {"id": "support_19", "name": "ผ้าป่าสุขภาพ", "scenario": "ชาวบ้านร่วมกันทอดผ้าป่าสามัคคี ได้เงินสมทบทุนซื้อเครื่องวัดความดันและเครื่องตรวจน้ำตาลในเลือดเพิ่ม", "scope": "all", "effects": [{"type": "drawCard", "cardType": "knowledge", "count": 1}], "image": {"src": "assets/support/support_19_phapa_sukkhaphap.jpg", "alt": "ผ้าป่าสุขภาพ"}}, {"id": "support_20", "name": "กฎหมู่บ้าน", "scenario": "ผู้นำชุมชนและ อสม. ร่วมกันประชาคมตั้งกฎหมู่บ้าน 'ให้ร้านอาหารทุกแห่งยกขวดน้ำปลาและพวงเครื่องปรุงออกจากโต๊ะ ไปวางไว้ที่จุดกลางจุดเดียว' เพื่อให้ชาวบ้านต้องเดินมาตัก และชิมก่อนปรุงทุกครั้ง", "scope": "all", "effects": [{"type": "drawCard", "cardType": "knowledge", "count": 1}], "image": {"src": "assets/support/support_20_kotmuban.jpg", "alt": "กฎหมู่บ้าน"}}];
+const FOOD = [{"id": "food_001", "name": "ข้าวซอยเนื้อ", "region": "พะเยา", "image": {"src": "assets/food/food_001_khaosoinuea.jpg", "alt": "ข้าวซอยเนื้อ"}, "sodium": {"amountMg": 979.0, "zone": "red", "servingNote": null}, "nutrition": {"energyKcal": 800.0, "fatG": 45.0, "proteinG": 35.0, "carbG": 50.0}, "warningIcons": ["salt"], "flavorText": "ไม่ควรซดน้ำ และควรตักเส้นกรอบออกเนื่องจากชุ่มน้ำมัน"}, {"id": "food_002", "name": "น้ำพริกหนุ่ม", "region": "พะเยา", "image": {"src": "assets/food/food_002_nampriknum.jpg", "alt": "น้ำพริกหนุ่ม"}, "sodium": {"amountMg": 971.0, "zone": "red", "servingNote": null}, "nutrition": {"energyKcal": 55.0, "fatG": 0.5, "proteinG": 2.1, "carbG": 10.5}, "warningIcons": ["salt"], "flavorText": "รสจัดจ้าน เสียหายต่อไต"}, {"id": "food_003", "name": "น้ำพริกแมงดา", "region": "พะเยา", "image": {"src": "assets/food/food_003_namprikmaengda.jpg", "alt": "น้ำพริกแมงดา"}, "sodium": {"amountMg": 2130.0, "zone": "red", "servingNote": null}, "nutrition": {"energyKcal": 241.0, "fatG": 17.7, "proteinG": 7.4, "carbG": 11.5}, "warningIcons": ["salt"], "flavorText": "กลิ่นหอมชวนหลงใหล แตะแต่น้อยทีละคำ"}, {"id": "food_004", "name": "น้ำพริกน้ำปู๋", "region": "พะเยา", "image": {"src": "assets/food/food_004_nampriknampu.jpg", "alt": "น้ำพริกน้ำปู๋"}, "sodium": {"amountMg": 6305.0, "zone": "red", "servingNote": null}, "nutrition": {"energyKcal": 105.0, "fatG": 1.2, "proteinG": 9.8, "carbG": 13.7}, "warningIcons": ["salt"], "flavorText": "ดื่มน้ำตามเยอะๆ งดเค็มทั้งวัน กินคู่มะเขือเปราะ หน่อไม้"}, {"id": "food_005", "name": "ขนมจีนน้ำเงี้ยว", "region": "พะเยา", "image": {"src": "assets/food/food_005_khanamachinnamngiao.jpg", "alt": "ขนมจีนน้ำเงี้ยว"}, "sodium": {"amountMg": 1850.0, "zone": "red", "servingNote": null}, "nutrition": {"energyKcal": 380.0, "fatG": 14.5, "proteinG": 18.2, "carbG": 44.1}, "warningIcons": ["salt"], "flavorText": "ซุปข้นซ่อนคม ผักกาดดองควรล้างน้ำก่อน"}, {"id": "food_006", "name": "ข้าวซอยไก่", "region": "พะเยา", "image": {"src": "assets/food/food_006_khaosoikai.jpg", "alt": "ข้าวซอยไก่"}, "sodium": {"amountMg": 2738.0, "zone": "red", "servingNote": null}, "nutrition": {"energyKcal": 506.0, "fatG": 21.0, "proteinG": 23.0, "carbG": 56.2}, "warningIcons": ["salt"], "flavorText": "ความนัวระดับตำนาน ซดน้ำ 3 คำพอ เน้นกินหอมแดง"}, {"id": "food_007", "name": "แกงแคหมูสามชั้น", "region": "พะเยา", "image": {"src": "assets/food/food_007_kaengkhaemusamchan.jpg", "alt": "แกงแคหมูสามชั้น"}, "sodium": {"amountMg": 1650.0, "zone": "red", "servingNote": null}, "nutrition": {"energyKcal": 345.0, "fatG": 26.5, "proteinG": 15.2, "carbG": 11.4}, "warningIcons": ["salt"], "flavorText": "กับดักสามชั้น ตักกินเฉพาะเนื้อไม่ติดมัน"}, {"id": "food_008", "name": "ตำลาว", "region": "พะเยา", "image": {"src": "assets/food/food_008_tamlao.jpg", "alt": "ตำลาว"}, "sodium": {"amountMg": 1950.0, "zone": "red", "servingNote": null}, "nutrition": {"energyKcal": 75.0, "fatG": 0.8, "proteinG": 3.2, "carbG": 13.8}, "warningIcons": ["salt"], "flavorText": "ตักแห้ง แซ่บเซฟ ไข่ต้มเพิ่มโปรตีน"}, {"id": "food_009", "name": "จิ้นส้ม", "region": "พะเยา", "image": {"src": "assets/food/food_009_chinsom.jpg", "alt": "จิ้นส้ม"}, "sodium": {"amountMg": 1190.0, "zone": "red", "servingNote": null}, "nutrition": {"energyKcal": 185.0, "fatG": 11.2, "proteinG": 17.5, "carbG": 3.5}, "warningIcons": ["salt"], "flavorText": "หมกไฟปรุงสุก ขิง กระเทียมกินคู่ลดไขมัน"}, {"id": "food_010", "name": "แกงโฮ๊ะ", "region": "พะเยา", "image": {"src": "assets/food/food_010_kaengho.jpg", "alt": "แกงโฮ๊ะ"}, "sodium": {"amountMg": 1480.0, "zone": "red", "servingNote": null}, "nutrition": {"energyKcal": 190.0, "fatG": 9.5, "proteinG": 11.2, "carbG": 15.0}, "warningIcons": ["salt"], "flavorText": "โซเดียมสะสม ดื่มน้ำตามหลังเยอะๆ"}, {"id": "food_011", "name": "ไส้อั่ว", "region": "พะเยา", "image": {"src": "assets/food/food_011_soai.jpg", "alt": "ไส้อั่ว"}, "sodium": {"amountMg": 1480.0, "zone": "red", "servingNote": null}, "nutrition": {"energyKcal": 342.0, "fatG": 28.5, "proteinG": 16.8, "carbG": 4.2}, "warningIcons": ["salt"], "flavorText": "สมุนไพรแน่นจมูก แต่ความเค็มและไขมันพุ่งชนเพดาน"}, {"id": "food_012", "name": "แกงฮังเล", "region": "พะเยา", "image": {"src": "assets/food/food_012_kaenghangle.jpg", "alt": "แกงฮังเล"}, "sodium": {"amountMg": 1250.0, "zone": "red", "servingNote": null}, "nutrition": {"energyKcal": 390.0, "fatG": 32.0, "proteinG": 14.5, "carbG": 11.0}, "warningIcons": ["salt"], "flavorText": "เนื้อนุ่มละลายในปาก กินคู่ขิงซอยสด เลี่ยงตักน้ำแกงชุ่มๆ"}, {"id": "food_013", "name": "แกงอ่อมหมู", "region": "พะเยา", "image": {"src": "assets/food/food_013_kaengommu.jpg", "alt": "แกงอ่อมหมู"}, "sodium": {"amountMg": 1150.0, "zone": "red", "servingNote": null}, "nutrition": {"energyKcal": 165.0, "fatG": 9.8, "proteinG": 17.2, "carbG": 2.0}, "warningIcons": ["salt"], "flavorText": "ให้ตักเน้นเนื้อและผัก ซดน้ำแกงขลุกขลิกแค่พอเคลือบลิ้น"}, {"id": "food_014", "name": "น้ำพริกตาแดง", "region": "พะเยา", "image": {"src": "assets/food/food_014_nampriktadaeng.jpg", "alt": "น้ำพริกตาแดง"}, "sodium": {"amountMg": 2340.0, "zone": "red", "servingNote": null}, "nutrition": {"energyKcal": 148.0, "fatG": 3.5, "proteinG": 5.8, "carbG": 23.3}, "warningIcons": ["salt"], "flavorText": "ใช้แตะปลายช้อน กินคู่กับผักนึ่ง"}, {"id": "food_015", "name": "แกงบ่าหนุนใส่กระดูกหมู", "region": "พะเยา", "image": {"src": "assets/food/food_015_kaengbanunsaikradukmu.jpg", "alt": "แกงบ่าหนุนใส่กระดูกหมู"}, "sodium": {"amountMg": 1680.0, "zone": "red", "servingNote": null}, "nutrition": {"energyKcal": 210.0, "fatG": 9.0, "proteinG": 18.5, "carbG": 13.8}, "warningIcons": ["salt"], "flavorText": "แกงเข้มข้นจากถั่วเน่า/กะปิ ล้างหน่อไม้ 2 น้ำก่อนแกง"}, {"id": "food_016", "name": "แกงส้มบะหน่อไม้ส้ม", "region": "พะเยา", "image": {"src": "assets/food/food_016_kaengtmbanomaisom.jpg", "alt": "แกงส้มบะหน่อไม้ส้ม"}, "sodium": {"amountMg": 1320.0, "zone": "red", "servingNote": null}, "nutrition": {"energyKcal": 185.0, "fatG": 8.5, "proteinG": 12.0, "carbG": 15.2}, "warningIcons": ["salt"], "flavorText": "เน้นเคี้ยวเนื้อขนุนและมะเขือเทศ ส่วนน้ำแกงรสเปรี้ยวเค็มให้ตักราดข้าวพอหายอยาก"}, {"id": "food_017", "name": "น้ำพริกปลาฮ้า", "region": "พะเยา", "image": {"src": "assets/food/food_017_namprikplaha.jpg", "alt": "น้ำพริกปลาฮ้า"}, "sodium": {"amountMg": 2850.0, "zone": "red", "servingNote": null}, "nutrition": {"energyKcal": 110.0, "fatG": 2.1, "proteinG": 14.8, "carbG": 8.0}, "warningIcons": ["salt"], "flavorText": "จิ้มแค่ปลายช้อน ผักนึ่ง 1 เซ็ต"}, {"id": "food_018", "name": "ต๋ำบะหนุน (ตำขนุน)", "region": "พะเยา", "image": {"src": "assets/food/food_018_tambanun.jpg", "alt": "ต๋ำบะหนุน (ตำขนุน)"}, "sodium": {"amountMg": 1820.0, "zone": "red", "servingNote": null}, "nutrition": {"energyKcal": 215.0, "fatG": 11.8, "proteinG": 8.5, "carbG": 18.7}, "warningIcons": ["salt"], "flavorText": "เมนูมงคล ดื่มน้ำเปล่าตามเพิ่ม 1-2 แก้ว เพิ่มถั่วฝักยาว แตงขวา มะเขือเปราะ"}, {"id": "food_019", "name": "แกงผักปลังต้มจืด", "region": "พะเยา", "image": {"src": "assets/food/food_019_kaengphakplangtamachuet.jpg", "alt": "แกงผักปลังต้มจืด"}, "sodium": {"amountMg": 240.0, "zone": "green", "servingNote": null}, "nutrition": {"energyKcal": 90.0, "fatG": 3.5, "proteinG": 8.2, "carbG": 6.4}, "warningIcons": ["salt"], "flavorText": "ซุปใสลื่นคอ เจลเคลือบลำไส้ ล้างสารตกค้าง"}, {"id": "food_020", "name": "คั่วเห็ดถอบ", "region": "พะเยา", "image": {"src": "assets/food/food_020_khuaetthop.jpg", "alt": "คั่วเห็ดถอบ"}, "sodium": {"amountMg": 280.0, "zone": "green", "servingNote": null}, "nutrition": {"energyKcal": 145.0, "fatG": 6.5, "proteinG": 9.2, "carbG": 12.4}, "warningIcons": ["salt"], "flavorText": "กรุบกรอบดังก๊อบเบาใจ สมุนไพรชูรสแทนน้ำปลา ไตยิ้มร่า"}, {"id": "food_021", "name": "แกงผักหวานใส่ไข่มดแดง", "region": "พะเยา", "image": {"src": "assets/food/food_021_kaengphakwansaikhaimadadaeng.jpg", "alt": "แกงผักหวานใส่ไข่มดแดง"}, "sodium": {"amountMg": 320.0, "zone": "green", "servingNote": null}, "nutrition": {"energyKcal": 125.0, "fatG": 4.2, "proteinG": 10.5, "carbG": 11.3}, "warningIcons": ["salt"], "flavorText": "รสหวานธรรมชาติจากป่าลึก โปรตีนพุ่ง ใยอาหารแน่น สบายไตสุดๆ"}, {"id": "food_022", "name": "ส้าผักกาด", "region": "พะเยา", "image": {"src": "assets/food/food_022_saphakkat.jpg", "alt": "ส้าผักกาด"}, "sodium": {"amountMg": 310.0, "zone": "green", "servingNote": null}, "nutrition": {"energyKcal": 85.0, "fatG": 3.8, "proteinG": 4.5, "carbG": 8.2}, "warningIcons": ["salt"], "flavorText": "กรอบสดชื่นสะท้านลิ้น วิตามินซีเต็มพิกัด พลังงานต่ำเซฟไตขั้นสุด"}, {"id": "food_023", "name": "แกงบ่าปลี", "region": "พะเยา", "image": {"src": "assets/food/food_023_kaengbapli.jpg", "alt": "แกงบ่าปลี"}, "sodium": {"amountMg": 290.0, "zone": "green", "servingNote": null}, "nutrition": {"energyKcal": 115.0, "fatG": 4.2, "proteinG": 9.5, "carbG": 12.8}, "warningIcons": ["salt"], "flavorText": "คลังใยอาหารจากสวนหลังบ้าน รสฝาดหวานละมุน สบายท้อง ดีต่อใจและไต"}, {"id": "food_024", "name": "ตำส้มโอใส่ใส่มะแว้ง/ใบชะพลู", "region": "พะเยา", "image": {"src": "assets/food/food_024_tamsamaosaisaimawaeng.jpg", "alt": "ตำส้มโอใส่ใส่มะแว้ง/ใบชะพลู"}, "sodium": {"amountMg": 280.0, "zone": "green", "servingNote": null}, "nutrition": {"energyKcal": 110.0, "fatG": 2.2, "proteinG": 3.8, "carbG": 19.5}, "warningIcons": ["salt"], "flavorText": "รสเปรี้ยว หวาน ขม ซ่า ทะลวงทุกต่อมรับรส วิตามินซีสูงลิ่ว ดับร้อน ชะล้างโซเดียม"}, {"id": "food_025", "name": "แกงเห็ดลม", "region": "พะเยา", "image": {"src": "assets/food/food_025_kaengetalom.jpg", "alt": "แกงเห็ดลม"}, "sodium": {"amountMg": 260.0, "zone": "green", "servingNote": null}, "nutrition": {"energyKcal": 75.0, "fatG": 1.5, "proteinG": 5.2, "carbG": 10.2}, "warningIcons": ["salt"], "flavorText": "เนื้อสัมผัสหนึบหนับดั่งเนื้อสัตว์ ซุปใสซดคล่องคอ เสริมภูมิคุ้มกัน"}, {"id": "food_026", "name": "แกงผักกาดจอ (ไม่ใส่ถั่วเน่า/กะปิ)", "region": "พะเยา", "image": {"src": "assets/food/food_026_kaengphakkatacho.jpg", "alt": "แกงผักกาดจอ (ไม่ใส่ถั่วเน่า/กะปิ)"}, "sodium": {"amountMg": 150.0, "zone": "green", "servingNote": null}, "nutrition": {"energyKcal": 110.0, "fatG": 5.0, "proteinG": 7.5, "carbG": 8.8}, "warningIcons": ["salt"], "flavorText": "รสเปรี้ยวอมหวานฉ่ำ ไร้กลิ่นคาวกะปิ ใยอาหารและแคลเซียมสูงลิ่ว"}, {"id": "food_027", "name": "แกงตูนใส่ปลา", "region": "พะเยา", "image": {"src": "assets/food/food_027_kaengtunsaipla.jpg", "alt": "แกงตูนใส่ปลา"}, "sodium": {"amountMg": 340.0, "zone": "green", "servingNote": null}, "nutrition": {"energyKcal": 95.0, "fatG": 1.8, "proteinG": 13.5, "carbG": 6.2}, "warningIcons": ["salt"], "flavorText": "ฟองน้ำธรรมชาติ โปรตีนปลาเนื้อแน่น แคลอรี่ต่ำ เซฟไตขั้นสุด"}, {"id": "food_028", "name": "ผักเซียงดาผัดไข่", "region": "พะเยา", "image": {"src": "assets/food/food_028_phaksiangdaphatkhai.jpg", "alt": "ผักเซียงดาผัดไข่"}, "sodium": {"amountMg": 290.0, "zone": "green", "servingNote": null}, "nutrition": {"energyKcal": 160.0, "fatG": 11.2, "proteinG": 8.5, "carbG": 6.8}, "warningIcons": ["salt"], "flavorText": "ราชินีผักพื้นบ้าน รสขมหวานละมุนตัดความมันไข่ สยบน้ำตาลในเลือด"}, {"id": "food_029", "name": "แกงสะแลใส่ปลาแห้ง", "region": "พะเยา", "image": {"src": "assets/food/food_029_kaengsalaesaiplaaeng.jpg", "alt": "แกงสะแลใส่ปลาแห้ง"}, "sodium": {"amountMg": 234.0, "zone": "green", "servingNote": null}, "nutrition": {"energyKcal": 65.0, "fatG": 0.8, "proteinG": 5.2, "carbG": 9.2}, "warningIcons": ["salt"], "flavorText": "ผักป่าหายาก เนื้อสัมผัสกรุบมันนัวซุปใส รสเปรี้ยวกลมกล่อมทดแทนความเค็ม"}, {"id": "food_030", "name": "แกงผักเสี้ยวป่า", "region": "พะเยา", "image": {"src": "assets/food/food_030_kaengphaksiaopa.jpg", "alt": "แกงผักเสี้ยวป่า"}, "sodium": {"amountMg": 280.0, "zone": "green", "servingNote": null}, "nutrition": {"energyKcal": 90.0, "fatG": 1.5, "proteinG": 12.8, "carbG": 6.5}, "warningIcons": ["salt"], "flavorText": "รสเปรี้ยวฝาดตามธรรมชาติ แคลอรี่ต่ำ ไม่บวมน้ำ"}, {"id": "food_031", "name": "ยำชิ้นไก่", "region": "พะเยา", "image": {"src": "assets/food/food_031_yamchinkai.jpg", "alt": "ยำชิ้นไก่"}, "sodium": {"amountMg": 360.0, "zone": "green", "servingNote": null}, "nutrition": {"energyKcal": 150.0, "fatG": 4.5, "proteinG": 22.0, "carbG": 5.4}, "warningIcons": ["salt"], "flavorText": "มะแขว่น และดีปลี ช่วยกระตุ้นต่อมรับรสทำงานได้ดีโดยไม่ต้องพึ่งความเค็ม"}, {"id": "food_032", "name": "หน่ออั่วนึ่ง", "region": "พะเยา", "image": {"src": "assets/food/food_032_nouanueng.jpg", "alt": "หน่ออั่วนึ่ง"}, "sodium": {"amountMg": 340.0, "zone": "green", "servingNote": null}, "nutrition": {"energyKcal": 140.0, "fatG": 5.5, "proteinG": 14.2, "carbG": 8.5}, "warningIcons": ["salt"], "flavorText": "หน่อไม้มีโพแทสเซียมสูงซึ่งช่วยขับโซเดียมได้ดี"}, {"id": "food_033", "name": "แกงบ่าค้อนก่อมใส่ไก่", "region": "พะเยา", "image": {"src": "assets/food/food_033_kaengbakhonkomsaikai.jpg", "alt": "แกงบ่าค้อนก่อมใส่ไก่"}, "sodium": {"amountMg": 310.0, "zone": "green", "servingNote": null}, "nutrition": {"energyKcal": 110.0, "fatG": 2.8, "proteinG": 12.5, "carbG": 8.7}, "warningIcons": ["salt"], "flavorText": "มะรุมมีสารต้านอนุมูลอิสระและช่วยลดความดันโลหิตสูง บำรุงหัวใจ"}, {"id": "food_034", "name": "ตำมะเขือยาวใส่ไก่อกฉีก (ลดปลาร้า", "region": "พะเยา", "image": {"src": "assets/food/food_034_tammakhueayaosaikaiokchik.jpg", "alt": "ตำมะเขือยาวใส่ไก่อกฉีก (ลดปลาร้า"}, "sodium": {"amountMg": 310.0, "zone": "green", "servingNote": null}, "nutrition": {"energyKcal": 95.0, "fatG": 1.5, "proteinG": 10.0, "carbG": 11.0}, "warningIcons": ["salt"], "flavorText": "มะเขือยาวเผามีโพแทสเซียมสูง ซึ่งช่วยขับโซเดียมออกจากร่างกาย"}, {"id": "food_035", "name": "ยำผักส้ม", "region": "พะเยา", "image": {"src": "assets/food/food_035_salaep.jpg", "alt": "ยำผักส้ม"}, "sodium": {"amountMg": 1044.0, "zone": "red", "servingNote": null}, "nutrition": {"energyKcal": 260.0, "fatG": 1.0, "proteinG": 3.0, "carbG": 14.0}, "warningIcons": ["salt"], "flavorText": "เมนูผักล้วนที่ให้พลังงานต่ำมาก เหมาะกับคนลดน้ำหนัก"}, {"id": "food_036", "name": "ยำเตา", "region": "พะเยา", "image": {"src": "assets/food/food_036_yamtao.jpg", "alt": "ยำเตา"}, "sodium": {"amountMg": 310.0, "zone": "green", "servingNote": null}, "nutrition": {"energyKcal": 90.0, "fatG": 2.0, "proteinG": 6.0, "carbG": 12.0}, "warningIcons": ["salt"], "flavorText": "สาหร่ายน้ำจืดให้แร่ธาตุสูง ปรุงรสด้วยมะเขือแจ้เปรี้ยวเพื่อลดการใช้ปลาร้า"}, {"id": "food_037", "name": "นึ่งปลาช่อน จิ้มแจ่วผักนึ่ง", "region": "พะเยา", "image": {"src": "assets/food/food_037_nuengplachon_chimchaeophaknu.jpg", "alt": "นึ่งปลาช่อน จิ้มแจ่วผักนึ่ง"}, "sodium": {"amountMg": 290.0, "zone": "green", "servingNote": null}, "nutrition": {"energyKcal": 210.0, "fatG": 3.5, "proteinG": 32.0, "carbG": 12.0}, "warningIcons": ["salt"], "flavorText": "ตักแต่น้อย เน้นผัก"}, {"id": "food_038", "name": "แกงบอน", "region": "พะเยา", "image": {"src": "assets/food/food_038_kaengbon.jpg", "alt": "แกงบอน"}, "sodium": {"amountMg": 350.0, "zone": "green", "servingNote": null}, "nutrition": {"energyKcal": 140.0, "fatG": 6.0, "proteinG": 8.0, "carbG": 14.0}, "warningIcons": ["salt"], "flavorText": "บอนต้องต้มให้เปื่อยเพื่อลดสารกาลเซียมออกซาเลต รสชาติเปรี้ยวลดเค็ม"}, {"id": "food_039", "name": "ส้ามมะเขือฝอย", "region": "พะเยา", "image": {"src": "assets/food/food_039_sammakhueafoi.jpg", "alt": "ส้ามมะเขือฝอย"}, "sodium": {"amountMg": 280.0, "zone": "green", "servingNote": null}, "nutrition": {"energyKcal": 85.0, "fatG": 2.5, "proteinG": 5.0, "carbG": 11.0}, "warningIcons": ["salt"], "flavorText": "ข่าอ่อนซอย และ ใบขิงฝอย เพิ่มความเผ็ดร้อน ช่วยให้ลดเค็ม"}, {"id": "food_040", "name": "ข้าวกั้นจิ้น", "region": "พะเยา", "image": {"src": "assets/food/food_040_khaokanchin.jpg", "alt": "ข้าวกั้นจิ้น"}, "sodium": {"amountMg": 580.0, "zone": "yellow", "servingNote": null}, "nutrition": {"energyKcal": 310.0, "fatG": 9.0, "proteinG": 13.0, "carbG": 44.0}, "warningIcons": ["salt"], "flavorText": "ทานคู่กับหอมแดงสดและแตงกวาเยอะๆ เพื่อใช้โพแทสเซียมในผักช่วยขับโซเดียม"}, {"id": "food_041", "name": "ยำผักเฮือด", "region": "พะเยา", "image": {"src": "assets/food/food_041_yamphakhueat.jpg", "alt": "ยำผักเฮือด"}, "sodium": {"amountMg": 450.0, "zone": "yellow", "servingNote": null}, "nutrition": {"energyKcal": 140.0, "fatG": 6.0, "proteinG": 9.0, "carbG": 13.0}, "warningIcons": ["salt"], "flavorText": "เน้นรสเปรี้ยวอมฝาดของตัวผักเฮือด เปรี้ยวจากมะเขือเทศ เพื่อลดปริมาณกะปิ"}, {"id": "food_042", "name": "น้ำพริกอ๋อง", "region": "พะเยา", "image": {"src": "assets/food/food_042_namprikong.jpg", "alt": "น้ำพริกอ๋อง"}, "sodium": {"amountMg": 520.0, "zone": "yellow", "servingNote": "ลดกะปิ น้ำปลา"}, "nutrition": {"energyKcal": 160.0, "fatG": 7.0, "proteinG": 14.0, "carbG": 11.0}, "warningIcons": ["salt"], "flavorText": "มะเขือเทศผ่านความร้อน บำรุงหัวใจและหลอดเลือด"}, {"id": "food_043", "name": "น้ำพริกอีเก๋", "region": "พะเยา", "image": {"src": "assets/food/food_043_namprikike.jpg", "alt": "น้ำพริกอีเก๋"}, "sodium": {"amountMg": 480.0, "zone": "yellow", "servingNote": "ลดกะปิ น้ำปลา"}, "nutrition": {"energyKcal": 65.0, "fatG": 1.0, "proteinG": 3.0, "carbG": 11.0}, "warningIcons": ["salt"], "flavorText": "รสเปรี้ยวจากมะเขือขื่นและน้ำมะนาว/มะขามเปียกมาช่วยตัดรส"}, {"id": "food_044", "name": "แกงหยวกใส่ไก่", "region": "พะเยา", "image": {"src": "assets/food/food_044_kaengyuaksaikai.jpg", "alt": "แกงหยวกใส่ไก่"}, "sodium": {"amountMg": 460.0, "zone": "yellow", "servingNote": null}, "nutrition": {"energyKcal": 160.0, "fatG": 4.0, "proteinG": 16.0, "carbG": 15.0}, "warningIcons": ["salt"], "flavorText": "หยวกกล้วย กระตุ้นการขับถ่าย ลดระดับน้ำตาล"}, {"id": "food_045", "name": "ผัดเซียงดาใส่ไข่", "region": "พะเยา", "image": {"src": "assets/food/food_045_phatsiangdasaikhai.jpg", "alt": "ผัดเซียงดาใส่ไข่"}, "sodium": {"amountMg": 430.0, "zone": "yellow", "servingNote": null}, "nutrition": {"energyKcal": 180.0, "fatG": 11.0, "proteinG": 10.0, "carbG": 9.0}, "warningIcons": ["salt"], "flavorText": "ใบเซียงดามีสารลดระดับน้ำตาล ผัดด้วยน้ำหรือใช้น้ำมันรำข้าว ช่วยลดไขมัน"}, {"id": "food_046", "name": "แอ๊บปลา (ลดเกลือและกะปิ)", "region": "พะเยา", "image": {"src": "assets/food/food_046_aeppla.jpg", "alt": "แอ๊บปลา (ลดเกลือและกะปิ)"}, "sodium": {"amountMg": 490.0, "zone": "yellow", "servingNote": null}, "nutrition": {"energyKcal": 140.0, "fatG": 3.5, "proteinG": 22.0, "carbG": 5.0}, "warningIcons": ["salt"], "flavorText": "เน้นทานเนื้อปลาด้านใน"}, {"id": "food_047", "name": "แกงผักกาดตงใส่ปลาแห้ง", "region": "พะเยา", "image": {"src": "assets/food/food_047_kaengphakkatatongsaiplaaeng.jpg", "alt": "แกงผักกาดตงใส่ปลาแห้ง"}, "sodium": {"amountMg": 440.0, "zone": "yellow", "servingNote": "กะปิเหลือ 1 ช้อนชา"}, "nutrition": {"energyKcal": 105.0, "fatG": 1.0, "proteinG": 14.0, "carbG": 10.0}, "warningIcons": ["salt"], "flavorText": "เลือกใช้ปลาแห้งย่างที่ไม่ผ่านการหมักเกลือ เพื่อป้องกันโซเดียมแฝง"}, {"id": "food_048", "name": "อ๊อกปลานิล", "region": "พะเยา", "image": {"src": "assets/food/food_048_okplanin.jpg", "alt": "อ๊อกปลานิล"}, "sodium": {"amountMg": 460.0, "zone": "yellow", "servingNote": "ลดกะปิ"}, "nutrition": {"energyKcal": 165.0, "fatG": 4.5, "proteinG": 24.0, "carbG": 7.0}, "warningIcons": ["salt"], "flavorText": "ปลามีโอเมก้า 3 บำรุงสมอง พริกแกงมีฤทธิ์ต้านการอักเสบ"}, {"id": "food_049", "name": "ลาบคั่วเหนือ", "region": "พะเยา", "image": {"src": "assets/food/food_049_lapkhuaenue.jpg", "alt": "ลาบคั่วเหนือ"}, "sodium": {"amountMg": 620.0, "zone": "yellow", "servingNote": "งดใส่เลือด ใช้ซีอิ๊วขาวแทนน้ำปลา"}, "nutrition": {"energyKcal": 220.0, "fatG": 10.0, "proteinG": 26.0, "carbG": 4.0}, "warningIcons": ["salt"], "flavorText": "ผักแพว เล็บครุฑ คาวตอง ช่วยจับโซเดียม"}, {"id": "food_050", "name": "แกงผักขี้หูด", "region": "พะเยา", "image": {"src": "assets/food/food_050_kaengphakkhiut.jpg", "alt": "แกงผักขี้หูด"}, "sodium": {"amountMg": 430.0, "zone": "yellow", "servingNote": "กะปิเหลือ 1 ช้อนชา ไม่เติมเกลือ"}, "nutrition": {"energyKcal": 110.0, "fatG": 1.5, "proteinG": 15.0, "carbG": 9.0}, "warningIcons": ["salt"], "flavorText": "ผักขี้หูดล้างพิษในตับ ลดมะเร็ง"}, {"id": "food_051", "name": "แกงคั่วหอยขม (ลดกะปิ)", "region": "พะเยา", "image": {"src": "assets/food/food_051_kaengkhuahoikhom.jpg", "alt": "แกงคั่วหอยขม (ลดกะปิ)"}, "sodium": {"amountMg": 490.0, "zone": "yellow", "servingNote": null}, "nutrition": {"energyKcal": 135.0, "fatG": 2.5, "proteinG": 14.0, "carbG": 12.0}, "warningIcons": ["salt"], "flavorText": "หอยขมบำรุงเลือด ใบชะพลู ชะอมบำรุงกระดูกและสายตา"}, {"id": "food_052", "name": "ไข่ป่าม", "region": "พะเยา", "image": {"src": "assets/food/food_052_khaipam.jpg", "alt": "ไข่ป่าม"}, "sodium": {"amountMg": 420.0, "zone": "yellow", "servingNote": "ซีอิ๊วขาว 1 ช้อนชา"}, "nutrition": {"energyKcal": 155.0, "fatG": 10.0, "proteinG": 13.0, "carbG": 3.0}, "warningIcons": ["salt"], "flavorText": "ไข่ ใช้รักษามวลกล้ามเนื้อ"}, {"id": "food_053", "name": "แกงกระด้าง", "region": "พะเยา", "image": {"src": "assets/food/food_053_kaengkradang.jpg", "alt": "แกงกระด้าง"}, "sodium": {"amountMg": 510.0, "zone": "yellow", "servingNote": null}, "nutrition": {"energyKcal": 190.0, "fatG": 11.0, "proteinG": 19.0, "carbG": 3.0}, "warningIcons": ["salt"], "flavorText": "วุ้นธรรมชาติ บำรุงเนื้อเยื่อ ข้อต่อ ผิวพรรณ"}, {"id": "food_054", "name": "แกงผักกูดใส่ปลาย่าง", "region": "พะเยา", "image": {"src": "assets/food/food_054_kaengphakkutsaiplayang.jpg", "alt": "แกงผักกูดใส่ปลาย่าง"}, "sodium": {"amountMg": 420.0, "zone": "yellow", "servingNote": "ลดกะปิ ใส่ซีอิ๊วแทนน้ำปลา"}, "nutrition": {"energyKcal": 115.0, "fatG": 1.5, "proteinG": 15.0, "carbG": 10.0}, "warningIcons": ["salt"], "flavorText": "ผักกูดบำรุงสายตา บำรุงโลหิต คุมความดันโลหิต"}, {"id": "food_055", "name": "แกงหน่อไม้ปลาดุก", "region": "พะเยา", "image": {"src": "assets/food/food_055_kaengnomaipladuk.jpg", "alt": "แกงหน่อไม้ปลาดุก"}, "sodium": {"amountMg": 540.0, "zone": "yellow", "servingNote": "น้ำปลาร้า 1 ชช. ลดกะปิ"}, "nutrition": {"energyKcal": 195.0, "fatG": 7.0, "proteinG": 21.0, "carbG": 12.0}, "warningIcons": ["salt"], "flavorText": "น้ำใบย่านาง มีฤทธิ์เย็น ช่วยดับร้อน ผู้ป่วยเก๊าต์ไม่ควรกิน"}, {"id": "food_056", "name": "ไก่นึ่งสมุนไพร", "region": "พะเยา", "image": {"src": "assets/food/food_056_kainuengsamunprai.jpg", "alt": "ไก่นึ่งสมุนไพร"}, "sodium": {"amountMg": 480.0, "zone": "yellow", "servingNote": "ใช้ซีอิ๊วขาว 1 ช้อนชา"}, "nutrition": {"energyKcal": 180.0, "fatG": 6.0, "proteinG": 28.0, "carbG": 4.0}, "warningIcons": ["salt"], "flavorText": "ขมิ้นสดต้านการอักเสบ บำรุงระบบทางเดินอาหาร"}, {"id": "food_057", "name": "คั่วแห้งไก่", "region": "พะเยา", "image": {"src": "assets/food/food_057_khuaaengkai.jpg", "alt": "คั่วแห้งไก่"}, "sodium": {"amountMg": 530.0, "zone": "yellow", "servingNote": "ลดกะปิ ใช้ซีอิ๊ว"}, "nutrition": {"energyKcal": 190.0, "fatG": 7.0, "proteinG": 26.0, "carbG": 5.0}, "warningIcons": ["salt"], "flavorText": "มะแขว่นลดท้องอืด ท้องเฝ้อ"}, {"id": "food_058", "name": "ทอดไข่ใส่มดแดง", "region": "พะเยา", "image": {"src": "assets/food/food_058_thotkhaisaimadadaeng.jpg", "alt": "ทอดไข่ใส่มดแดง"}, "sodium": {"amountMg": 440.0, "zone": "yellow", "servingNote": "ใช้ซีอิ๊วขาว 1 ช้อนชา"}, "nutrition": {"energyKcal": 440.0, "fatG": 13.0, "proteinG": 16.0, "carbG": 3.0}, "warningIcons": ["salt"], "flavorText": "ทอดไม่ให้ไข่ไม่ชุ่มน้ำมัน ลดไขมันในเลือด"}, {"id": "food_059", "name": "ตำมะเขือ", "region": "พะเยา", "image": {"src": "assets/food/food_059_tammakhuea.jpg", "alt": "ตำมะเขือ"}, "sodium": {"amountMg": 450.0, "zone": "yellow", "servingNote": "ลดกะปิ/ปลาร้าเหลือ ½ ช้อนชา"}, "nutrition": {"energyKcal": 95.0, "fatG": 1.5, "proteinG": 4.0, "carbG": 16.0}, "warningIcons": ["salt"], "flavorText": "มะเขือยาวลดคลอเลสเตอรอล ขยายหลอดเลือด"}, {"id": "food_060", "name": "ข้าวแคบ (รสเค็ม/งา)", "region": "พะเยา", "image": {"src": "assets/food/food_060_khaokhaep.jpg", "alt": "ข้าวแคบ (รสเค็ม/งา)"}, "sodium": {"amountMg": 120.0, "zone": "green", "servingNote": null}, "nutrition": {"energyKcal": 70.0, "fatG": 1.0, "proteinG": 2.0, "carbG": 13.0}, "warningIcons": ["salt"], "flavorText": "แผ่นแป้งบางกรอบ แคลอรีต่ำและโซเดียมน้อย แต่ต้องระวังอย่าเคี้ยวเพลินหมดเป็นปึก"}, {"id": "food_061", "name": "ข้าวควบ (ข้าวโป่ง) สูตรดั้งเดิม", "region": "พะเยา", "image": {"src": "assets/food/food_061_khaokhuap.jpg", "alt": "ข้าวควบ (ข้าวโป่ง) สูตรดั้งเดิม"}, "sodium": {"amountMg": 180.0, "zone": "green", "servingNote": null}, "nutrition": {"energyKcal": 110.0, "fatG": 0.5, "proteinG": 2.0, "carbG": 24.0}, "warningIcons": ["salt"], "flavorText": "ข้าวเหนียวตำแผ่ปิ้งจนพองโต หอมกลิ่นไหม้จางๆ เค็มปะแล่มกำลังดี เป็นของว่างที่ปลอดภัย"}, {"id": "food_062", "name": "ข้าวนุกงา (ข้าวหนุกงา)", "region": "พะเยา", "image": {"src": "assets/food/food_062_khaonuknga.jpg", "alt": "ข้าวนุกงา (ข้าวหนุกงา)"}, "sodium": {"amountMg": 240.0, "zone": "green", "servingNote": null}, "nutrition": {"energyKcal": 220.0, "fatG": 5.0, "proteinG": 4.0, "carbG": 40.0}, "warningIcons": ["salt"], "flavorText": "ข้าวเหนียวใหม่นวดผสมงาขี้ม้อน มีโพแทสเซียมสูงจากงา ซึ่งช่วยขับโซเดียมออกจากร่างกายได้ดี"}, {"id": "food_063", "name": "ข้าวแต๋นน้ำแตงโม (หน้าธัญพืช)", "region": "พะเยา", "image": {"src": "assets/food/food_063_khaotaennamtaengmo.jpg", "alt": "ข้าวแต๋นน้ำแตงโม (หน้าธัญพืช)"}, "sodium": {"amountMg": 350.0, "zone": "yellow", "servingNote": null}, "nutrition": {"energyKcal": 190.0, "fatG": 8.0, "proteinG": 3.0, "carbG": 26.0}, "warningIcons": ["salt"], "flavorText": "กรุบกรอบหอมหวานอมเค็มจากน้ำตาลเคี่ยว หักห้ามใจกินแค่แผ่นเดียวพอ เพราะมีโซเดียมและไขมันจากการทอด"}, {"id": "food_064", "name": "ขนมจ๊อก (ไส้เค็ม)", "region": "พะเยา", "image": {"src": "assets/food/food_064_khanomchok.jpg", "alt": "ขนมจ๊อก (ไส้เค็ม)"}, "sodium": {"amountMg": 580.0, "zone": "yellow", "servingNote": null}, "nutrition": {"energyKcal": 210.0, "fatG": 7.0, "proteinG": 4.0, "carbG": 33.0}, "warningIcons": ["salt"], "flavorText": "ขนมเทียนไส้เค็มเนื้อนุ่มหนึบ แต่ไส้ข้างในผัดพริกไทยเกลือเข้มข้น แนะนำให้ตักแบ่งกินเพื่อลดการรับโซเดียม"}, {"id": "food_065", "name": "ข้าวต้มหัวหงอก (จิ้มมะพร้าวเกลือ)", "region": "พะเยา", "image": {"src": "assets/food/food_065_khaotmuangok.jpg", "alt": "ข้าวต้มหัวหงอก (จิ้มมะพร้าวเกลือ)"}, "sodium": {"amountMg": 650.0, "zone": "red", "servingNote": null}, "nutrition": {"energyKcal": 280.0, "fatG": 10.0, "proteinG": 4.0, "carbG": 44.0}, "warningIcons": ["salt"], "flavorText": "ตัวอันตรายอยู่ที่เกลือที่คลุกมากับมะพร้าวขูด ควรเขี่ยเกลือออก หรือหลีกเลี่ยงการจิ้มน้ำตาลผสมเกลือเพิ่ม"}, {"id": "food_066", "name": "ขนมเกลือ (หนมเกลือ)", "region": "พะเยา", "image": {"src": "assets/food/food_066_khanomkelue.jpg", "alt": "ขนมเกลือ (หนมเกลือ)"}, "sodium": {"amountMg": 780.0, "zone": "red", "servingNote": null}, "nutrition": {"energyKcal": 180.0, "fatG": 8.0, "proteinG": 2.0, "carbG": 25.0}, "warningIcons": ["salt"], "flavorText": "ขนมโบราณเนื้อนุ่มที่ทำจากแป้งและกะทิ ชื่อบอกชัดเจนว่าขนมเกลือ มีโซเดียมสูงมาก ไม่เหมาะกับผู้ป่วยโรคไต"}, {"id": "food_067", "name": "ข้าวเหนียวหน้าปลาแห้ง", "region": "พะเยา", "image": {"src": "assets/food/food_067_khaoheninaplaaeng.jpg", "alt": "ข้าวเหนียวหน้าปลาแห้ง"}, "sodium": {"amountMg": 890.0, "zone": "red", "servingNote": null}, "nutrition": {"energyKcal": 360.0, "fatG": 12.0, "proteinG": 8.0, "carbG": 55.0}, "warningIcons": ["salt"], "flavorText": "ข้าวเหนียวมูนมันเยิ้ม โดนโซเดียมคูณสองจากทั้งน้ำกะทิที่ใช้มูนข้าวและปลาแห้งป่นรสเค็มจัดด้านบน"}, {"id": "food_068", "name": "ข้าวตอกน้ำกะทิ (สูตรใส่เกลือตัดหวาน)", "region": "พะเยา", "image": {"src": "assets/food/food_068_khaotoknamkathi.jpg", "alt": "ข้าวตอกน้ำกะทิ (สูตรใส่เกลือตัดหวาน)"}, "sodium": {"amountMg": 610.0, "zone": "red", "servingNote": null}, "nutrition": {"energyKcal": 290.0, "fatG": 14.0, "proteinG": 2.0, "carbG": 39.0}, "warningIcons": ["salt"], "flavorText": "ข้าวตอกคั่วหอมๆ มักถูกราดด้วยน้ำกะทิเคี่ยวที่ใส่เกลือปริมาณมากเพื่อตัดรสหวานให้กลมกล่อม โซเดียมแฝงสูงจากกะทิและเกลือปรุงรส"}, {"id": "food_069", "name": "ข้าวเหนียวหัวหงอก (จิ้มมะพร้าวขูดโรยเกลือ)", "region": "พะเยา", "image": {"src": "assets/food/food_069_khaoheniuangok.jpg", "alt": "ข้าวเหนียวหัวหงอก (จิ้มมะพร้าวขูดโรยเกลือ)"}, "sodium": {"amountMg": 680.0, "zone": "red", "servingNote": null}, "nutrition": {"energyKcal": 320.0, "fatG": 9.0, "proteinG": 4.0, "carbG": 56.0}, "warningIcons": ["salt"], "flavorText": "ข้าวเหนียวนึ่งสุกนำมาคลุกหรือจิ้มกินกับมะพร้าวขูดขาว (ที่ดูเหมือนหัวหงอก) ตัวอันตรายอยู่ที่การสาดเกลือป่นลงไปคลุกกับมะพร้าวเพื่อให้มีรสเค็มมัน ยิ่งกินเพลินไตยิ่งทำงานหนัก"}, {"id": "food_070", "name": "ข้าวหนมแป้น (ขนมแป้นสูตรโบราณ)", "region": "พะเยา", "image": {"src": "assets/food/food_070_khaoonmpaen.jpg", "alt": "ข้าวหนมแป้น (ขนมแป้นสูตรโบราณ)"}, "sodium": {"amountMg": 380.0, "zone": "yellow", "servingNote": null}, "nutrition": {"energyKcal": 190.0, "fatG": 6.0, "proteinG": 3.0, "carbG": 31.0}, "warningIcons": ["salt"], "flavorText": "ขนมแป้งข้าวเหนียวห่อไส้มะพร้าวขูดคลุกน้ำตาลอ้อย แม้ตัวไส้จะหวาน แต่ในแป้งสูตรโบราณมักนวดผสมเกลือเพื่อตัดรสชาติให้กลมกล่อมและไม่เลี่ยน"}, {"id": "food_071", "name": "ขนมปังปี๊บไส้สับปะรด (ขนมยอดฮิตติดบ้าน)", "region": "พะเยา", "image": {"src": "assets/food/food_071_khanamapangpipsaisappant.jpg", "alt": "ขนมปังปี๊บไส้สับปะรด (ขนมยอดฮิตติดบ้าน)"}, "sodium": {"amountMg": 720.0, "zone": "red", "servingNote": null}, "nutrition": {"energyKcal": 340.0, "fatG": 12.0, "proteinG": 4.0, "carbG": 54.0}, "warningIcons": ["salt", "sugar"], "flavorText": "ตัวร้ายในคราบของว่าง! ตัวแครกเกอร์โรยเกลือเม็ดเป้งให้รสเค็มจัด ส่วนไส้สับปะรดกวนก็หวานเจี๊ยบ กินเพลินจนเบาหวานและไตถามหาพร้อมกัน"}, {"id": "food_072", "name": "โรตีทอดนมข้น-น้ำตาล", "region": "พะเยา", "image": {"src": "assets/food/food_072_rotithotnamakhon_namtan.jpg", "alt": "โรตีทอดนมข้น-น้ำตาล"}, "sodium": {"amountMg": 590.0, "zone": "red", "servingNote": null}, "nutrition": {"energyKcal": 450.0, "fatG": 22.0, "proteinG": 6.0, "carbG": 57.0}, "warningIcons": ["salt", "sugar"], "flavorText": "หวานมันเค็มครบสูตร แป้งโรตีมีส่วนผสมของเกลือและเนยมาการีนจำนวนมาก นำไปทอดน้ำมันท่วมแล้วราดนมข้นหวานซ้ำ เป็นเมนูที่ อสม. ต้องสั่งห้ามผู้ป่วยความดันและเบาหวานเด็ดขาด"}, {"id": "food_073", "name": "ขนมขาไก่ (รสเค็มดั้งเดิม)", "region": "พะเยา", "image": {"src": "assets/food/food_073_khanomkhakai.jpg", "alt": "ขนมขาไก่ (รสเค็มดั้งเดิม)"}, "sodium": {"amountMg": 840.0, "zone": "red", "servingNote": null}, "nutrition": {"energyKcal": 290.0, "fatG": 11.0, "proteinG": 5.0, "carbG": 43.0}, "warningIcons": ["salt", "sugar"], "flavorText": "ขนมขบเคี้ยวที่ละลายทรัพย์สุขภาพ แป้งกรอบๆ เคลือบด้วยน้ำตาลเคี่ยวปรุงรสซีอิ๊วและเกลือป่น เค็มๆ หวานๆ กินสี่ห้าชิ้น โซเดียมพุ่งทะลุหลอด"}, {"id": "food_074", "name": "กล้วยฉาบ (รสเค็ม-หวาน)", "region": "พะเยา", "image": {"src": "assets/food/food_074_kluaichap.jpg", "alt": "กล้วยฉาบ (รสเค็ม-หวาน)"}, "sodium": {"amountMg": 390.0, "zone": "yellow", "servingNote": null}, "nutrition": {"energyKcal": 260.0, "fatG": 9.0, "proteinG": 2.0, "carbG": 43.0}, "warningIcons": ["salt", "sugar"], "flavorText": "ของฝากรถเข็นที่ดูเหมือนธรรมชาติ แต่ผ่านการทอดและคลุกเคล้าน้ำเชื่อมผสมเกลือป่น เพื่อให้ได้รสชาติหวานมันเค็มเคลือบตัวกล้วย"}, {"id": "food_075", "name": "ข้าวเกรียบปลาทอด", "region": "พะเยา", "image": {"src": "assets/food/food_075_khaokeripplathot.jpg", "alt": "ข้าวเกรียบปลาทอด"}, "sodium": {"amountMg": 790.0, "zone": "red", "servingNote": null}, "nutrition": {"energyKcal": 320.0, "fatG": 15.0, "proteinG": 6.0, "carbG": 40.0}, "warningIcons": ["salt"], "flavorText": "ขนมขบเคี้ยวขวัญใจเด็กๆ และผู้ใหญ่ตอนดูทีวี แป้งผสมเนื้อปลาที่มีเกลือสูงอยู่แล้ว แถมยังปรุงรสด้วยผงชูรสและน้ำตาลเพิ่ม หวานเค็มกลมกล่อมแต่ไตพัง"}, {"id": "food_076", "name": "ขนมเปี๊ยะโบราณ (ไส้ถั่วไข่เค็ม)", "region": "พะเยา", "image": {"src": "assets/food/food_076_khanompiaboran.jpg", "alt": "ขนมเปี๊ยะโบราณ (ไส้ถั่วไข่เค็ม)"}, "sodium": {"amountMg": 480.0, "zone": "yellow", "servingNote": null}, "nutrition": {"energyKcal": 290.0, "fatG": 11.0, "proteinG": 5.0, "carbG": 42.0}, "warningIcons": ["salt", "sugar"], "flavorText": "ขนมไหว้และของฝากยอดนิยม ไส้ถั่วกวนหวานละมุนตัดรสด้วยไข่แดงเค็มชิ้นโต โซเดียมส่วนใหญ่มาจากไข่เค็มและแป้งชั้นนอกที่มีส่วนผสมของเกลือ"}, {"id": "food_077", "name": "พัฟเค้กสอดไส้ครีมคัสตาร์ด", "region": "พะเยา", "image": {"src": "assets/food/food_077_phapkheksotsaikhrimkhattat.jpg", "alt": "พัฟเค้กสอดไส้ครีมคัสตาร์ด"}, "sodium": {"amountMg": 320.0, "zone": "yellow", "servingNote": null}, "nutrition": {"energyKcal": 200.0, "fatG": 9.0, "proteinG": 3.0, "carbG": 27.0}, "warningIcons": ["salt", "sugar"], "flavorText": "ขนมยอดฮิตที่ลูกหลานชอบซื้อมาฝากผู้สูงอายุเพราะเนื้อนุ่มเคี้ยวง่าย แต่ระวังโซเดียมแฝงจากผงฟูและเกลือในเนื้อแป้ง รวมถึงน้ำตาลปริมาณสูงในไส้ครีม"}, {"id": "food_078", "name": "ขนมตระกูลทอง (ทองหยิบ-หยอด-ฝอยทอง)", "region": "พะเยา", "image": {"src": "assets/food/food_078_khanomtrakunthong.jpg", "alt": "ขนมตระกูลทอง (ทองหยิบ-หยอด-ฝอยทอง)"}, "sodium": {"amountMg": 520.0, "zone": "red", "servingNote": "หมายเหตุ: โซเดียมมาจากไข่แดงและน้ำเชื่อมปรุงรส"}, "nutrition": {"energyKcal": 380.0, "fatG": 14.0, "proteinG": 7.0, "carbG": 56.0}, "warningIcons": ["salt", "sugar"], "flavorText": "ขนมไทยภาคกลางที่แพร่หลายไปทั่วประเทศ มักซื้อไปทำบุญหรือจัดงานเลี้ยง เนื้อนุ่มฉ่ำน้ำเชื่อม หวานเจี๊ยบจนแสบคอ และมีโซเดียมแฝงเข้มข้นจากการใช้ไข่แดงล้วนและเทคนิคการแต่งรสน้ำเชื่อม"}, {"id": "food_079", "name": "ขนมบ้าบิ่นมะพร้าวอ่อน", "region": "พะเยา", "image": {"src": "assets/food/food_079_khanombabinmapraoon.jpg", "alt": "ขนมบ้าบิ่นมะพร้าวอ่อน"}, "sodium": {"amountMg": 390.0, "zone": "yellow", "servingNote": null}, "nutrition": {"energyKcal": 280.0, "fatG": 11.0, "proteinG": 3.0, "carbG": 42.0}, "warningIcons": ["salt", "sugar"], "flavorText": "ขนมยอดนิยมตามกาดนัด แป้งเหนียวนุ่มหนึบหอมมะพร้าว แต่แม่ค้ามักใส่เกลือป่นค่อนข้างหนักมือในขั้นตอนการผสมแป้งและกะทิ เพื่อตัดรสให้หวานมันเข้มข้นสะใจ"}, {"id": "food_080", "name": "ขนมตะโก้ (ไส้เผือก)", "region": "พะเยา", "image": {"src": "assets/food/food_080_khanamatako.jpg", "alt": "ขนมตะโก้ (ไส้เผือก)"}, "sodium": {"amountMg": 380.0, "zone": "yellow", "servingNote": "ต่อกระทงขนาดกลาง 2-3 กระทง"}, "nutrition": {"energyKcal": 240.0, "fatG": 9.0, "proteinG": 2.0, "carbG": 38.0}, "warningIcons": ["salt", "sugar"], "flavorText": "ขนมตลาดนัดเนื้อนุ่มตักทานง่าย หน้ากะทิเน้นความเค็มมันเข้มข้นสะใจ ส่วนตัวแป้งด้านล่างหวานจัด เป็นคู่หูโซเดียมและน้ำตาลที่ผู้ป่วยความดันและเบาหวานต้องจำกัดปริมาณ"}, {"id": "food_081", "name": "หมูปิ้งนมสด", "region": "พะเยา", "image": {"src": "assets/food/food_081_mupingnamasot.jpg", "alt": "หมูปิ้งนมสด"}, "sodium": {"amountMg": 780.0, "zone": "red", "servingNote": "ต่อ 3 ไม้"}, "nutrition": {"energyKcal": 390.0, "fatG": 24.0, "proteinG": 21.0, "carbG": 22.0}, "warningIcons": ["salt", "sugar"], "flavorText": "อาหารเช้าสุดฮิตที่ซ่อนอันตราย หมักด้วยซีอิ๊ว น้ำปลา ผงชูรส และน้ำตาลปี๊บจนเนื้อนุ่ม หวานเค็มเข้มข้นแทรกซึมทุกอนูเนื้อ"}, {"id": "food_082", "name": "ไส้กรอกอีสานย่าง", "region": "พะเยา", "image": {"src": "assets/food/food_082_sakairokisanyang.jpg", "alt": "ไส้กรอกอีสานย่าง"}, "sodium": {"amountMg": 890.0, "zone": "red", "servingNote": "ต่อ 1 ไม้/ชุดเล็ก"}, "nutrition": {"energyKcal": 320.0, "fatG": 25.0, "proteinG": 12.0, "carbG": 12.0}, "warningIcons": ["salt"], "flavorText": "มีขายทุกตลาดนัด รสชาติเปรี้ยวเค็มมัน แต่โซเดียมพุ่งทะลุจอจากทั้งเกลือหมักและผงชูรส ควรทานแกล้มผักสดเยอะๆ เพื่อช่วยขับโซเดียม"}, {"id": "food_083", "name": "แกงพะโล้ขาหมู", "region": "พะเยา", "image": {"src": "assets/food/food_083_kaengphalokhamu.jpg", "alt": "แกงพะโล้ขาหมู"}, "sodium": {"amountMg": 950.0, "zone": "red", "servingNote": null}, "nutrition": {"energyKcal": 480.0, "fatG": 32.0, "proteinG": 26.0, "carbG": 22.0}, "warningIcons": ["salt", "sugar"], "flavorText": "เมนูกับข้าวยอดนิยมในร้านข้าวแกง น้ำซุปสีเข้มเกิดจากการเคี่ยวน้ำตาลปี๊บผสมซีอิ๊วดำและเกลือ หวานเจี๊ยบเค็มข้น ไม่ควรตักน้ำราดข้าวมากเกินไป"}, {"id": "food_084", "name": "ไข่ต้มซีอิ๊วพะโล้", "region": "พะเยา", "image": {"src": "assets/food/food_084_khataimsiiophalo.jpg", "alt": "ไข่ต้มซีอิ๊วพะโล้"}, "sodium": {"amountMg": 460.0, "zone": "yellow", "servingNote": "ต่อ 1 ฟอง"}, "nutrition": {"energyKcal": 150.0, "fatG": 10.0, "proteinG": 12.0, "carbG": 3.0}, "warningIcons": ["salt", "sugar"], "flavorText": "ไข่ต้มเคี่ยวจนเนื้อหนึบ รสเค็มหวานซึมลึกเข้าไปถึงเนื้อไข่แดง กินง่ายสำหรับผู้สูงอายุ แต่โซเดียมและคอเลสเตอรอลไม่น้อยเลย"}, {"id": "food_085", "name": "ลูกชิ้นทอด น้ำจิ้มรสเด็ด", "region": "พะเยา", "image": {"src": "assets/food/food_085_lukchinthot_namchimrasadet.jpg", "alt": "ลูกชิ้นทอด น้ำจิ้มรสเด็ด"}, "sodium": {"amountMg": 980.0, "zone": "red", "servingNote": "ต่อ 4-5 ไม้"}, "nutrition": {"energyKcal": 380.0, "fatG": 18.0, "proteinG": 14.0, "carbG": 40.0}, "warningIcons": ["salt", "sugar"], "flavorText": "ตัวลูกชิ้นมีโซเดียมแฝงจากสารบอแรกซ์และเกลืออยู่แล้ว เมื่อราดน้ำจิ้มมะขามเปียกสูตรโบราณที่หวานจัดเค็มจัด ยิ่งทำให้ร่างกายได้รับโซเดียมพุ่งกระฉูด"}, {"id": "food_086", "name": "หมูหวาน", "region": "พะเยา", "image": {"src": "assets/food/food_086_muwan.jpg", "alt": "หมูหวาน"}, "sodium": {"amountMg": 750.0, "zone": "red", "servingNote": null}, "nutrition": {"energyKcal": 410.0, "fatG": 25.0, "proteinG": 18.0, "carbG": 28.0}, "warningIcons": ["salt", "sugar"], "flavorText": "เมนูกับข้าวตักที่เด็กๆ และผู้สูงอายุนิยม เพราะเคี้ยวง่าย รสชาติหวานนำเค็มตาม อุดมไปด้วยน้ำตาลทราย ซีอิ๊วขาว และน้ำมันเยิ้ม"}, {"id": "food_087", "name": "ปลาทูต้มเค็มหวานโบราณ", "region": "พะเยา", "image": {"src": "assets/food/food_087_plathutamakhemwanboran.jpg", "alt": "ปลาทูต้มเค็มหวานโบราณ"}, "sodium": {"amountMg": 1100.0, "zone": "red", "servingNote": "ต่อปลา 1 ตัว"}, "nutrition": {"energyKcal": 260.0, "fatG": 12.0, "proteinG": 24.0, "carbG": 14.0}, "warningIcons": ["salt", "sugar"], "flavorText": "ปลาทูที่ต้มเคี่ยวกับน้ำตาลอ้อย ซีอิ๊ว และมะขามเปียกจนก้างนิ่มทานได้ทั้งตัว อร่อยนุ่มลิ้นแต่โซเดียมสูงปรี๊ดจากน้ำต้มที่งวดจนเค็มจัด"}, {"id": "food_088", "name": "ผัดกะเพราหมูสับ", "region": "พะเยา", "image": {"src": "assets/food/food_088_phatkapheramusap.jpg", "alt": "ผัดกะเพราหมูสับ"}, "sodium": {"amountMg": 1200.0, "zone": "red", "servingNote": null}, "nutrition": {"energyKcal": 350.0, "fatG": 22.0, "proteinG": 24.0, "carbG": 8.0}, "warningIcons": ["salt"], "flavorText": "เมนูสิ้นคิดยอดฮิตในตลาด ร้านค้ามักสาดน้ำมันหอย ซีอิ๊วขาว น้ำปลา และผงชูรส เพื่อให้ได้รสชาติเค็มเผ็ดสะใจ โซเดียมสูงติดอันดับต้นๆ ของอาหารตามสั่ง"}, {"id": "food_089", "name": "หมูแดดเดียวทอด", "region": "พะเยา", "image": {"src": "assets/food/food_089_mudaetdiaothot.jpg", "alt": "หมูแดดเดียวทอด"}, "sodium": {"amountMg": 850.0, "zone": "red", "servingNote": "ต่อจานเล็ก"}, "nutrition": {"energyKcal": 380.0, "fatG": 26.0, "proteinG": 32.0, "carbG": 4.0}, "warningIcons": ["salt"], "flavorText": "ของกิ๋นลำคู่ข้าวเหนียวอุ่นๆ การถนอมอาหารด้วยการหมักเกลือ ซอส และผงชูรสปริมาณมาก ก่อนนำไปตากและทอด ทำให้โซเดียมเข้มข้นสูงมาก"}, {"id": "food_090", "name": "ทอดมันปลากราย", "region": "พะเยา", "image": {"src": "assets/food/food_090_thotmanplakrai.jpg", "alt": "ทอดมันปลากราย"}, "sodium": {"amountMg": 580.0, "zone": "yellow", "servingNote": "ต่อ 4-5 ชิ้น"}, "nutrition": {"energyKcal": 240.0, "fatG": 14.0, "proteinG": 18.0, "carbG": 10.0}, "warningIcons": ["salt", "sugar"], "flavorText": "เนื้อปลาเหนียวนุ่มเคี้ยวหนึบ ปรุงรสด้วยพริกแกงที่มีเกลือสูง มักทานคู่กับน้ำจิ้มอาจาดที่หวานนำ ทำให้ได้รับทั้งน้ำตาลและโซเดียมเพิ่มขึ้น"}, {"id": "food_091", "name": "กุนเชียงหมูทอด", "region": "พะเยา", "image": {"src": "assets/food/food_091_kunchiangmuthot.jpg", "alt": "กุนเชียงหมูทอด"}, "sodium": {"amountMg": 810.0, "zone": "red", "servingNote": "ต่อ 1 แท่ง/จานแบ่ง"}, "nutrition": {"energyKcal": 360.0, "fatG": 28.0, "proteinG": 14.0, "carbG": 12.0}, "warningIcons": ["salt", "sugar"], "flavorText": "อาหารแปรรูปยอดนิยมที่รสชาติหวานนำเค็มตาม อัดแน่นไปด้วยเกลือเพื่อการถนอมอาหารและน้ำตาลทรายปริมาณมาก รวมถึงไขมันอิ่มตัวสูง"}, {"id": "food_092", "name": "แหนมชุบไข่ทอด", "region": "พะเยา", "image": {"src": "assets/food/food_092_aenmchupkhathait.jpg", "alt": "แหนมชุบไข่ทอด"}, "sodium": {"amountMg": 930.0, "zone": "red", "servingNote": null}, "nutrition": {"energyKcal": 290.0, "fatG": 22.0, "proteinG": 18.0, "carbG": 5.0}, "warningIcons": ["salt"], "flavorText": "แหนมเปรี้ยวเค็มนำไปชุบไข่ทอดจนหอมฉุย โซเดียมสูงมากจากเกลือป่นและดินประสิวที่ใช้ในกระบวนการหมักแหนมดิบ"}, {"id": "food_093", "name": "ยำไข่เค็ม", "region": "พะเยา", "image": {"src": "assets/food/food_093_yamkhaikhem.jpg", "alt": "ยำไข่เค็ม"}, "sodium": {"amountMg": 1150.0, "zone": "red", "servingNote": null}, "nutrition": {"energyKcal": 320.0, "fatG": 20.0, "proteinG": 12.0, "carbG": 22.0}, "warningIcons": ["salt", "sugar"], "flavorText": "เมนูกับแกล้มหรือทานกับข้าวต้ม โซเดียมคูณสามจากไข่เค็ม บวกกับน้ำยำสามรสที่สาดทั้งน้ำปลาและน้ำตาลทรายแบบจัดเต็ม"}, {"id": "food_094", "name": "ต้มซุปเปอร์ขาไก่", "region": "พะเยา", "image": {"src": "assets/food/food_094_tomsuppoekhakai.jpg", "alt": "ต้มซุปเปอร์ขาไก่"}, "sodium": {"amountMg": 1350.0, "zone": "red", "servingNote": null}, "nutrition": {"energyKcal": 220.0, "fatG": 10.0, "proteinG": 28.0, "carbG": 4.0}, "warningIcons": ["salt"], "flavorText": "น้ำซุปรสแซ่บจัดจ้าน เผ็ดเปรี้ยวเค็มสะใจที่คนชอบซดร้อนๆ แท้จริงแล้วอัดแน่นไปด้วยน้ำปลา เกลือป่น และผงชูรสในปริมาณมหาศาลเพื่อกลบความคาว"}, {"id": "food_095", "name": "แกงไตปลา (สูตรเข้มข้น)", "region": "พะเยา", "image": {"src": "assets/food/food_095_kaengtapaila.jpg", "alt": "แกงไตปลา (สูตรเข้มข้น)"}, "sodium": {"amountMg": 1450.0, "zone": "red", "servingNote": null}, "nutrition": {"energyKcal": 180.0, "fatG": 4.0, "proteinG": 22.0, "carbG": 14.0}, "warningIcons": ["salt"], "flavorText": "ซุปเผ็ดร้อนจัดจ้าน โซเดียมพุ่งสูงริบจากการใช้พุงปลาหมักเกลือเข้มข้นและกะปิ แนะนำให้ทานเนื้อปลาและผัก เขี่ยน้ำแกงออกห้ามซดเด็ดขาด"}, {"id": "food_096", "name": "ข้าวหมูแดง-หมูกรอบ", "region": "พะเยา", "image": {"src": "assets/food/food_096_khaomudaeng_mukrop.jpg", "alt": "ข้าวหมูแดง-หมูกรอบ"}, "sodium": {"amountMg": 1050.0, "zone": "red", "servingNote": null}, "nutrition": {"energyKcal": 560.0, "fatG": 24.0, "proteinG": 22.0, "carbG": 64.0}, "warningIcons": ["salt", "sugar"], "flavorText": "ตัวร้ายอยู่ที่ \"น้ำราดสีแดง\" ที่เคี่ยวจากน้ำตาลปี๊บ ซีอิ๊ว และผงพวงปรุงรสจนหวานเค็มข้นหนืด ยิ่งราดฉ่ำ เบาหวานและไตยิ่งทำงานหนักควบคู่กัน"}, {"id": "food_097", "name": "ขนมจีนน้ำยาป่า", "region": "พะเยา", "image": {"src": "assets/food/food_097_khanamachinnamyapa.jpg", "alt": "ขนมจีนน้ำยาป่า"}, "sodium": {"amountMg": 1180.0, "zone": "red", "servingNote": null}, "nutrition": {"energyKcal": 320.0, "fatG": 12.0, "proteinG": 14.0, "carbG": 38.0}, "warningIcons": ["salt"], "flavorText": "น้ำยาขนมจีนเข้มข้นด้วยปลาและพริกแกงที่มีส่วนผสมของกะปิและเกลือป่นปริมาณมาก ผสมผงชูรสเพื่อความนัว ไม่ควรตักน้ำราดจนท่วมเส้น"}, {"id": "food_098", "name": "ซาลาเปาไส้หมูสับไข่เค็ม", "region": "พะเยา", "image": {"src": "assets/food/food_098_salapaosaimusapkhaikhem.jpg", "alt": "ซาลาเปาไส้หมูสับไข่เค็ม"}, "sodium": {"amountMg": 490.0, "zone": "yellow", "servingNote": "ต่อ 1 ลูกใหญ่"}, "nutrition": {"energyKcal": 260.0, "fatG": 8.0, "proteinG": 10.0, "carbG": 37.0}, "warningIcons": ["salt", "sugar"], "flavorText": "แป้งซาลาเปานุ่มๆ มีน้ำตาลแฝงสูง ส่วนไส้หมูสับข้างในปรุงรสด้วยน้ำมันหอย ซีอิ๊วขาว และมักใส่ไข่เค็มเพิ่มรสชาติ ทำให้เป็นของว่างเคี้ยวง่ายที่โซเดียมไม่เบาเลย"}, {"id": "food_099", "name": "ยำแหนมคลุกข้าวทอด", "region": "พะเยา", "image": {"src": "assets/food/food_099_yamaenmkhlukkhaothot.jpg", "alt": "ยำแหนมคลุกข้าวทอด"}, "sodium": {"amountMg": 1250.0, "zone": "red", "servingNote": "ต่อชุดเล็ก 1 ถุง"}, "nutrition": {"energyKcal": 410.0, "fatG": 22.0, "proteinG": 15.0, "carbG": 38.0}, "warningIcons": ["salt", "sugar"], "flavorText": "เมนูกับแกล้มและของกินเล่นยอดฮิต โซเดียมคูณสามจาก \"ข้าวทอด\" ที่ปรุงรสใส่พริกแกงและเกลือ, \"แหนมดิบ\" ที่หมักด้วยเกลือและดินประสิว และ \"น้ำยำ\" ที่สาดน้ำปลา ผงชูรส และน้ำตาลทรายเพื่อตัดรสชาติให้แซ่บนัว อร่อยกรุบกรอบแต่ไตกรีดร้อง"}];
+const ZONE_COLOR = {green:'#1E8E3E', yellow:'#F2A900', red:'#D32F2F'};
+const ZONE_LABEL = {green:'เขียว - ปลอดภัย', yellow:'เหลือง - ระวัง', red:'แดง - เสี่ยง'};
+function zoneTextColor(zone){ return zone==='yellow' ? '#3a2a00' : '#fff'; }
+
+/* ================= VERSION ================= */
+// Bump this by hand whenever a meaningful change ships — shown on the setup
+// screen and stamped into exported save files so a downloaded .json can be
+// traced back to the build that produced it.
+const GAME_VERSION = 'Alpha';
+(function initVersionTag(){
+  const el = document.getElementById('version-tag');
+  if(el) el.textContent = GAME_VERSION;
+})();
+
+/* ================= STATE ================= */
+let state = null;
+
+// Avoids handing a player a card they already hold, as long as the pool has
+// an unowned card left to give — falls back to allowing a duplicate only
+// once every card in the pool is already owned (pool exhausted).
+function drawUniqueCards(pool, existingHand, count){
+  const owned = new Set(existingHand.map(c=>c.id));
+  const out = [];
+  for(let i=0;i<count;i++){
+    const available = pool.filter(c=>!owned.has(c.id));
+    const card = rndPick(available.length ? available : pool);
+    out.push(card);
+    owned.add(card.id);
+  }
+  return out;
+}
+function drawRandomCards(type, count, existingHand){
+  const pool = type==='food' ? FOOD : type==='knowledge' ? KNOWLEDGE : SUPPORT;
+  return drawUniqueCards(pool, existingHand || [], count);
+}
+// Starting food hand: guarantee at least one card from every sodium zone
+// (green/yellow/red) so every player can compare colors from turn one,
+// then fill the rest randomly (no duplicates) and shuffle so the order
+// isn't predictable.
+function drawStartingFoodHand(count){
+  const zones = ['green','yellow','red'];
+  const byZone = {
+    green: FOOD.filter(c=>c.sodium.zone==='green'),
+    yellow: FOOD.filter(c=>c.sodium.zone==='yellow'),
+    red: FOOD.filter(c=>c.sodium.zone==='red'),
+  };
+  const picks = [];
+  zones.filter(z=>byZone[z].length>0).forEach(z=>{ picks.push(drawUniqueCards(byZone[z], picks, 1)[0]); });
+  while(picks.length < count) picks.push(drawUniqueCards(FOOD, picks, 1)[0]);
+  for(let i=picks.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [picks[i],picks[j]] = [picks[j],picks[i]];
+  }
+  return picks;
+}
+
+function newState(playerConfigs){
+  return {
+    players: playerConfigs.map((p,i)=>({
+      // position:-1 = "not yet on the board" so the first roll moves onto tile
+      // 0 (headman) the same way any other tile is landed on, instead of
+      // starting the game already standing there and skipping its card forever
+      id:i, name:p.name, icon:p.icon, position:-1, score:0,
+      hand:{ food: drawStartingFoodHand(6), knowledge: drawRandomCards('knowledge',1,[]), support: [] },
+      skipTurns:0, finished:false, nextDrawPenalty:0
+    })),
+    currentPlayerIndex: 0,
+    log: [],
+    villageIndex: 0,
+    finished:false
+  };
+}
+
+// Pass `player` to always append that player's current score to the log
+// line; also pass `scoreBefore` when the action may have changed it, so the
+// line reads "before → after" instead of just the final number.
+function log(msg, cls, player, scoreBefore){
+  if(player){
+    msg += (scoreBefore !== undefined && scoreBefore !== player.score)
+      ? ` · คะแนน: ${scoreBefore} → ${player.score} แต้ม`
+      : ` · คะแนน: ${player.score} แต้ม`;
+  }
+  state.log.unshift({msg, cls});
+  state.log = state.log.slice(0,40);
+  renderLog();
+}
+
+/* ================= SETUP SCREEN ================= */
+let selectedCount = 2;
+const countBtnsEl = document.getElementById('count-btns');
+for(let n=1;n<=5;n++){
+  const b = document.createElement('button');
+  b.textContent = n+" คน";
+  b.className = n===selectedCount ? 'selected':'';
+  b.onclick = ()=>{ selectedCount=n; renderPlayerRows();
+    [...countBtnsEl.children].forEach(c=>c.classList.remove('selected')); b.classList.add('selected'); };
+  countBtnsEl.appendChild(b);
+}
+function renderPlayerRows(){
+  const wrap = document.getElementById('player-rows');
+  wrap.innerHTML='';
+  for(let i=0;i<selectedCount;i++){
+    const row = document.createElement('div');
+    row.className='player-row';
+    const defaultIcon = ALL_ICONS[i % ALL_ICONS.length];
+    row.innerHTML = `<span style="font-size:13px;color:var(--text-dim);width:16px;">${i+1}</span>
+      <input type="text" placeholder="ชื่อผู้เล่น ${i+1}" maxlength="16" data-idx="${i}" class="pname-input"/>
+      <button type="button" class="icon-select-btn" id="icon-btn-${i}" data-icon="${defaultIcon}" onclick="toggleIconPanel(${i})">${defaultIcon}</button>
+      <div class="icon-panel hidden" id="icon-panel-${i}"></div>`;
+    wrap.appendChild(row);
+    renderIconPanel(i);
+  }
+}
+function renderIconPanel(i){
+  const panel = document.getElementById(`icon-panel-${i}`);
+  panel.innerHTML = ICON_GROUPS.map(g => `
+    <div class="icon-group">
+      <div class="icon-group-label">${g.label}</div>
+      <div class="icon-group-row">
+        ${g.icons.map(ic => `<button type="button" class="icon-opt" onclick="selectIcon(${i}, '${ic}')">${ic}</button>`).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+function toggleIconPanel(i){
+  document.querySelectorAll('.icon-panel').forEach(p=>{ if(p.id !== `icon-panel-${i}`) p.classList.add('hidden'); });
+  document.getElementById(`icon-panel-${i}`).classList.toggle('hidden');
+}
+function selectIcon(i, icon){
+  const btn = document.getElementById(`icon-btn-${i}`);
+  btn.textContent = icon;
+  btn.dataset.icon = icon;
+  document.getElementById(`icon-panel-${i}`).classList.add('hidden');
+}
+document.addEventListener('click', (e)=>{
+  if(!e.target.closest('.player-row')){
+    document.querySelectorAll('.icon-panel').forEach(p=>p.classList.add('hidden'));
+  }
+});
+renderPlayerRows();
+
+document.getElementById('start-btn').onclick = ()=>{
+  const rows = document.getElementById('player-rows').children;
+  const configs = [...rows].map((row,i)=>{
+    const name = row.querySelector('.pname-input').value.trim() || `ผู้เล่น ${i+1}`;
+    const icon = row.querySelector('.icon-select-btn').dataset.icon || ALL_ICONS[i%ALL_ICONS.length];
+    return {name, icon};
+  });
+  state = newState(configs);
+  log('เริ่มเกมใหม่ — โชคดี อสม. ทุกคน!', 'lg-good');
+  showGameScreen();
+};
+
+// Load a save from a .json file on disk — works independently of
+// localStorage, so it's also the way to carry a save between browsers/
+// devices, or to recover play when localStorage itself is unavailable.
+document.getElementById('load-file-btn').onclick = ()=>{
+  document.getElementById('load-file-input').click();
+};
+document.getElementById('load-file-input').onchange = (e)=>{
+  const file = e.target.files[0];
+  e.target.value = ''; // reset so picking the same file again still fires 'change'
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    let parsed;
+    try{
+      parsed = JSON.parse(reader.result);
+    } catch(err){
+      alert('ไฟล์นี้ไม่ใช่ไฟล์เซฟที่ถูกต้อง (เปิดอ่านเป็น JSON ไม่ได้)');
+      return;
+    }
+    if(!restoreSaveData(parsed)){
+      alert('ไฟล์นี้ไม่ใช่ไฟล์เซฟที่ถูกต้อง');
+      return;
+    }
+    showGameScreen();
+  };
+  reader.onerror = ()=>{ alert('ไม่สามารถอ่านไฟล์นี้ได้'); };
+  reader.readAsText(file);
+};
+
+/* ================= BOARD RENDER ================= */
+// Tile grid X range, in the shared 1000x520 design space — deliberately
+// short of the full 0-1000 canvas (not 0..1000) so the start/finish bookend
+// pads always have clear, on-canvas, non-overlapping room past either edge.
+const TILE_X0 = 130, TILE_X1 = 870;
+const BOOKEND_OFFSET = 90;  // design-space distance from the edge tile to its pad
+const BOOKEND_SCALE = 0.6;  // bookend pads render smaller than real tiles
+// Each village gets its own tile layout for variety. Whatever coordinates a
+// layout returns are used BOTH for the tile positions AND to draw the trail
+// line (via a Catmull-Rom curve that passes exactly through every point) —
+// so the path and the tiles can never disagree, no matter the shape.
+function buildTileCoords(villageIdx){
+  // Randomized zigzag walk on a grid: horizontal runs are 1-2 tiles, but
+  // every vertical move is EXACTLY 1 tile, immediately followed by a
+  // forced move to the right (the map is short vertically, so continuing
+  // up/down or going left after a vertical hop would waste the wide
+  // horizontal space). Self-avoiding + bounds-checked, with a
+  // guaranteed-valid fallback shape if generation ever fails.
+  // Each village uses a different grid shape/start point so the paths
+  // are genuinely distinct from one another, not just randomly reshuffled
+  // versions of the same layout.
+  const CONFIGS = [
+    { cols:8, rows:2, startRow:'bottom', yRange:[80,460] },    // 0 — เข้าถึง
+    { cols:8, rows:2, startRow:'top',    yRange:[80,460] },    // 1 — เข้าใจ
+    { cols:8, rows:2, startRow:'bottom', yRange:[80,460] },    // 2 — ไต่ถาม
+    { cols:8, rows:2, startRow:'top',    yRange:[80,460] },    // 3 — ตัดสินใจ
+    { cols:8, rows:2, startRow:'bottom', yRange:[80,460] },    // 4 — นำไปใช้
+  ];
+  const cfg = CONFIGS[villageIdx] || CONFIGS[0];
+  const COLS = cfg.cols, ROWS = cfg.rows, TOTAL = 12;
+  const [yTop, yBottom] = cfg.yRange || [80, 460];
+  // The grid itself is kept short of the full 0-1000 canvas width (TILE_X0..
+  // TILE_X1, not 0..1000) so there's always clear space left of column 0 and
+  // right of the last column for the start/finish bookend pads below.
+  const xs = []; for(let c=0;c<COLS;c++) xs.push(TILE_X0 + c*((TILE_X1-TILE_X0)/(COLS-1)));
+  const ys = []; for(let r=0;r<ROWS;r++) ys.push(yTop + r*((yBottom-yTop)/(ROWS-1)));
+  const inBounds = (c,r) => c>=0 && c<COLS && r>=0 && r<ROWS;
+  const startR = cfg.startRow==='bottom' ? ROWS-1 : 0;
+
+  function attemptWalk(){
+    const visited = new Set(['0,'+startR]);
+    const cells = [{col:0, row:startR}];
+    let axis = 'v'; // forces the first run to be horizontal
+    let guard = 0;
+    while(cells.length < TOTAL && guard < 300){
+      guard++;
+      // after any vertical step, only "right" is offered (never left, never
+      // another vertical step in a row)
+      const perp = axis==='h' ? [{x:0,y:-1},{x:0,y:1}] : [{x:1,y:0}];
+      const options = perp.sort(()=>Math.random()-0.5);
+      let moved = false;
+      for(const dir of options){
+        const isVertical = dir.y !== 0;
+        const maxRun = isVertical ? 1 : Math.min(2, TOTAL-cells.length);
+        for(let runLen=maxRun; runLen>=1 && !moved; runLen--){
+          let {col,row} = cells[cells.length-1];
+          const trial = [];
+          let ok = true;
+          for(let s=0;s<runLen;s++){
+            col += dir.x; row += dir.y;
+            if(!inBounds(col,row) || visited.has(col+','+row)){ ok=false; break; }
+            trial.push({col,row});
+          }
+          if(ok){
+            trial.forEach(p=>{ visited.add(p.col+','+p.row); cells.push(p); });
+            axis = dir.x!==0 ? 'h' : 'v';
+            moved = true;
+          }
+        }
+        if(moved) break;
+      }
+      if(!moved) return null;
+    }
+    return cells;
+  }
+
+  let cells = null;
+  for(let attempt=0; attempt<200 && !cells; attempt++) cells = attemptWalk();
+  if(!cells){
+    // fallback: simple guaranteed-valid snake, only used if the random
+    // walk somehow can't find a path after many attempts
+    cells = [];
+    for(let r=0;r<ROWS;r++){
+      const rowCols = (r%2===0) ? [...Array(COLS).keys()] : [...Array(COLS).keys()].reverse();
+      rowCols.forEach(c=>cells.push({col:c,row:r}));
+    }
+    cells = cells.slice(0, TOTAL);
+  }
+  return cells.map(p => ({ x: xs[p.col], y: ys[p.row] }));
+}
+// Strict rectilinear path (straight horizontal/vertical segments only) —
+// matches the grid layout above exactly, so corners are always 90°.
+function buildRectPath(points){
+  if(points.length<2) return '';
+  return 'M ' + points.map(p=>`${p.x} ${p.y}`).join(' L ');
+}
+// Two small "bookend" pads just past either end of the path, in the same
+// 1000x520 design space as buildTileCoords: a start pad (every village —
+// players sit here, off the board, before their first roll) directly LEFT
+// of tile 0, and a second pad directly RIGHT of the final tile, same row as
+// each neighbor so the trail into/out of them stays perfectly horizontal.
+// That second pad is every village's overshoot landing spot (see
+// moveSteps): "ศาลาพักคอย" in villages 1-4, "เส้นชัย" in the last one.
+// This is always collision-free: horizontal moves in the walk above are
+// rightward-only (never left), so column indices never decrease along the
+// path — tile 0 is therefore always the leftmost cell used, and the final
+// tile is always the rightmost, so nothing else in the path can ever sit
+// where these pads land, whatever shape the random walk took.
+function computeBookendDesignCoords(design){
+  const last = design[design.length-1];
+  return {
+    start: { x: design[0].x - BOOKEND_OFFSET, y: design[0].y },
+    finish: { x: last.x + BOOKEND_OFFSET, y: last.y },
+  };
+}
+
+// Faint, non-cluttered background motif per village — houses, food, อสม.,
+// tradition, communal meals, rural life — different icon set each stage.
+const VILLAGE_BG_ICONS = [
+  ['🏠','🚶','🌾','🐕','🪴'],        // เข้าถึง — walking out to visit houses
+  ['💬','📖','🧑‍⚕️','🏡','🌿'],      // เข้าใจ — learning & conversation
+  ['🧺','🍜','🥬','🌶️','🧑‍🌾'],      // ไต่ถาม — market, food, questions
+  ['🤝','❤️','🙏','🌾','🕊️'],       // ตัดสินใจ — trust, care, tradition
+  ['🍚','🥣','🛕','🎉','🌾'],        // นำไปใช้ — sharing a meal, celebration
+];
+function buildBgPatternDataUri(icons){
+  // 5 icons hand-placed at varied positions/sizes/rotations for an organic,
+  // non-grid scattered feel within one repeating tile.
+  const placements = [
+    {x:35,  y:45,  size:34, rot:-12},
+    {x:150, y:30,  size:26, rot:10},
+    {x:95,  y:120, size:38, rot:-6},
+    {x:190, y:150, size:24, rot:16},
+    {x:40,  y:195, size:28, rot:-18},
+  ];
+  const items = placements.map((p,i)=>
+    `<text x="${p.x}" y="${p.y}" font-size="${p.size}" transform="rotate(${p.rot} ${p.x} ${p.y})" text-anchor="middle" dominant-baseline="middle">${icons[i % icons.length]}</text>`
+  ).join('');
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="220" height="220">${items}</svg>`;
+  return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+}
+function updateBoardBackground(villageIdx){
+  const el = document.getElementById('board-bg');
+  if(!el) return;
+  const icons = VILLAGE_BG_ICONS[villageIdx] || VILLAGE_BG_ICONS[0];
+  el.style.backgroundImage = `url("${buildBgPatternDataUri(icons)}")`;
+}
+
+let tilePositions = [];
+let startPixelPos = null;  // "off the board" pad players sit on before rolling
+let finishPixelPos = null; // "เส้นชัย" pad, last village only
+let boardScale = 1; // used to size tiles/tokens responsively
+let cachedVillageIdx = -1;
+let cachedDesignCoords = null;
+let cachedBookendDesign = null;
+// Bundles `state` together with the current village's randomly-generated
+// board layout, so reloading a save shows the SAME path shape the player
+// left off on instead of silently reshuffling it (computeTilePositions()
+// only regenerates when cachedVillageIdx doesn't match — restoring these
+// alongside state pre-fills that cache before the board is ever drawn).
+function buildSaveData(){
+  return {
+    saveVersion: 2,
+    gameVersion: GAME_VERSION,
+    state,
+    board: { villageIndex: cachedVillageIdx, design: cachedDesignCoords, bookend: cachedBookendDesign },
+  };
+}
+// Accepts either the current {saveVersion, state, board} format or a bare
+// state object (saves written before this format existed) — returns false
+// if the data isn't a usable game state at all.
+function restoreSaveData(parsed){
+  const loadedState = (parsed && parsed.saveVersion && parsed.state) ? parsed.state : parsed;
+  if(!loadedState || !Array.isArray(loadedState.players)) return false;
+  state = loadedState;
+  const board = parsed && parsed.board;
+  if(board && board.design && board.villageIndex === state.villageIndex){
+    cachedVillageIdx = board.villageIndex;
+    cachedDesignCoords = board.design;
+    cachedBookendDesign = board.bookend || null;
+  }
+  return true;
+}
+function computeTilePositions(){
+  const svg = document.getElementById('board-svg');
+  const svgW = svg.clientWidth  || 1000;
+  const svgH = svg.clientHeight || 520;
+  // Set the viewBox to the SVG's *actual* rendered pixel size. This makes
+  // 1 viewBox unit == 1 real pixel, so the board fills its box completely
+  // with zero letterboxing, however wide or narrow the screen is.
+  svg.setAttribute('viewBox', `0 0 ${svgW} ${svgH}`);
+  boardScale = Math.min(svgW/1000, svgH/520);
+  // Only generate a new random path when actually entering a new village —
+  // resize/re-render for other reasons must reuse the same shape, or the
+  // board would visually reshuffle under the player's feet.
+  if(cachedVillageIdx !== state.villageIndex || !cachedDesignCoords){
+    cachedDesignCoords = buildTileCoords(state.villageIndex); // authored in a 1000x520 reference space
+    cachedBookendDesign = computeBookendDesignCoords(cachedDesignCoords);
+    cachedVillageIdx = state.villageIndex;
+  }
+  const design = cachedDesignCoords;
+  const scalePt = p => ({ x: p.x/1000*svgW, y: p.y/520*svgH });
+  tilePositions = design.map(scalePt);
+  startPixelPos = scalePt(cachedBookendDesign.start);
+  finishPixelPos = cachedBookendDesign.finish ? scalePt(cachedBookendDesign.finish) : null;
+  const path = document.getElementById('trail-path');
+  const pathPoints = [startPixelPos, ...tilePositions, ...(finishPixelPos ? [finishPixelPos] : [])];
+  path.setAttribute('d', buildRectPath(pathPoints));
+  path.setAttribute('stroke-width', Math.max(20, 34*boardScale));
+  updateBoardBackground(state.villageIndex);
+}
+// tilePositions are already in the SVG's real pixel units (1:1) — just add
+// the SVG element's own offset within .board-area to place HTML overlays.
+function toPixel(pt){
+  const svg = document.getElementById('board-svg');
+  const area = document.querySelector('.board-area');
+  const svgRect = svg.getBoundingClientRect();
+  const areaRect = area.getBoundingClientRect();
+  return { x: pt.x + (svgRect.left-areaRect.left), y: pt.y + (svgRect.top-areaRect.top) };
+}
+function renderTiles(){
+  const layer = document.getElementById('tiles-layer');
+  layer.innerHTML='';
+  const size = Math.max(61, Math.min(112, 96*boardScale));
+  TILE_SEQUENCE.forEach((t,i)=>{
+    const pos = toPixel(tilePositions[i]);
+    const div = document.createElement('div');
+    div.className = 'tile-marker '+TILE_CLASS[t.type];
+    div.id = 'tile-'+i;
+    div.style.left = pos.x+'px';
+    div.style.top = pos.y+'px';
+    div.style.width = size+'px';
+    div.style.height = size+'px';
+    div.style.fontSize = Math.max(22, 35*boardScale)+'px';
+    const badgeSize = Math.max(22, Math.min(34, 29*boardScale));
+    div.innerHTML = `<span class="tnum" style="width:${badgeSize}px;height:${badgeSize}px;font-size:${Math.max(10,badgeSize*0.55)}px;">${i+1}</span>${TILE_ICON[t.type]}`;
+    div.title = t.label;
+    layer.appendChild(div);
+  });
+  const padSize = size*BOOKEND_SCALE;
+  if(startPixelPos){
+    const pos = toPixel(startPixelPos);
+    const div = document.createElement('div');
+    div.className = 'tile-marker tile-start';
+    div.id = 'tile-start';
+    div.style.left = pos.x+'px';
+    div.style.top = pos.y+'px';
+    div.style.width = padSize+'px';
+    div.style.height = padSize+'px';
+    div.style.fontSize = Math.max(16, 22*boardScale)+'px';
+    div.innerHTML = `📍<div class="tile-caption">เริ่มต้น</div>`;
+    div.title = 'จุดเริ่มต้น — ก่อนทอยลูกเต๋าครั้งแรกของหมู่บ้านนี้';
+    layer.appendChild(div);
+  }
+  if(finishPixelPos){
+    const isLastVillage = state.villageIndex === VILLAGES.length-1;
+    const pos = toPixel(finishPixelPos);
+    const div = document.createElement('div');
+    div.className = 'tile-marker ' + (isLastVillage ? 'tile-finish-line' : 'tile-waiting-pavilion');
+    div.id = 'tile-finish-line';
+    div.style.left = pos.x+'px';
+    div.style.top = pos.y+'px';
+    div.style.width = padSize+'px';
+    div.style.height = padSize+'px';
+    div.style.fontSize = Math.max(16, 22*boardScale)+'px';
+    div.innerHTML = isLastVillage
+      ? `🏁<div class="tile-caption">เส้นชัย</div>`
+      : `🛕<div class="tile-caption">ศาลาพักคอย</div>`;
+    div.title = isLastVillage
+      ? 'เส้นชัย — จุดจบการเดินทางทั้งหมด (ทอยเกินช่องสุดท้ายก็มาลงที่นี่)'
+      : 'ศาลาพักคอย — ทอยเกินช่องสุดท้ายของหมู่บ้านนี้ มาลงที่นี่แทน รอเพื่อนที่ยังเล่นอยู่';
+    layer.appendChild(div);
+  }
+}
+function tilePixelPos(i){
+  i = Number(i);
+  if(i < 0) return toPixel(startPixelPos || tilePositions[0]);
+  if(i >= TILE_SEQUENCE.length) return toPixel(finishPixelPos || tilePositions[tilePositions.length-1]);
+  return toPixel(tilePositions[i]);
+}
+function renderTokens(){
+  const layer = document.getElementById('tokens-layer');
+  layer.innerHTML='';
+  const size = Math.max(30, Math.min(48, 42*boardScale));
+  const grouped = {};
+  // position:-1 ("not yet on the board") is a valid group key here — it maps
+  // to the start pad via tilePixelPos, not to tile 0.
+  state.players.forEach(p=>{ (grouped[p.position] = grouped[p.position]||[]).push(p); });
+  Object.keys(grouped).forEach(posIdx=>{
+    const group = grouped[posIdx];
+    const base = tilePixelPos(posIdx);
+    group.forEach((p,gi)=>{
+      const offsetAngle = (gi / group.length) * Math.PI*2;
+      const r = group.length>1 ? Math.max(18, 24*boardScale) : 0;
+      const dx = Math.cos(offsetAngle)*r, dy = Math.sin(offsetAngle)*r;
+      const tok = document.createElement('div');
+      tok.className='token';
+      tok.id = 'token-'+p.id;
+      tok.textContent = p.icon;
+      tok.style.width = size+'px';
+      tok.style.height = size+'px';
+      tok.style.fontSize = Math.max(16, 22*boardScale)+'px';
+      tok.style.left = (base.x+dx-size/2)+'px';
+      tok.style.top = (base.y+dy-size/2)+'px';
+      layer.appendChild(tok);
+    });
+  });
+}
+
+/* ================= PLAYERS PANEL ================= */
+function renderPlayersList(){
+  const wrap = document.getElementById('players-list');
+  wrap.innerHTML='';
+  state.players.forEach((p,i)=>{
+    const div = document.createElement('div');
+    div.className = 'player-card'+(i===state.currentPlayerIndex && !state.finished?' current':'');
+    let statusText = '';
+    const isLastVillage = state.villageIndex === VILLAGES.length-1;
+    if(p.finished) statusText = isLastVillage ? '🏁 ถึงศาลาประชาคมแล้ว' : '🚩 ถึงจุดผ่านด่านแล้ว รอเพื่อน';
+    else if(p.skipTurns>0) statusText = `⏸ หยุดเดินอีก ${p.skipTurns} ตา`;
+    div.innerHTML = `<span class="pi">${p.icon}</span>
+      <div style="flex:1;">
+        <div class="pname">${p.name}</div>
+        <div class="phand">🍲${p.hand.food.length} 💡${p.hand.knowledge.length} 🤝${p.hand.support.length}</div>
+        ${statusText ? `<div class="pstatus">${statusText}</div>`:''}
+      </div>
+      <button class="view-hand-btn" id="viewhand-${p.id}" onclick="openHandModal(${p.id})" title="ดูการ์ดในมือ">🔎</button>
+      <div class="pscore">${p.score} แต้ม</div>`;
+    wrap.appendChild(div);
+  });
+  renderHandPanel();
+}
+function renderHandPanel(){
+  const wrap = document.getElementById('hand-panel');
+  if(!wrap || !state.players.length) return;
+  const p = state.players[state.currentPlayerIndex];
+  wrap.innerHTML = `
+    <span class="hp-title">🎒 มือของ ${p.icon} ${p.name} (ตานี้):</span>
+    <span class="hp-item">🍲 ${p.hand.food.length}<small>การ์ดอาหาร</small></span>
+    <span class="hp-item">💡 ${p.hand.knowledge.length}<small>การ์ดความรู้</small></span>
+    <span class="hp-item">🤝 ${p.hand.support.length}<small>การ์ดสนับสนุน</small></span>
+    <button class="view-hand-btn hp-view" id="viewhand-panel-btn" onclick="openHandModal(${p.id})">ดูการ์ดทั้งหมด 🔎</button>
+  `;
+}
+// Read-only card list (no pay/selection buttons) — reused everywhere a
+// player's hand needs to be shown: casual viewing, after receiving a card,
+// and after a mission resolves.
+function renderHandSummaryHTML(player){
+  const section = (title, icon, type, pairs, renderItem) => `
+    <div style="margin-bottom:10px;">
+      <div style="font-weight:800;font-size:12px;margin-bottom:4px;color:#4a4030;">${icon} ${title} (${pairs.length})</div>
+      ${pairs.length ? pairs.map(({c,idx})=>`
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
+          <div style="flex:1;min-width:0;">${renderItem(c)}</div>
+          <button type="button" class="card-view-btn" onclick="showCardDetail(${player.id}, '${type}', ${idx})">🔍 ดูการ์ด</button>
+        </div>`).join('') : `<div style="font-size:11px;color:#8c8267;">— ไม่มีในมือ —</div>`}
+    </div>`;
+  // food is sorted by sodium (mg) high -> low for display, but each row keeps
+  // its ORIGINAL index into player.hand.food so showCardDetail still points
+  // at the right card.
+  const foodPairs = player.hand.food
+    .map((c,idx)=>({c,idx}))
+    .sort((a,b)=> (b.c.sodium?.amountMg||0) - (a.c.sodium?.amountMg||0));
+  const knowledgePairs = player.hand.knowledge.map((c,idx)=>({c,idx}));
+  const supportPairs = player.hand.support.map((c,idx)=>({c,idx}));
+
+  return section('การ์ดอาหาร (โซเดียมมาก → น้อย)', '🍲', 'food', foodPairs, c=>
+      `<div class="effect-line" style="background:${ZONE_COLOR[c.sodium.zone]};color:${zoneTextColor(c.sodium.zone)};margin-bottom:0;">${c.name} — ${Math.round(c.sodium.amountMg||0)} มก.</div>`)
+    + section('การ์ดความรู้', '💡', 'knowledge', knowledgePairs, c=>`<div class="effect-line" style="margin-bottom:0;">${c.name}</div>`)
+    + section('การ์ดสนับสนุน', '🤝', 'support', supportPairs, c=>`<div class="effect-line" style="margin-bottom:0;">${c.name}</div>`);
+}
+// Full detail view for any card already in a player's hand — shows the same
+// educational content (nutrition/tips/scenario) as when the card was first
+// drawn, plus a way back to the hand list.
+function showCardDetail(ownerPid, type, index){
+  const player = state.players.find(p=>p.id===ownerPid);
+  const card = player && player.hand[type] && player.hand[type][index];
+  if(!card) return;
+
+  let inner = '';
+  if(type === 'food'){
+    const sodiumMg = Math.round(card.sodium.amountMg || 0);
+    const servingNote = card.sodium.servingNote ? ` (${card.sodium.servingNote})` : '';
+    const warnIcons = (card.warningIcons||[]).map(w => w==='sugar' ? '🥄 หวาน' : '🧂 เค็ม').join('  ');
+    const n = card.nutrition || {};
+    const nutritionLine = (n.energyKcal!=null) ?
+      `⚡ ${Math.round(n.energyKcal)} kcal · 🥓 ไขมัน ${n.fatG??'-'} ก. · 🍗 โปรตีน ${n.proteinG??'-'} ก. · 🍚 คาร์บ ${n.carbG??'-'} ก.` : '';
+    const imgTag = card.image?.src ?
+      `<img src="${card.image.src}" alt="${card.image.alt||card.name}" style="width:100%;max-height:190px;object-fit:cover;border-radius:10px;margin-bottom:10px;" onerror="this.style.display='none'">` : '';
+    inner = `
+      <span class="ctype" style="background:var(--ochre);color:#3a2a00;">🧺 การ์ดเมนูอาหาร ${warnIcons ? '· '+warnIcons : ''}</span>
+      <h3>${card.name}</h3>
+      ${imgTag}
+      <div class="effect-line" style="background:${ZONE_COLOR[card.sodium.zone]};color:${zoneTextColor(card.sodium.zone)};">โซเดียม ${sodiumMg} มก.${servingNote} (${ZONE_LABEL[card.sodium.zone]})</div>
+      ${nutritionLine ? `<div class="effect-line">${nutritionLine}</div>` : ''}
+      ${card.flavorText ? `<div class="scenario">${card.flavorText}</div>` : ''}
+    `;
+  } else if(type === 'knowledge'){
+    const kImgTag = card.image?.src ?
+      `<img src="${card.image.src}" alt="${card.image.alt||card.name}" style="width:100%;max-height:190px;object-fit:cover;border-radius:10px;margin-bottom:10px;" onerror="this.style.display='none'">` : '';
+    inner = `
+      <span class="ctype" style="background:var(--teal);">💡 การ์ดความรู้สุขภาพ</span>
+      <h3>${card.name}</h3>
+      ${kImgTag}
+      <div class="scenario">${card.knowledgeFact}</div>
+      ${card.flavorText ? `<div class="effect-line" style="font-style:italic;">"${card.flavorText}"</div>` : ''}
+    `;
+  } else if(type === 'support'){
+    const heroBg = card.image?.src ? ` style="background-image:url('${card.image.src}')"` : '';
+    inner = `
+      <div class="support-hero"${heroBg}>
+        <div class="hero-scrim">
+          <span class="ctype" style="background:var(--purple);">🤝 การ์ดสนับสนุนชุมชน</span>
+          <h3>${card.name}</h3>
+        </div>
+      </div>
+      <div class="scenario">${card.scenario}</div>
+      ${(card.effects||[]).map(eff=>`<div class="effect-line">${describeCardEffect(eff, player)}</div>`).join('')}
+    `;
+  }
+
+  showModal(`
+    ${inner}
+    <button class="btn-ack" onclick="openHandModal(${ownerPid})">← กลับไปดูมือ</button>
+  `);
+}
+/* Casual "view my hand" modal — read-only, shows score, no pay buttons at all */
+function openHandModal(pid){
+  const p = state.players.find(x=>x.id===pid);
+  if(!p) return;
+  showModal(`
+    <span class="ctype" style="background:var(--accent-dim);color:#28221a;">🎒 มือของ ${p.icon} ${p.name}</span>
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;">
+      <h3 style="margin:0;">การ์ดในมือทั้งหมด</h3>
+      <span style="font-weight:700;font-size:1em;white-space:nowrap;">คะแนนสะสม: ${p.score} แต้ม</span>
+    </div>
+    ${renderHandSummaryHTML(p)}
+    <button class="btn-ack" onclick="closeModal()">ปิด</button>
+  `);
+}
+function renderLog(){
+  const wrap = document.getElementById('log-panel');
+  wrap.innerHTML = state.log.map(l=>`<div class="${l.cls||''}">${l.msg}</div>`).join('');
+}
+function toggleLog(){
+  const wrap = document.getElementById('log-wrap');
+  const collapsed = wrap.classList.toggle('collapsed');
+  document.getElementById('log-toggle-icon').textContent = collapsed ? 'แสดง ▴' : 'ซ่อน ▾';
+}
+
+/* ================= DICE ================= */
+const dicePipLayout = {
+  1:[4], 2:[0,8], 3:[0,4,8], 4:[0,2,6,8], 5:[0,2,4,6,8], 6:[0,2,3,5,6,8]
+};
+function showDiceFace(n){
+  const pips = document.getElementById('dice').children;
+  [...pips].forEach(p=>p.classList.remove('on'));
+  (dicePipLayout[n]||[]).forEach(idx=>pips[idx].classList.add('on'));
+}
+showDiceFace(1);
+
+let rolling = false;
+document.getElementById('roll-btn').onclick = async ()=>{
+  if(rolling || state.finished) return;
+  const player = state.players[state.currentPlayerIndex];
+  if(player.finished){ nextTurn(); return; }
+  if(player.skipTurns>0){
+    player.skipTurns--;
+    log(`⏸ ${player.name} ถูกหยุดเดิน (เหลืออีก ${player.skipTurns} ตา)`, 'lg-bad', player);
+    renderPlayersList();
+    nextTurn();
+    return;
+  }
+  rolling = true;
+  document.getElementById('roll-btn').disabled = true;
+  document.getElementById('roll-hint').textContent = 'กำลังทอย...';
+  const diceEl = document.getElementById('dice');
+  diceEl.classList.add('rolling');
+  playDiceRollSound();
+  let ticks = 0;
+  const interval = setInterval(()=>{ showDiceFace(1+Math.floor(Math.random()*6)); ticks++; }, 90);
+  await sleep(750);
+  clearInterval(interval);
+  diceEl.classList.remove('rolling');
+  const result = 1+Math.floor(Math.random()*6);
+  showDiceFace(result);
+  playDiceLandSound();
+  document.getElementById('roll-hint').textContent = `${player.name} ทอยได้ ${result} แต้ม`;
+  log(`🎲 ${player.name} ทอยได้ ${result}`, null, player);
+  await sleep(450);
+  await moveSteps(player, result);
+  rolling = false;
+  document.getElementById('roll-btn').disabled = false;
+};
+function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
+
+/* ================= MOVEMENT ================= */
+// Every tile type opens a card when landed on, including the last tile of
+// every village ('khuen') — so a player must resolve that card before being
+// marked finished, whether it's the last village or not.
+const FINISH_CARD_TYPES = ['house','khuen','clinic','market','headman'];
+// Set by moveSteps() when a player's landing tile is BOTH the last tile of
+// the village AND a tile that opens a card — the "finished" bookkeeping
+// (flag, log line, village-done check) is deferred until nextTurn() runs
+// next, i.e. after the player has actually resolved that card.
+let pendingFinishPlayerId = null;
+
+function finalizeVillageFinish(player, overshoot){
+  player.finished = true;
+  const isLastVillage = state.villageIndex === VILLAGES.length-1;
+  let msg;
+  if(overshoot){
+    msg = isLastVillage
+      ? `🏁 ${player.name} ทอยเกินช่องสุดท้าย พุ่งเข้าเส้นชัยเลย!`
+      : `🛕 ${player.name} ทอยเกินช่องสุดท้าย เข้าศาลาพักคอยเลย (ไม่ต้องเล่นช่องนั้นแล้ว)`;
+  } else {
+    msg = isLastVillage
+      ? `🏁 ${player.name} เดินทางถึงศาลาประชาคมแล้ว!`
+      : `🚩 ${player.name} ถึงจุดผ่านด่านของหมู่บ้านนี้แล้ว!`;
+  }
+  log(msg, 'lg-good', player);
+  if(isLastVillage){
+    playCheerShort();
+    showSmallCelebration();
+  }
+}
+
+async function moveSteps(player, steps, silent){
+  const lastIndex = TILE_SEQUENCE.length-1; // the last numbered tile (12)
+  let overshoot = false;
+  for(let s=0; s<steps; s++){
+    if(player.position >= lastIndex){ overshoot = true; break; }
+    player.position++;
+    playFootstepSound(s);
+    renderTokens();
+    highlightTile(player.position);
+    await sleep(560);
+  }
+  if(overshoot){
+    // Rolled past the last tile — skip it entirely (never resolves its
+    // card) and hop straight into the waiting pavilion pad instead, so
+    // players who overshoot don't have to "play" a tile they blew past.
+    player.position = lastIndex+1;
+    playFootstepSound(steps-1);
+    renderTokens();
+    await sleep(560);
+  }
+  clearHighlight();
+  const atFinish = player.position >= lastIndex; // true whether landed exactly or overshot into the pavilion
+  const tileType = overshoot ? null : TILE_SEQUENCE[player.position].type;
+  // Silent bonus movement (support-card move) never opens cards, so a finish
+  // reached that way must finalize immediately, same as an overshoot into
+  // the pavilion/finish pad.
+  const deferFinish = atFinish && !overshoot && !silent && FINISH_CARD_TYPES.includes(tileType);
+
+  if(atFinish && !deferFinish){
+    finalizeVillageFinish(player, overshoot);
+    renderPlayersList();
+    checkVillageDone();
+    if(!silent) nextTurn();
+    return;
+  }
+  renderPlayersList();
+  if(!silent){
+    if(deferFinish) pendingFinishPlayerId = player.id;
+    playLandingSound(tileType);
+    openCardForTile(player, tileType);
+  }
+}
+function highlightTile(i){
+  clearHighlight();
+  const el = document.getElementById('tile-'+i);
+  if(el) el.classList.add('active-highlight');
+}
+function clearHighlight(){
+  document.querySelectorAll('.tile-marker').forEach(t=>t.classList.remove('active-highlight'));
+}
+function checkVillageDone(){
+  if(state.players.every(p=>p.finished)){
+    document.getElementById('roll-btn').disabled = true;
+    const isLastVillage = state.villageIndex === VILLAGES.length-1;
+    if(isLastVillage){
+      playCheerBig();
+      showBigCelebration(()=>{
+        state.finished = true;
+        updateSaveScoreButtonVisibility();
+        showFinalResults();
+      });
+    } else {
+      showVillageDoneBanner();
+    }
+  }
+}
+function showVillageDoneBanner(){
+  const v = VILLAGES[state.villageIndex];
+  showModal(`
+    <span class="ctype" style="background:var(--teal);">🎉 ผ่านด่านแล้ว</span>
+    <h3>ผู้เล่นทุกคนถึงจุดผ่านด่านของหมู่บ้าน "${v.name}" (หมู่บ้านแห่งการ${v.hl}) แล้ว!</h3>
+    <div class="scenario">คะแนนและการ์ดในมือของทุกคนจะติดตัวไปหมู่บ้านถัดไปตามเดิม</div>
+    <button class="btn-ack" onclick="advanceVillage()">ไปหมู่บ้านถัดไป ➜</button>
+  `);
+}
+function advanceVillage(){
+  closeModal();
+  state.villageIndex++;
+  state.players.forEach(p=>{ p.position = -1; p.finished = false; });
+  TILE_SEQUENCE = buildTileSequence(state.villageIndex);
+  document.getElementById('roll-btn').disabled = false;
+  computeTilePositions();
+  renderTiles();
+  renderTokens();
+  renderPlayersList();
+  updateTopbar();
+  log(`🚩 เข้าสู่หมู่บ้านที่ ${state.villageIndex+1}: ${VILLAGES[state.villageIndex].name} (หมู่บ้านแห่งการ${VILLAGES[state.villageIndex].hl})`, 'lg-good');
+  document.getElementById('roll-hint').textContent = `ตาของ ${state.players[state.currentPlayerIndex].name}`;
+}
+function csvEscape(val){
+  const s = String(val);
+  return /[",\r\n]/.test(s) ? '"' + s.replace(/"/g,'""') + '"' : s;
+}
+// Exports just {rank, name, icon, score} per player — a small, spreadsheet-
+// friendly file meant for feeding a separate progress-tracking dashboard
+// across many play sessions, distinct from the full-state save/load files.
+function downloadResultsCsv(){
+  const sorted = [...state.players].sort((a,b)=>b.score-a.score);
+  const playedAt = new Date().toISOString();
+  const header = ['อันดับ','ชื่อผู้เล่น','ไอคอน','คะแนนสะสม','วันที่เล่น','เวอร์ชันเกม'];
+  const rows = sorted.map((p,i)=>[i+1, p.name, p.icon, p.score, playedAt, GAME_VERSION]);
+  const csvText = '\uFEFF' + [header, ...rows].map(row=>row.map(csvEscape).join(',')).join('\r\n');
+  const blob = new Blob([csvText], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const stamp = new Date().toISOString().slice(0,19).replace(/[:T]/g,'-');
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `sodium-quest-results-${stamp}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+function showFinalResults(){
+  const sorted = [...state.players].sort((a,b)=>b.score-a.score);
+  const rows = sorted.map((p,i)=>`
+    <div class="effect-line" style="display:flex;justify-content:space-between;align-items:center;">
+      <span>${i===0?'🏆 ':''}${p.icon} ${p.name}</span><span>${p.score} คะแนน</span>
+    </div>`).join('');
+  showModal(`
+    <span class="ctype" style="background:var(--accent);color:#28221a;">🎉 จบเกม — ถึงศาลาประชาคมแล้ว</span>
+    <h3>สรุปผลคะแนน</h3>
+    ${rows}
+    <div class="scenario">ผู้เล่นที่มีคะแนนสะสมมากที่สุดคือผู้ชนะ 🏆</div>
+    <div class="choice-list">
+      <button type="button" class="btn-plain" onclick="downloadResultsCsv()">💾 บันทึกผลคะแนน (CSV)</button>
+      <button type="button" class="btn-plain secondary" onclick="closeModal()">ปิด</button>
+    </div>
+  `);
+}
+function nextTurn(){
+  // A player who landed on the village's last tile but still had a mission
+  // card to resolve only gets marked finished now, once that card is done.
+  if(pendingFinishPlayerId != null){
+    const pendingPlayer = state.players.find(p=>p.id===pendingFinishPlayerId);
+    pendingFinishPlayerId = null;
+    if(pendingPlayer && !pendingPlayer.finished){
+      finalizeVillageFinish(pendingPlayer);
+      renderPlayersList();
+      checkVillageDone();
+    }
+  }
+  if(state.finished) return;
+  let tries = 0;
+  do{
+    state.currentPlayerIndex = (state.currentPlayerIndex+1) % state.players.length;
+    tries++;
+  } while(state.players[state.currentPlayerIndex].finished && tries <= state.players.length);
+  renderPlayersList();
+  document.getElementById('roll-hint').textContent = `ตาของ ${state.players[state.currentPlayerIndex].name}`;
+}
+
+/* ================= CARD LOGIC ================= */
+function rndPick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+function shuffleArray(arr){
+  const copy = arr.slice();
+  for(let i=copy.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [copy[i],copy[j]] = [copy[j],copy[i]];
+  }
+  return copy;
+}
+
+function openCardForTile(player, tileType){
+  if(tileType==='house') openMissionCard(player);
+  else if(tileType==='khuen') openObstacleCard(player);
+  else if(tileType==='clinic') openKnowledgeCard(player);
+  else if(tileType==='market') openFoodCard(player);
+  else if(tileType==='headman') openSupportCard(player);
+}
+
+function showModal(html){
+  document.getElementById('card-modal-content').innerHTML = html;
+  document.getElementById('card-overlay').classList.remove('hidden');
+}
+function closeModal(){ document.getElementById('card-overlay').classList.add('hidden'); }
+
+function parseCard(cardStr){ return typeof cardStr==='string' ? JSON.parse(cardStr.replace(/&quot;/g,'"')) : cardStr; }
+function cardTypeName(t){ return t==='knowledge'?'ความรู้':t==='support'?'สนับสนุน':'อาหาร'; }
+function cardTypeIcon(t){ return t==='knowledge'?'💡':t==='support'?'🤝':'🍲'; }
+
+// Shown after any card is gained (knowledge/food/support/mission reward) —
+// confirms what was received, current score, and the player's full hand.
+function showReceivedCardModal(player, type, card, onContinueAttr){
+  showModal(`
+    <div class="result-banner result-good">🎉 ได้รับการ์ด${cardTypeName(type)}: ${card.name}</div>
+    <div class="scenario" style="font-weight:700;">คะแนนสะสม: ${player.score} แต้ม</div>
+    ${renderHandSummaryHTML(player)}
+    <button class="btn-ack" ${onContinueAttr}>ไปต่อ</button>
+  `);
+}
+
+// Preview of what an obstacle effect will do, based on hand state right now
+// (deterministic for knowledgeCheck/swapFoodZone; generic wording for the
+// effects shared with missions, since those don't depend on hand contents).
+// Shared by obstacle AND support cards — both use the same effect
+// vocabulary (score / skipTurn / discardCard / drawCard, plus the two
+// obstacle-only types), so one preview/apply pair covers both card types.
+function describeCardEffect(eff, player){
+  if(eff.type === 'score') return `${eff.operation==='subtract'?'-':'+'}${eff.value} คะแนน`;
+  if(eff.type === 'skipTurn') return `หยุดเดิน ${eff.value} ตา`;
+  if(eff.type === 'discardCard') return `ทิ้งการ์ด${cardTypeName(eff.cardType)} ${eff.count} ใบ (สุ่ม)`;
+  if(eff.type === 'drawCard'){
+    const zoneNote = eff.zone ? ` โซน${ZONE_LABEL[eff.zone].split(' - ')[0]}` : '';
+    return `ได้การ์ด${cardTypeName(eff.cardType)}เพิ่ม ${eff.count} ใบ${zoneNote}`;
+  }
+  if(eff.type === 'knowledgeCheck'){
+    if(player.hand.knowledge.length > 0){
+      return eff.consume ? 'มีการ์ดความรู้สุขภาพ → ใช้รับมือสถานการณ์ (ทิ้ง 1 ใบ)' : 'มีการ์ดความรู้สุขภาพ → รับมือสถานการณ์ได้ ไม่เสียคะแนน';
+    }
+    return eff.penaltyIfMissing ? `ไม่มีการ์ดความรู้สุขภาพ → ติดลบ ${eff.penaltyIfMissing} คะแนน` : 'ไม่มีการ์ดความรู้สุขภาพ (ไม่มีบทลงโทษ)';
+  }
+  if(eff.type === 'swapFoodZone'){
+    const n = player.hand.food.filter(c=>c.sodium.zone===eff.fromZone).length;
+    return n ? `แลกการ์ดอาหารโซนเขียวที่มี (${n} ใบ) เป็นโซนเหลือง/แดง` : 'ไม่มีการ์ดอาหารโซนเขียวในมือ — ไม่มีผล';
+  }
+  return '';
+}
+function openObstacleCard(player){
+  const card = rndPick(OBSTACLES);
+  const cardEnc = JSON.stringify(card).replace(/"/g,'&quot;');
+  const effectLines = card.effects.map(eff=>describeCardEffect(eff, player));
+  showModal(`
+    <span class="ctype" style="background:var(--brick);">⚠️ การ์ดอุปสรรคหมู่บ้าน (ขึด)</span>
+    <h3>${card.name}</h3>
+    <div class="scenario">${card.scenario}</div>
+    ${card.scope==='all' ? `<div class="req-box">⚠️ อุปสรรคนี้ส่งผลกับผู้เล่นทุกคน (ตามการ์ดที่แต่ละคนถืออยู่)</div>` : ''}
+    ${effectLines.map(l=>`<div class="effect-line">${l}</div>`).join('')}
+    <button class="btn-ack" onclick="ackObstacle(${player.id}, ${cardEnc})">รับทราบ</button>
+  `);
+}
+// Applies one card effect to one player, logging that player's own
+// before/after score line — reuses the mission-card effect vocabulary
+// (score/skipTurn/discardCard/drawCard) plus the two obstacle-only types.
+function applyCardEffect(player, eff){
+  const scoreBefore = player.score;
+  if(eff.type === 'score'){
+    player.score += (eff.operation==='subtract' ? -eff.value : eff.value);
+    log(`${player.name}: ${eff.operation==='subtract'?'-':'+'}${eff.value} คะแนน`, 'lg-bad', player, scoreBefore);
+  } else if(eff.type === 'skipTurn'){
+    player.skipTurns += eff.value;
+    log(`${player.name}: หยุดเดิน ${eff.value} ตา`, 'lg-bad', player, scoreBefore);
+  } else if(eff.type === 'discardCard'){
+    const arr = player.hand[eff.cardType];
+    const n = Math.min(eff.count, arr.length);
+    const removedNames = [];
+    for(let i=0;i<n;i++){
+      const idx = Math.floor(Math.random()*arr.length);
+      removedNames.push(arr[idx].name);
+      arr.splice(idx, 1);
+    }
+    if(n>0) log(`${player.name}: สุ่มทิ้งการ์ด${cardTypeName(eff.cardType)} — ${removedNames.join(', ')}`, 'lg-bad', player, scoreBefore);
+  } else if(eff.type === 'drawCard'){
+    let pool = eff.cardType==='food' ? FOOD : eff.cardType==='knowledge' ? KNOWLEDGE : SUPPORT;
+    if(eff.cardType==='food' && eff.zone) pool = FOOD.filter(f=>f.sodium.zone===eff.zone);
+    const gained = drawUniqueCards(pool, player.hand[eff.cardType], eff.count);
+    player.hand[eff.cardType].push(...gained);
+    log(`${player.name}: ได้การ์ด${cardTypeName(eff.cardType)}เพิ่ม ${eff.count} ใบ`, 'lg-good', player, scoreBefore);
+  } else if(eff.type === 'knowledgeCheck'){
+    if(player.hand.knowledge.length > 0){
+      if(eff.consume){
+        player.hand.knowledge.splice(Math.floor(Math.random()*player.hand.knowledge.length), 1);
+        log(`${player.name}: ใช้การ์ดความรู้สุขภาพรับมือสถานการณ์ (ทิ้ง 1 ใบ)`, 'lg-good', player, scoreBefore);
+      } else {
+        log(`${player.name}: มีการ์ดความรู้สุขภาพ รับมือสถานการณ์ได้`, 'lg-good', player, scoreBefore);
+      }
+    } else if(eff.penaltyIfMissing){
+      player.score -= eff.penaltyIfMissing;
+      log(`${player.name}: ไม่มีการ์ดความรู้สุขภาพ`, 'lg-bad', player, scoreBefore);
+    } else {
+      log(`${player.name}: ไม่มีการ์ดความรู้สุขภาพ (ไม่มีบทลงโทษ)`, 'lg-bad', player, scoreBefore);
+    }
+  } else if(eff.type === 'swapFoodZone'){
+    const idxs = player.hand.food.map((c,i)=>i).filter(i=>player.hand.food[i].sodium.zone===eff.fromZone);
+    if(idxs.length){
+      const pool = FOOD.filter(f=>eff.toZones.includes(f.sodium.zone));
+      // Track cards kept (not being swapped) plus each newly-drawn card as we
+      // go, so the replacements can't duplicate each other or the rest of
+      // the hand either.
+      const runningHand = player.hand.food.filter((c,i)=>!idxs.includes(i));
+      idxs.forEach(i=>{
+        const [newCard] = drawUniqueCards(pool, runningHand, 1);
+        player.hand.food[i] = newCard;
+        runningHand.push(newCard);
+      });
+      log(`${player.name}: แลกการ์ดอาหารโซนเขียว ${idxs.length} ใบ เป็นโซนเหลือง/แดง`, 'lg-bad', player, scoreBefore);
+    } else {
+      log(`${player.name}: ไม่มีการ์ดอาหารโซนเขียวให้แลก`, 'lg-good', player, scoreBefore);
+    }
+  }
+}
+function ackObstacle(pid, cardStr){
+  const card = parseCard(cardStr);
+  const acting = state.players.find(p=>p.id===pid);
+  const targets = card.scope === 'all' ? state.players : [acting];
+  playFailSound();
+  log(`⚠️ ${acting.name} เจอ "ขึด": ${card.name}${card.scope==='all' ? ' (ส่งผลกับทุกคน)' : ''}`, 'lg-bad');
+  targets.forEach(p => card.effects.forEach(eff => applyCardEffect(p, eff)));
+  renderPlayersList();
+  closeModal();
+  nextTurn();
+}
+
+function openKnowledgeCard(player){
+  const card = drawUniqueCards(KNOWLEDGE, player.hand.knowledge, 1)[0];
+  const kImgTag = card.image?.src ?
+    `<img src="${card.image.src}" alt="${card.image.alt||card.name}" style="width:100%;max-height:190px;object-fit:cover;border-radius:10px;margin-bottom:10px;" onerror="this.style.display='none'">` : '';
+  showModal(`
+    <span class="ctype" style="background:var(--teal);">💡 การ์ดความรู้สุขภาพ</span>
+    <h3>${card.name}</h3>
+    ${kImgTag}
+    <div class="scenario">${card.knowledgeFact}</div>
+    <div class="effect-line" style="font-style:italic;">"${card.flavorText}"</div>
+    <div class="effect-line">ได้รับการ์ดความรู้ 1 ใบ (เก็บไว้ใช้ทีหลัง)</div>
+    <button class="btn-ack" onclick="ackKnowledge(${player.id}, ${JSON.stringify(card).replace(/"/g,'&quot;')})">รับการ์ด</button>
+  `);
+}
+function ackKnowledge(pid, cardStr){
+  const card = parseCard(cardStr);
+  const player = state.players.find(p=>p.id===pid);
+  player.hand.knowledge.push(card);
+  playSuccessSound();
+  log(`💡 ${player.name} ได้รับการ์ดความรู้ที่ รพ.สต.`, 'lg-good', player);
+  renderPlayersList();
+  showReceivedCardModal(player, 'knowledge', card, 'onclick="closeModalAndNext()"');
+}
+
+function openFoodCard(player){
+  const card = drawUniqueCards(FOOD, player.hand.food, 1)[0];
+  const sodiumMg = Math.round(card.sodium.amountMg || 0);
+  const servingNote = card.sodium.servingNote ? ` (${card.sodium.servingNote})` : '';
+  const warnIcons = (card.warningIcons||[]).map(w => w==='sugar' ? '🥄 หวาน' : '🧂 เค็ม').join('  ');
+  const n = card.nutrition || {};
+  const nutritionLine = (n.energyKcal!=null) ?
+    `⚡ ${Math.round(n.energyKcal)} kcal · 🥓 ไขมัน ${n.fatG??'-'} ก. · 🍗 โปรตีน ${n.proteinG??'-'} ก. · 🍚 คาร์บ ${n.carbG??'-'} ก.` : '';
+  const imgTag = card.image?.src ?
+    `<img src="${card.image.src}" alt="${card.image.alt||card.name}" style="width:100%;max-height:190px;object-fit:cover;border-radius:10px;margin-bottom:10px;" onerror="this.style.display='none'">` : '';
+  showModal(`
+    <span class="ctype" style="background:var(--ochre);color:#3a2a00;">🧺 การ์ดเมนูอาหาร (กาดนัด) ${warnIcons ? '· '+warnIcons : ''}</span>
+    <h3>${card.name}</h3>
+    ${imgTag}
+    <div class="effect-line" style="background:${ZONE_COLOR[card.sodium.zone]};color:${zoneTextColor(card.sodium.zone)};">โซเดียม ${sodiumMg} มก.${servingNote} (${ZONE_LABEL[card.sodium.zone]})</div>
+    ${nutritionLine ? `<div class="effect-line">${nutritionLine}</div>` : ''}
+    ${card.flavorText ? `<div class="scenario">${card.flavorText}</div>` : ''}
+    <button class="btn-ack" onclick="ackFood(${player.id}, '${card.id}')">รับการ์ดอาหาร</button>
+  `);
+}
+function ackFood(pid, cardId){
+  const card = FOOD.find(c=>c.id===cardId);
+  const player = state.players.find(p=>p.id===pid);
+  player.hand.food.push(card);
+  playSuccessSound();
+  log(`🧺 ${player.name} ได้การ์ดอาหารจากกาดนัด: ${card.name}`, 'lg-good', player);
+  renderPlayersList();
+  showReceivedCardModal(player, 'food', card, 'onclick="closeModalAndNext()"');
+}
+
+function openSupportCard(player){
+  const card = drawUniqueCards(SUPPORT, player.hand.support, 1)[0];
+  const cardEnc = JSON.stringify(card).replace(/"/g,'&quot;');
+  const effectLines = card.effects.map(eff=>describeCardEffect(eff, player));
+  const heroBg = card.image?.src ? ` style="background-image:url('${card.image.src}')"` : '';
+  showModal(`
+    <div class="support-hero"${heroBg}>
+      <div class="hero-scrim">
+        <span class="ctype" style="background:var(--purple);">🤝 การ์ดสนับสนุนชุมชน</span>
+        <h3>${card.name}</h3>
+      </div>
+    </div>
+    <div class="scenario">${card.scenario}</div>
+    ${card.scope==='all' ? `<div class="req-box">🤝 การสนับสนุนนี้ส่งผลกับผู้เล่นทุกคน</div>` : ''}
+    ${effectLines.map(l=>`<div class="effect-line">${l}</div>`).join('')}
+    <button class="btn-ack" onclick="ackSupport(${player.id}, ${cardEnc})">รับผลดี</button>
+  `);
+}
+function ackSupport(pid, cardStr){
+  const card = parseCard(cardStr);
+  const acting = state.players.find(p=>p.id===pid);
+  const targets = card.scope === 'all' ? state.players : [acting];
+  acting.hand.support.push(card);
+  playSuccessSound();
+  log(`🤝 ${acting.name} ได้รับการสนับสนุนจากชุมชน: ${card.name}${card.scope==='all' ? ' (ส่งผลกับทุกคน)' : ''}`, 'lg-good');
+  targets.forEach(p => card.effects.forEach(eff => applyCardEffect(p, eff)));
+  renderPlayersList();
+  showReceivedCardModal(acting, 'support', card, 'onclick="closeModalAndNext()"');
+}
+
+/* ---- Mission: pick from current village's pool, route by challengeType ---- */
+function openMissionCard(player){
+  const villageNum = state.villageIndex + 1; // MISSIONS use 1-indexed village numbers
+  const pool = MISSIONS.filter(m => m.village === villageNum);
+  const card = rndPick(pool.length ? pool : MISSIONS);
+  if(card.challengeType === 'food_card_select_threshold'){
+    openFoodThresholdMission(player, card);
+  } else {
+    openMultipleChoiceMission(player, card);
+  }
+}
+
+// Text before the first "เลือก N" marker reads as the actual question/prompt;
+// the choices themselves are now shown as real buttons instead of repeating
+// that list as plain text.
+function questionLeadIn(instructions){
+  const idx = instructions.search(/เลือก\s*(?:ข้อ)?\s*\d/);
+  const lead = idx > 0 ? instructions.slice(0, idx).trim() : '';
+  return lead || 'อสม. จะเลือกทำอย่างไร?';
+}
+
+// Some missions' instructions name specific dishes the player should be
+// shown while deciding (e.g. "นำภาพแกงฮังเล...มา") — referenceFoodCards
+// points those at real cards in the FOOD deck so the actual photo/name/
+// sodium reference is shown instead of leaving the player to imagine it.
+function renderReferenceFoodCards(card){
+  const ids = card.referenceFoodCards || [];
+  if(!ids.length) return '';
+  const items = ids.map(id => FOOD.find(f=>f.id===id)).filter(Boolean).map(f => `
+    <div style="flex:1;min-width:110px;text-align:center;">
+      <img src="${f.image.src}" alt="${f.image.alt||f.name}" style="width:100%;height:100px;object-fit:cover;border-radius:10px;" onerror="this.style.display='none'">
+      <div style="font-size:0.82em;font-weight:700;margin-top:4px;">${f.name}</div>
+      <div style="font-size:0.78em;color:#6b6250;">${Math.round(f.sodium.amountMg||0)} มก. โซเดียม</div>
+    </div>`).join('');
+  return items ? `<div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;">${items}</div>` : '';
+}
+
+function openMultipleChoiceMission(player, card){
+  const cardEnc = JSON.stringify(card).replace(/"/g,'&quot;');
+  // Shuffle the display order so the correct answer isn't always the first
+  // button — resolveMultipleChoiceMission looks choices up by id, so the
+  // shuffle is purely cosmetic and doesn't affect scoring.
+  const buttons = shuffleArray(card.choices).map(c =>
+    `<button type="button" class="mc-choice-btn" onclick="resolveMultipleChoiceMission(${player.id}, ${cardEnc}, ${c.id})">${c.label}</button>`
+  ).join('');
+  showModal(`
+    <span class="ctype" style="background:var(--house);">🏠 ${card.title}</span>
+    <h3>สถานการณ์</h3>
+    <div class="scenario">${card.scenario}</div>
+    ${renderReferenceFoodCards(card)}
+    <div class="req-box">📋 ${questionLeadIn(card.instructions)}</div>
+    <div class="choice-list">${buttons}</div>
+  `);
+}
+
+function resolveMultipleChoiceMission(pid, cardStr, choiceId){
+  const card = parseCard(cardStr);
+  const player = state.players.find(p=>p.id===pid);
+  const scoreBefore = player.score;
+  const choice = card.choices.find(c=>c.id===choiceId);
+  let scoreDelta = 0;
+  const notes = [];
+  (choice.effects||[]).forEach(eff=>{
+    if(eff.type==='score'){
+      const delta = eff.operation==='subtract' ? -eff.value : eff.value;
+      player.score += delta; scoreDelta += delta;
+    } else if(eff.type==='skipTurn'){
+      player.skipTurns += eff.value;
+      notes.push(`หยุดเดิน ${eff.value} ตา`);
+    } else if(eff.type==='discardCard'){
+      const arr = player.hand[eff.cardType];
+      const n = Math.min(eff.count, arr.length);
+      const removedNames = [];
+      for(let i=0;i<n;i++){
+        const idx = Math.floor(Math.random()*arr.length);
+        removedNames.push(arr[idx].name);
+        arr.splice(idx, 1);
+      }
+      if(n>0) notes.push(`สุ่มทิ้งการ์ด${cardTypeName(eff.cardType)}: ${removedNames.join(', ')}`);
+    } else if(eff.type==='drawCard'){
+      const gained = drawRandomCards(eff.cardType, eff.count, player.hand[eff.cardType]);
+      player.hand[eff.cardType].push(...gained);
+      notes.push(`ได้การ์ด${cardTypeName(eff.cardType)}เพิ่ม ${eff.count} ใบ`);
+    }
+  });
+  // A choice that earns no points at all is not a success, even if it
+  // wasn't penalized either — only a genuine point gain counts.
+  const success = scoreDelta > 0;
+  if(success) playSuccessSound(); else playFailSound();
+  log(`${success?'✅':'❌'} ${player.name} เลือก "${choice.label}" ในภารกิจ "${card.title}" (${scoreDelta>=0?'+':''}${scoreDelta}${notes.length ? ' · '+notes.join(', ') : ''})`, success?'lg-good':'lg-bad', player, scoreBefore);
+  renderPlayersList();
+  const detail = `${scoreDelta>=0?'+':''}${scoreDelta} คะแนน${notes.length ? ' · '+notes.join(', ') : ''}`;
+  showMissionResultModal(player, success, card.title, detail);
+}
+
+/* ---- Mission: select food card(s) from hand meeting a sodium condition ---- */
+let foodThresholdPickState = null; // { playerId, card, selected: [handIndices] }
+
+function openFoodThresholdMission(player, card){
+  const rule = card.cardSelectRule;
+  if(player.hand.food.length < rule.count){
+    resolveFoodThresholdOutcome(player.id, card, 'noValidCardAvailable', []);
+    return;
+  }
+  if(rule.condition === 'sodium_max_each'){
+    const anyValid = player.hand.food.some(c => (c.sodium.amountMg||0) <= rule.thresholdMg);
+    if(!anyValid){
+      resolveFoodThresholdOutcome(player.id, card, 'noValidCardAvailable', []);
+      return;
+    }
+  }
+  foodThresholdPickState = { playerId: player.id, card, selected: [] };
+  renderFoodThresholdPicker();
+}
+
+function renderFoodThresholdPicker(){
+  const { playerId, card, selected } = foodThresholdPickState;
+  const player = state.players.find(p=>p.id===playerId);
+  const rule = card.cardSelectRule;
+  const items = player.hand.food
+    .map((c,idx)=>({c,idx}))
+    .sort((a,b)=> (b.c.sodium.amountMg||0) - (a.c.sodium.amountMg||0))
+    .map(({c,idx})=>{
+      const isSel = selected.includes(idx);
+      const bg = ZONE_COLOR[c.sodium.zone];
+      const color = zoneTextColor(c.sodium.zone);
+      const border = isSel ? '2px solid var(--accent)' : '2px solid transparent';
+      return `<div class="effect-line" style="background:${bg};color:${color};border:${border};cursor:pointer;" onclick="toggleFoodThresholdSelect(${idx})">${isSel?'✅ ':''}${c.name} — ${Math.round(c.sodium.amountMg||0)} มก.</div>`;
+    }).join('');
+  const sumMg = selected.reduce((s,idx)=> s + (player.hand.food[idx].sodium.amountMg||0), 0);
+  const ruleText = rule.condition==='sodium_max_each'
+    ? `เลือกการ์ดอาหาร ${rule.count} ใบ ที่มีโซเดียมไม่เกิน ${rule.thresholdMg} มก. ต่อใบ`
+    : `เลือกการ์ดอาหาร ${rule.count} ใบ รวมโซเดียมไม่เกิน ${rule.thresholdMg} มก.`;
+  const progress = ` (เลือกแล้ว ${selected.length}/${rule.count}${rule.condition==='sodium_sum_max' && selected.length ? ', รวม '+Math.round(sumMg)+' มก.' : ''})`;
+  const allMet = selected.length === rule.count;
+  showModal(`
+    <span class="ctype" style="background:var(--house);">🏠 ${card.title}</span>
+    <h3>สถานการณ์</h3>
+    <div class="scenario">${card.scenario}</div>
+    <div class="req-box">📋 ${ruleText}${progress}</div>
+    ${items}
+    <button class="btn-ack" ${allMet?'':'disabled'} onclick="confirmFoodThresholdPick()">✅ ยืนยันการ์ดที่เลือก</button>
+  `);
+}
+function toggleFoodThresholdSelect(idx){
+  const { selected, card } = foodThresholdPickState;
+  const rule = card.cardSelectRule;
+  const pos = selected.indexOf(idx);
+  if(pos>=0){ selected.splice(pos,1); }
+  else{
+    if(selected.length>=rule.count) selected.shift();
+    selected.push(idx);
+  }
+  renderFoodThresholdPicker();
+}
+function confirmFoodThresholdPick(){
+  const { playerId, card, selected } = foodThresholdPickState;
+  const player = state.players.find(p=>p.id===playerId);
+  const rule = card.cardSelectRule;
+  const chosenCards = selected.map(idx => player.hand.food[idx]);
+  let outcomeKey;
+  if(rule.condition === 'sodium_max_each'){
+    const allOk = chosenCards.every(c => (c.sodium.amountMg||0) <= rule.thresholdMg);
+    outcomeKey = allOk ? 'hasValidCardAndPicksCorrectly' : 'hasValidCardButPicksWrong';
+  } else {
+    const sum = chosenCards.reduce((s,c)=> s+(c.sodium.amountMg||0), 0);
+    outcomeKey = sum <= rule.thresholdMg ? 'underThreshold' : 'overThreshold';
+  }
+  resolveFoodThresholdOutcome(playerId, card, outcomeKey, selected);
+}
+const FOOD_THRESHOLD_OUTCOME_LABELS = {
+  hasValidCardAndPicksCorrectly: 'เลือกการ์ดถูกต้องตามเงื่อนไข',
+  hasValidCardButPicksWrong: 'เลือกการ์ดไม่ตรงเงื่อนไข',
+  noValidCardAvailable: 'ไม่มีการ์ดที่เข้าเงื่อนไขในมือ',
+  underThreshold: 'โซเดียมรวมไม่เกินเกณฑ์',
+  overThreshold: 'โซเดียมรวมเกินเกณฑ์',
+};
+function resolveFoodThresholdOutcome(pid, card, outcomeKey, selectedIndices){
+  const player = state.players.find(p=>p.id===pid);
+  const scoreBefore = player.score;
+  // Not every mission's `outcomes` defines every possible key (e.g. a
+  // "sodium_sum_max" mission may have no cards to sum at all) — fall back to
+  // a no-op outcome instead of crashing on a missing one.
+  const outcome = card.outcomes[outcomeKey] || { effects: [] };
+  let scoreDelta = 0;
+  (outcome.effects||[]).forEach(eff=>{
+    if(eff.type==='score'){
+      const delta = eff.operation==='subtract' ? -eff.value : eff.value;
+      player.score += delta; scoreDelta += delta;
+    }
+  });
+  // A choice that earns no points at all is not a success, even if it
+  // wasn't penalized either — only a genuine point gain counts.
+  const success = scoreDelta > 0;
+  if(success) playSuccessSound(); else playFailSound();
+  const label = FOOD_THRESHOLD_OUTCOME_LABELS[outcomeKey] || outcomeKey;
+  log(`${success?'✅':'❌'} ${player.name} ภารกิจ "${card.title}" — ${label} (${scoreDelta>=0?'+':''}${scoreDelta})`, success?'lg-good':'lg-bad', player, scoreBefore);
+  renderPlayersList();
+  showMissionResultModal(player, success, card.title, `${label}: ${scoreDelta>=0?'+':''}${scoreDelta} คะแนน`);
+}
+
+function showMissionResultModal(player, success, title, detail){
+  showModal(`
+    <div class="result-banner ${success?'result-good':'result-bad'}">${success?'✅ สำเร็จ':'❌ ไม่สำเร็จ'} — ${title}</div>
+    <div class="scenario">${detail}</div>
+    <div class="scenario" style="font-weight:700;">คะแนนสะสมตอนนี้: ${player.score} แต้ม</div>
+    ${renderHandSummaryHTML(player)}
+    <button class="btn-ack" onclick="closeModalAndNext()">ไปต่อ</button>
+  `);
+}
+function closeModalAndNext(){ closeModal(); nextTurn(); }
+
+/* ================= SAVE / LOAD ================= */
+// File-based save/load is the only persistence path — no localStorage
+// "quick save": that meant two parallel save systems for no real benefit,
+// and unlike a downloaded file, a browser's localStorage can be blocked
+// entirely by policy/privacy settings (see the safeLocalGet/Set guards
+// above, still used for theme/font prefs) or wiped by clearing site data,
+// silently losing a save with no way to recover it.
+document.getElementById('reset-btn').onclick = ()=>{
+  if(confirm('ต้องการเริ่มเกมใหม่หรือไม่? (เกมปัจจุบันจะหายไปถ้ายังไม่ได้ดาวน์โหลดไฟล์เซฟไว้)')){
+    location.reload();
+  }
+};
+// Download the current save as a .json file (load it back in via
+// "📂 โหลดเกมจากไฟล์..." on the setup screen).
+document.getElementById('download-save-btn').onclick = ()=>{
+  const blob = new Blob([JSON.stringify(buildSaveData(), null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const stamp = new Date().toISOString().slice(0,19).replace(/[:T]/g,'-');
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `sodium-quest-save-${stamp}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+};
+// Lets a player save their final score even if they already closed the
+// end-of-game results modal (accidentally or otherwise) — the CSV export
+// itself lives in downloadResultsCsv(), already used by that modal's own
+// "save" button.
+document.getElementById('save-score-btn').onclick = ()=> downloadResultsCsv();
+// Only meaningful once the whole game is actually over — hidden the rest of
+// the time (mid-game, or right after starting a new one) so it never
+// implies there's a score worth saving before there is one.
+function updateSaveScoreButtonVisibility(){
+  document.getElementById('save-score-btn').classList.toggle('hidden', !state.finished);
+}
+
+/* ================= SCREEN SWITCH ================= */
+function showGameScreen(){
+  document.getElementById('setup-screen').classList.add('hidden');
+  document.getElementById('game-screen').classList.remove('hidden');
+  TILE_SEQUENCE = buildTileSequence(state.villageIndex);
+  requestAnimationFrame(()=>{
+    computeTilePositions();
+    renderTiles();
+    renderTokens();
+    renderPlayersList();
+    renderLog();
+    updateTopbar();
+    updateSaveScoreButtonVisibility();
+    if(state.finished){
+      showFinalResults();
+    } else if(state.players.every(p=>p.finished)){
+      showVillageDoneBanner();
+    }
+    document.getElementById('roll-hint').textContent = `ตาของ ${state.players[state.currentPlayerIndex].name}`;
+  });
+}
+
+function updateTopbar(){
+  const v = VILLAGES[state.villageIndex];
+  document.getElementById('village-title').textContent = `🏞️ หมู่บ้าน ${state.villageIndex+1}: ${v.name} (${v.hl})`;
+  const wrap = document.getElementById('village-progress');
+  wrap.innerHTML = VILLAGES.map((vv,i)=>{
+    const cls = i < state.villageIndex ? 'done' : i===state.villageIndex ? 'active' : '';
+    return `<div class="vdot ${cls}" title="หมู่บ้าน ${i+1}: ${vv.name} (${vv.hl})">${i+1}</div>`;
+  }).join('');
+}
+
+// Recompute the board whenever its ACTUAL on-screen size changes. This
+// covers window resizes, but also fixes a first-render bug: the SVG's real
+// size depends on several nested flex containers (.game-wrap > .board-area
+// > svg, each flex:1 1 auto) finishing layout after #game-screen goes from
+// display:none to visible, which can take an extra layout pass beyond the
+// single requestAnimationFrame in showGameScreen() — so the very first
+// board draw could measure a stale/zero size and lay the trail line out
+// of step with the tiles, only self-correcting once something else (like
+// manually resizing the window) forced a fresh layout. ResizeObserver
+// fires again as soon as the real size settles, so that correction now
+// happens automatically within a frame or two instead of needing a resize.
+if(typeof ResizeObserver !== 'undefined'){
+  const boardResizeObserver = new ResizeObserver(()=>{
+    if(state){ computeTilePositions(); renderTiles(); renderTokens(); }
+  });
+  boardResizeObserver.observe(document.getElementById('board-svg'));
+} else {
+  window.addEventListener('resize', ()=>{
+    if(state){ computeTilePositions(); renderTiles(); renderTokens(); }
+  });
+}
+
+</script>
+</body>
+</html>

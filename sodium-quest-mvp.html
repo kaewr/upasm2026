@@ -686,7 +686,12 @@ function newState(playerConfigs){
       // starting the game already standing there and skipping its card forever
       id:i, name:p.name, icon:p.icon, position:-1, score:0,
       hand:{ food: drawStartingFoodHand(6), knowledge: drawRandomCards('knowledge',1,[]), support: [] },
-      skipTurns:0, finished:false, nextDrawPenalty:0
+      skipTurns:0, finished:false, nextDrawPenalty:0,
+      // Per-village score breakdown: stageScores[i] is the points earned
+      // while playing village i (not cumulative). scoreAtStageStart tracks
+      // the running total's value at the moment the current village began,
+      // so the delta at finish time is exactly that village's contribution.
+      stageScores:[0,0,0,0,0], scoreAtStageStart:0
     })),
     currentPlayerIndex: 0,
     log: [],
@@ -978,6 +983,13 @@ function buildSaveData(){
 function restoreSaveData(parsed){
   const loadedState = (parsed && parsed.saveVersion && parsed.state) ? parsed.state : parsed;
   if(!loadedState || !Array.isArray(loadedState.players)) return false;
+  // Back-fill per-stage score tracking for save files written before it
+  // existed, so resuming an older save doesn't crash the next time a
+  // village is finished.
+  loadedState.players.forEach(p=>{
+    if(!Array.isArray(p.stageScores)) p.stageScores = [0,0,0,0,0];
+    if(typeof p.scoreAtStageStart !== 'number') p.scoreAtStageStart = 0;
+  });
   state = loadedState;
   const board = parsed && parsed.board;
   if(board && board.design && board.villageIndex === state.villageIndex){
@@ -1313,6 +1325,7 @@ let pendingFinishPlayerId = null;
 
 function finalizeVillageFinish(player, overshoot){
   player.finished = true;
+  player.stageScores[state.villageIndex] = player.score - player.scoreAtStageStart;
   const isLastVillage = state.villageIndex === VILLAGES.length-1;
   let msg;
   if(overshoot){
@@ -1409,7 +1422,7 @@ function showVillageDoneBanner(){
 function advanceVillage(){
   closeModal();
   state.villageIndex++;
-  state.players.forEach(p=>{ p.position = -1; p.finished = false; });
+  state.players.forEach(p=>{ p.position = -1; p.finished = false; p.scoreAtStageStart = p.score; });
   TILE_SEQUENCE = buildTileSequence(state.villageIndex);
   document.getElementById('roll-btn').disabled = false;
   computeTilePositions();
@@ -1430,8 +1443,18 @@ function csvEscape(val){
 function downloadResultsCsv(){
   const sorted = [...state.players].sort((a,b)=>b.score-a.score);
   const playedAt = new Date().toISOString();
-  const header = ['อันดับ','ชื่อผู้เล่น','ไอคอน','คะแนนสะสม','วันที่เล่น','เวอร์ชันเกม'];
-  const rows = sorted.map((p,i)=>[i+1, p.name, p.icon, p.score, playedAt, GAME_VERSION]);
+  const header = ['username','stage_1_score','stage_2_score','stage_3_score','stage_4_score','stage_5_score','total_score','played_at','rank','icon','game_version'];
+  const rows = sorted.map((p,i)=>{
+    // Each stage's score is recorded independently as it's earned (see
+    // finalizeVillageFinish), so this sum should always equal the running
+    // total by construction — checked here anyway as a guard against any
+    // future bug silently desyncing the two.
+    const stageSum = p.stageScores.reduce((a,b)=>a+b, 0);
+    if(stageSum !== p.score){
+      console.warn(`[downloadResultsCsv] ${p.name}: ผลรวมคะแนนแต่ละด่าน (${stageSum}) ไม่ตรงกับคะแนนรวม (${p.score})`, p);
+    }
+    return [p.name, ...p.stageScores, p.score, playedAt, i+1, p.icon, GAME_VERSION];
+  });
   const csvText = '\uFEFF' + [header, ...rows].map(row=>row.map(csvEscape).join(',')).join('\r\n');
   const blob = new Blob([csvText], {type:'text/csv;charset=utf-8;'});
   const url = URL.createObjectURL(blob);

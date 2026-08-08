@@ -199,25 +199,11 @@
   .gcard ul{ margin:8px 0 0; padding-left:18px; }
   .gcard li{ margin-bottom:4px; }
 
-  .tag-pill{
-    display:inline-block; font-size:10.5px; font-weight:800; padding:2px 8px; border-radius:999px;
-    background:var(--surface-2); color:var(--ink-dim); margin:2px 4px 2px 0; white-space:nowrap;
-  }
-
   .end-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px; }
   .end-card{ background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px; box-shadow:var(--shadow); }
   .end-card .ic{ font-size:26px; }
   .end-card h3{ font-size:16px; font-weight:800; margin-top:8px; }
   .end-card p{ font-size:13.5px; color:var(--ink-dim); margin-top:6px; }
-
-  .conn-list{ display:flex; flex-direction:column; gap:10px; margin-top:8px; }
-  .conn-item{
-    display:flex; gap:12px; align-items:flex-start; background:var(--surface);
-    border:1px solid var(--border); border-radius:12px; padding:12px 16px; box-shadow:var(--shadow);
-  }
-  .conn-item .arrow{ font-size:16px; color:var(--accent-strong); flex:none; margin-top:1px; }
-  .conn-item .txt b{ color:var(--ink); }
-  .conn-item .txt{ font-size:13.5px; color:var(--ink-dim); }
 
   footer{ text-align:center; padding:40px 20px 10px; color:var(--ink-dim); font-size:12px; }
   footer .v{ margin-top:4px; font-variant-numeric:tabular-nums; }
@@ -235,9 +221,7 @@
   <a href="#turn">กลไกในตา</a>
   <a href="#tiles">ช่อง↔การ์ด</a>
   <a href="#cards">ประเภทการ์ด</a>
-  <a href="#effects">รางวัล/บทลงโทษ</a>
   <a href="#end">จบด่าน/จบเกม</a>
-  <a href="#links">การเชื่อมโยง</a>
   <a href="cards.html">🗂️ สำรวจการ์ด</a>
   <select class="theme-select" id="theme-select" title="ธีมสี">
     <option value="light">🎨 ขาว</option>
@@ -389,52 +373,15 @@
     </div>
   </section>
 
-  <section id="effects">
-    <div class="sec-head">
-      <div class="sec-num">06 — รางวัลและบทลงโทษ</div>
-      <h2>คำสั่งผลลัพธ์ที่ใช้ร่วมกันข้ามการ์ด</h2>
-      <p>ทุกประเภทการ์ดใช้ "คำศัพท์ผลลัพธ์" ชุดเดียวกัน ทำให้กลไกคาดเดาได้และดูแลรักษาง่าย</p>
-    </div>
-    <div class="tbl-wrap">
-      <table>
-        <thead><tr><th>ผลลัพธ์</th><th>ใช้ในการ์ด</th><th>ทำอะไร</th></tr></thead>
-        <tbody>
-          <tr><td><b>score</b> (add/subtract)</td><td><span class="tag-pill">ภารกิจ</span><span class="tag-pill">อุปสรรค</span><span class="tag-pill">สนับสนุน</span></td><td>บวก/ลบคะแนนสะสมโดยตรง</td></tr>
-          <tr><td><b>skipTurn</b></td><td><span class="tag-pill">ภารกิจ</span><span class="tag-pill">อุปสรรค</span></td><td>เพิ่มจำนวนตาที่ต้องหยุดเดิน</td></tr>
-          <tr><td><b>discardCard</b></td><td><span class="tag-pill">ภารกิจ</span><span class="tag-pill">อุปสรรค</span></td><td>สุ่มทิ้งการ์ดประเภทที่ระบุจากมือ (บอกชื่อการ์ดที่ทิ้งเสมอ)</td></tr>
-          <tr><td><b>drawCard</b></td><td><span class="tag-pill">ภารกิจ</span><span class="tag-pill">อุปสรรค</span><span class="tag-pill">สนับสนุน</span></td><td>สุ่มได้การ์ดประเภทที่ระบุเพิ่ม (ไม่ซ้ำกับที่มีอยู่แล้ว ถ้ากองยังมีเหลือ)</td></tr>
-          <tr><td><b>knowledgeCheck</b></td><td><span class="tag-pill">อุปสรรคเท่านั้น</span></td><td>มีการ์ดความรู้ในมือ → รอด (อาจถูกใช้ทิ้ง 1 ใบ); ไม่มี → หักคะแนนตามที่กำหนด</td></tr>
-          <tr><td><b>swapFoodZone</b></td><td><span class="tag-pill">อุปสรรคเท่านั้น</span></td><td>บังคับแลกการ์ดอาหารโซนเขียวทั้งหมด เป็นการ์ดสุ่มจากโซนเหลือง/แดง</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <p style="font-size:12.5px;color:var(--ink-dim);margin-top:10px;">เกณฑ์ "ภารกิจสำเร็จ": นับเฉพาะเมื่อได้คะแนนบวกจริง (&gt;0) เท่านั้น — ตัวเลือกที่ไม่บวกไม่ลบเลยถือว่า "ไม่สำเร็จ" เช่นกัน</p>
-  </section>
-
   <section id="end">
     <div class="sec-head">
-      <div class="sec-num">07 — เงื่อนไขจบด่านและจบเกม</div>
+      <div class="sec-num">06 — เงื่อนไขจบด่านและจบเกม</div>
       <h2>เมื่อไหร่ถือว่าจบ</h2>
     </div>
     <div class="end-grid">
       <div class="end-card"><div class="ic">🚩</div><h3>จบหมู่บ้าน (ด่าน 1–4)</h3><p>เมื่อผู้เล่นทุกคนแก้อุปสรรค (ขึด) ที่ช่องสุดท้ายผ่านแล้ว (หรือถึงศาลาพักคอยจากการทอยเกิน) ครบทุกคน → เข้าหมู่บ้านถัดไปพร้อมกัน คะแนนและการ์ดในมือติดตัวไปด้วย ตำแหน่งรีเซ็ตเป็นนอกกระดาน</p></div>
       <div class="end-card"><div class="ic">🏁</div><h3>จบเกม (หลังด่าน 5)</h3><p>เมื่อทุกคนแก้อุปสรรคช่องสุดท้ายของหมู่บ้าน "บ้านปันใจ้" ผ่านแล้ว (หรือทอยเกินเข้าศาลาพักคอย) → เดินทางถึงศาลาประชาคม เกมจบ แสดงตารางจัดอันดับคะแนน ผู้คะแนนสูงสุดชนะ</p></div>
       <div class="end-card"><div class="ic">💾</div><h3>ส่งออกผลคะแนน</h3><p>หน้าจอสรุปผลมีปุ่มบันทึกผลเป็นไฟล์ CSV (ชื่อ ไอคอน คะแนน วันที่เล่น เวอร์ชันเกม) สำหรับนำไปทำ dashboard ติดตามความก้าวหน้า — กดบันทึกซ้ำได้แม้ปิดหน้าต่างสรุปผลไปแล้ว</p></div>
-    </div>
-  </section>
-
-  <section id="links">
-    <div class="sec-head">
-      <div class="sec-num">08 — การเชื่อมโยงระหว่างระบบ</div>
-      <h2>การ์ดและกลไกอ้างอิงถึงกันอย่างไร</h2>
-    </div>
-    <div class="conn-list">
-      <div class="conn-item"><div class="arrow">➜</div><div class="txt"><b>ภารกิจ ↔ อาหาร</b> — บางใบภารกิจอ้าง id การ์ดอาหารจริงเพื่อโชว์รูป/ชื่อ/โซเดียมประกอบคำถาม</div></div>
-      <div class="conn-item"><div class="arrow">➜</div><div class="txt"><b>อุปสรรค/สนับสนุน ↔ ความรู้</b> — <code>knowledgeCheck</code> อ่านการ์ดความรู้ในมือผู้เล่นเอง ส่วนการ์ดสนับสนุนบางใบแจกการ์ดความรู้กลับเข้ามือ</div></div>
-      <div class="conn-item"><div class="arrow">➜</div><div class="txt"><b>อุปสรรค ↔ อาหาร</b> — <code>swapFoodZone</code> และ <code>drawCard</code> ปรับ/เพิ่มการ์ดอาหารในมือโดยตรงจากคลัง 99 ใบเดียวกัน</div></div>
-      <div class="conn-item"><div class="arrow">➜</div><div class="txt"><b>scope: "all"</b> — ผลของการ์ดอุปสรรค/สนับสนุนบางใบกระทบผู้เล่นทุกคนพร้อมกัน ไม่ใช่แค่คนที่จับได้</div></div>
-      <div class="conn-item"><div class="arrow">➜</div><div class="txt"><b>รูปภาพ</b> — การ์ดอาหาร/สนับสนุน/ความรู้ ชี้ไปยังไฟล์ภาพในโฟลเดอร์ assets ของตนเอง หากไม่มีไฟล์รูป เกมจะ fallback แสดงข้อความอย่างเดียว ไม่ทำให้พัง</div></div>
-      <div class="conn-item"><div class="arrow">➜</div><div class="txt"><b>ไฟล์ข้อมูล ↔ ตัวเกม</b> — ทั้ง 5 ชุดการ์ดที่ฝังในตัวเกมตรงกับไฟล์ข้อมูลอ้างอิง (*_cards_full.json) ทุกใบ 100% (ไฟล์อ้างอิงมี field เอกสารเสริมที่เกมไม่ใช้ แต่เนื้อหาที่เล่นจริงตรงกันทุกตัวอักษร)</div></div>
     </div>
   </section>
 

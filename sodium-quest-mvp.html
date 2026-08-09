@@ -1422,6 +1422,10 @@ function showVillageDoneBanner(){
 function advanceVillage(){
   closeModal();
   state.villageIndex++;
+  // Deterministic restart: whoever finished last village first goes first
+  // in the next one, regardless of wherever currentPlayerIndex was left
+  // pointing once everyone had already finished the previous village.
+  state.currentPlayerIndex = 0;
   state.players.forEach(p=>{ p.position = -1; p.finished = false; p.scoreAtStageStart = p.score; });
   TILE_SEQUENCE = buildTileSequence(state.villageIndex);
   document.getElementById('roll-btn').disabled = false;
@@ -1497,6 +1501,11 @@ function nextTurn(){
     }
   }
   if(state.finished) return;
+  // Once everyone has finished this village there's no one left to hand the
+  // turn to — leave currentPlayerIndex alone rather than spinning it through
+  // a meaningless search, since advanceVillage() is what actually resets
+  // things for the next village.
+  if(state.players.every(p=>p.finished)) return;
   let tries = 0;
   do{
     state.currentPlayerIndex = (state.currentPlayerIndex+1) % state.players.length;
@@ -1611,7 +1620,7 @@ function applyCardEffect(player, eff){
     if(eff.cardType==='food' && eff.zone) pool = FOOD.filter(f=>f.sodium.zone===eff.zone);
     const gained = drawUniqueCards(pool, player.hand[eff.cardType], eff.count);
     player.hand[eff.cardType].push(...gained);
-    log(`${player.name}: ได้การ์ด${cardTypeName(eff.cardType)}เพิ่ม ${eff.count} ใบ`, 'lg-good', player, scoreBefore);
+    log(`${player.name}: ได้การ์ด${cardTypeName(eff.cardType)}เพิ่ม — ${gained.map(c=>c.name).join(', ')}`, 'lg-good', player, scoreBefore);
   } else if(eff.type === 'knowledgeCheck'){
     if(player.hand.knowledge.length > 0){
       if(eff.consume){
@@ -1634,12 +1643,15 @@ function applyCardEffect(player, eff){
       // go, so the replacements can't duplicate each other or the rest of
       // the hand either.
       const runningHand = player.hand.food.filter((c,i)=>!idxs.includes(i));
+      const lostNames = idxs.map(i=>player.hand.food[i].name);
+      const gainedNames = [];
       idxs.forEach(i=>{
         const [newCard] = drawUniqueCards(pool, runningHand, 1);
         player.hand.food[i] = newCard;
         runningHand.push(newCard);
+        gainedNames.push(newCard.name);
       });
-      log(`${player.name}: แลกการ์ดอาหารโซนเขียว ${idxs.length} ใบ เป็นโซนเหลือง/แดง`, 'lg-bad', player, scoreBefore);
+      log(`${player.name}: แลกการ์ดอาหาร — เสีย ${lostNames.join(', ')} ได้ ${gainedNames.join(', ')} แทน`, 'lg-bad', player, scoreBefore);
     } else {
       log(`${player.name}: ไม่มีการ์ดอาหารโซนเขียวให้แลก`, 'lg-good', player, scoreBefore);
     }
@@ -1676,7 +1688,7 @@ function ackKnowledge(pid, cardStr){
   const player = state.players.find(p=>p.id===pid);
   player.hand.knowledge.push(card);
   playSuccessSound();
-  log(`💡 ${player.name} ได้รับการ์ดความรู้ที่ รพ.สต.`, 'lg-good', player);
+  log(`💡 ${player.name} ได้รับการ์ดความรู้ที่ รพ.สต.: ${card.name}`, 'lg-good', player);
   renderPlayersList();
   showReceivedCardModal(player, 'knowledge', card, 'onclick="closeModalAndNext()"');
 }
@@ -1823,7 +1835,7 @@ function resolveMultipleChoiceMission(pid, cardStr, choiceId){
     } else if(eff.type==='drawCard'){
       const gained = drawRandomCards(eff.cardType, eff.count, player.hand[eff.cardType]);
       player.hand[eff.cardType].push(...gained);
-      notes.push(`ได้การ์ด${cardTypeName(eff.cardType)}เพิ่ม ${eff.count} ใบ`);
+      notes.push(`ได้การ์ด${cardTypeName(eff.cardType)}เพิ่ม — ${gained.map(c=>c.name).join(', ')}`);
     }
   });
   // A choice that earns no points at all is not a success, even if it

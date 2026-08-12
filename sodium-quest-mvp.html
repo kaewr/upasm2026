@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>คุ้มครองชีวิต พิชิตโซเดียม — Alpha</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50' y='78' font-size='80' text-anchor='middle'%3E%F0%9F%8F%A0%3C/text%3E%3C/svg%3E">
 <style>
   :root{
     /* ---- theme variables (overridden per data-theme below) ---- */
@@ -114,7 +115,13 @@
 
   /* ---------- Game screen ---------- */
   .game-wrap{width:100%;max-width:1900px;margin:0 auto;display:flex;flex-direction:column;gap:8px;min-height:0;}
-  .topbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;flex:none;}
+  /* Collapsing .topbar (title/village dots/theme/save/reset buttons) never
+     touches .hand-panel below it (current player + dice) — that row is a
+     sibling outside .topbar-wrap entirely, so it always stays visible. */
+  .topbar-wrap{flex:none;display:flex;flex-direction:column;align-items:center;}
+  .topbar.collapsed{display:none;}
+  .topbar-toggle-btn{margin-top:2px;padding:3px 16px;font-size:12px;font-weight:700;background:var(--surface2);color:var(--text-dim);border:1px solid var(--border);border-top:none;border-radius:0 0 10px 10px;min-height:0;}
+  .topbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;flex:none;width:100%;}
   .topbar h2{color:var(--accent-text);font-size:21px;margin:0;}
   .topbar .actions{display:flex;gap:8px;align-items:center;}
   .topbar .actions button{padding:11px 16px;font-size:15px;background:var(--surface2);color:var(--text);min-height:44px;}
@@ -123,21 +130,63 @@
   .vdot.done{background:var(--teal);border-color:var(--teal);color:#fff;}
   .vdot.active{background:var(--accent);border-color:var(--accent);color:var(--on-accent);font-weight:800;}
 
-  .hand-panel{flex:none;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:10px 16px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+  /* Two separate bordered boxes, not one continuous bar — "current player
+     info" and "dice + roll" are different concerns, so they get their own
+     visible outline instead of blending into a single strip. */
+  .hand-panel{flex:none;display:flex;align-items:stretch;gap:10px;flex-wrap:wrap;}
+  .hp-info-box{flex:1 1 auto;min-width:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:10px 16px;display:flex;align-items:center;}
+  .hp-dice-box{flex:none;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:10px 16px;display:flex;align-items:center;gap:16px;}
+  .hp-info{display:flex;align-items:center;gap:16px;flex-wrap:wrap;flex:1 1 auto;min-width:0;}
   .hand-panel .hp-title{font-size:14px;color:var(--text-dim);margin-right:2px;font-weight:700;}
   .hand-panel .hp-item{display:flex;align-items:baseline;gap:5px;font-size:22px;font-weight:800;color:var(--text);}
   .hand-panel .hp-item small{font-size:12px;color:var(--text-dim);font-weight:600;}
 
+  /* ---------- Board + collapsible player sidebar, side by side ---------- */
+  .game-main{display:flex;gap:10px;flex:1 1 auto;min-height:0;}
+  .game-left{display:flex;flex-direction:column;gap:10px;flex:1 1 auto;min-width:0;min-height:0;}
   .board-area{flex:1 1 auto;min-height:0;background:var(--surface);border-radius:18px;padding:12px;position:relative;border:1px solid var(--border);display:flex;flex-direction:column;}
+  /* Scenic village illustration behind the map — background-size:cover
+     re-fits itself to .board-area's box on every resize with no JS needed.
+     Sits below .board-bg (the per-village icon texture) in DOM order so
+     that faint pattern still shows on top of it. Which image + opacity are
+     set inline by updateBoardBackground()/adjustBoardPhotoOpacity() (JS),
+     not fixed here, since they change per village and per user preference.
+     background-size:100% 100% stretches the image to fill the box exactly
+     in both directions — no cropping (so START/ศาลาพักผ่อน signage at the
+     image's edges is never cut off, unlike "cover") and no letterboxing
+     (unlike "contain", which left empty side-margins whenever the board's
+     aspect ratio was wider than the image's). Trade-off: the art stretches
+     a bit rather than staying pixel-perfect, an acceptable cost for a
+     background layer, especially under 50% opacity. */
+  .board-photo-bg{position:absolute;inset:12px;border-radius:14px;pointer-events:none;background-size:100% 100%;background-repeat:no-repeat;z-index:0;}
+  .bg-opacity-control{display:flex;align-items:center;gap:4px;}
+  .bg-opacity-control button{padding:6px 10px;font-size:15px;min-height:36px;background:var(--surface2);color:var(--text);}
+  .bg-opacity-control span{font-size:13px;color:var(--text-dim);font-weight:700;min-width:34px;text-align:center;}
   .board-bg{position:absolute;inset:12px;border-radius:14px;pointer-events:none;opacity:0.13;filter:grayscale(30%);background-repeat:repeat;background-size:220px 220px;z-index:0;}
   svg#board-svg{width:100%;flex:1 1 auto;min-height:0;display:block;}
-  .tile-marker{position:absolute;transform:translate(-50%,-50%);width:54px;height:54px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 4px 10px rgba(0,0,0,.4);border:2px solid rgba(255,255,255,.25);}
+  #trail-path-outer{filter:drop-shadow(0 3px 3px rgba(0,0,0,.3));}
+  /* Border bumped from a faint 25%-opacity ring to solid white — now that
+     tiles carry their own photo art, a subtle border no longer reads
+     clearly against busy backgrounds, so each tile needs a strong edge to
+     stay legible as a distinct "square on the board". */
+  .tile-marker{position:absolute;transform:translate(-50%,-50%);width:54px;height:54px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 4px 10px rgba(0,0,0,.4);border:3px solid #fff;}
   .tile-marker .tnum{position:absolute;top:-10px;left:-10px;background:rgba(0,0,0,.65);color:#fff;font-size:11px;font-weight:700;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.4);}
-  .tile-house{background:var(--house);}
-  .tile-clinic{background:var(--teal);}
-  .tile-market{background:var(--ochre);}
-  .tile-headman{background:var(--purple);}
-  .tile-khuen{background:var(--brick);}
+  /* Each tile type's number badge matches that type's own accent color
+     (same colors already used for the tile fill / legend swatch), so the
+     badge itself hints at the tile type at a glance. */
+  .tile-house .tnum{background:var(--house);}
+  .tile-clinic .tnum{background:var(--teal);}
+  .tile-market .tnum{background:var(--ochre);}
+  .tile-headman .tnum{background:var(--purple);}
+  .tile-khuen .tnum{background:var(--brick);}
+  /* Fallback fills (show briefly if a photo hasn't loaded yet, or if the
+     image path is ever wrong) — the per-village photo, set inline in
+     renderTiles(), paints over it once loaded. */
+  .tile-house{background:var(--house);background-size:cover;background-position:center top;}
+  .tile-clinic{background:var(--teal);background-size:cover;background-position:center top;}
+  .tile-market{background:var(--ochre);background-size:cover;background-position:center top;}
+  .tile-headman{background:var(--purple);background-size:cover;background-position:center top;}
+  .tile-khuen{background:var(--brick);background-size:cover;background-position:center top;}
   .tile-start{background:#FFFFFF;border:2px solid #6b6250;}
   .tile-finish-line{background:#2E7D32;border-color:#eafbea;}
   .tile-waiting-pavilion{background:#6D4C2C;border-color:#e9dcc8;}
@@ -145,27 +194,83 @@
   .tile-marker.active-highlight{outline:3px solid var(--accent);animation:pulseTile .8s ease-in-out infinite;}
   @keyframes pulseTile{0%,100%{box-shadow:0 0 0 0 rgba(224,167,46,.5);}50%{box-shadow:0 0 0 10px rgba(224,167,46,0);}}
 
-  .token{position:absolute;width:26px;height:26px;border-radius:50%;background:var(--paper);display:flex;align-items:center;justify-content:center;font-size:15px;border:2px solid var(--on-accent);transition:left .48s ease, top .48s ease;box-shadow:0 3px 6px rgba(0,0,0,.5);z-index:5;}
+  /* Player marker: a map-pin shape (badge + pointed tail) rather than a
+     plain dot, so it reads as "someone standing here" at a glance — the
+     tail tip is the actual anchor point (see tokenAnchorOffset in JS), not
+     the badge's own center, so growing the badge never drifts it off the
+     tile it's marking. */
+  /* transform anchors the marker by its own bottom edge (the tail's tip,
+     the last flex child) rather than its center — so left/top can always
+     just be "the exact tile point" no matter how tall the label+badge+tail
+     stack ends up being, and growing the badge never drifts the anchor. */
+  .token{position:absolute;display:flex;flex-direction:column;align-items:center;transform:translate(-50%,-100%);transition:left .48s ease, top .48s ease;z-index:5;}
+  .token-label{
+    background:#FFFDF6; color:#241C10; font-weight:800; white-space:nowrap;
+    border-radius:999px; padding:3px 10px; margin-bottom:3px;
+    border:1px solid rgba(0,0,0,.15); box-shadow:0 2px 5px rgba(0,0,0,.3);
+    line-height:1.2;
+  }
+  .token-badge{
+    border-radius:50%; background:var(--paper); display:flex; align-items:center;
+    justify-content:center; border:3px solid var(--border);
+    box-shadow:0 3px 7px rgba(0,0,0,.5);
+  }
+  .token-tail{
+    width:0; height:0; margin-top:-2px;
+    border-left:9px solid transparent; border-right:9px solid transparent;
+    border-top:12px solid var(--border);
+    filter:drop-shadow(0 2px 2px rgba(0,0,0,.35));
+  }
+  /* Current player: a soft glow ring instead of a blinking effect, so their
+     spot is obvious at a glance without being visually jarring. */
+  .token.current .token-badge{
+    border-color:var(--accent);
+    box-shadow:0 0 0 4px color-mix(in srgb, var(--accent) 45%, transparent), 0 3px 9px rgba(0,0,0,.5);
+  }
+  .token.current .token-tail{ border-top-color:var(--accent); }
+  .token.current .token-label{ border-color:var(--accent); border-width:2px; }
+  @media (prefers-reduced-motion: no-preference){
+    .token.walking .token-badge{ animation:tokenBob .5s ease-in-out infinite; }
+  }
+  @keyframes tokenBob{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-4px); } }
 
   .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:14px;color:var(--text-dim);margin-top:8px;flex:none;font-weight:600;}
   .legend span{display:inline-flex;align-items:center;gap:6px;}
   .legend i{width:14px;height:14px;border-radius:4px;display:inline-block;}
 
-  .bottom-panels{display:flex;gap:10px;flex-wrap:wrap;flex:none;}
-  .players-panel{flex:1;min-width:280px;background:var(--surface);border-radius:16px;padding:12px 16px;border:1px solid var(--border);}
-  #players-list{display:grid;grid-template-columns:repeat(auto-fit, minmax(210px, 1fr));gap:8px;}
-  .player-card{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:10px;background:var(--surface2);}
-  .player-card.current{outline:2px solid var(--accent);}
-  .player-card .pi{font-size:23px;}
-  .player-card .pname{font-weight:700;font-size:16px;flex:1;}
-  .player-card .pscore{font-size:16px;color:var(--accent-text);font-weight:800;}
-  .player-card .phand{font-size:13px;color:var(--text-dim);}
-  .player-card .pstatus{font-size:13px;color:var(--warn-text);font-weight:700;}
-  .view-hand-btn{background:var(--accent);color:var(--on-accent);border:1px solid var(--accent);border-radius:8px;padding:8px 12px;font-size:16px;flex:none;font-weight:800;min-height:40px;}
+  /* Right-side, collapsible — mirrors the .log-wrap collapse pattern below.
+     Collapsing shrinks it to an icon strip rather than hiding it entirely,
+     so it's always obvious it's there and one click away. */
+  .players-sidebar{width:280px;flex:none;background:var(--surface);border-radius:16px;border:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;transition:width .2s ease;}
+  .players-sidebar.collapsed{width:60px;}
+  .sidebar-header{display:flex;justify-content:space-between;align-items:center;gap:6px;padding:12px 14px;font-weight:800;font-size:15px;color:var(--accent-text);cursor:pointer;background:var(--surface2);white-space:nowrap;}
+  .players-sidebar.collapsed .sidebar-header{justify-content:center;}
+  .players-sidebar.collapsed .sidebar-title{display:none;}
+  .players-sidebar.collapsed #players-toggle-icon{font-size:18px;}
+  .sidebar-body{padding:12px;overflow-y:auto;flex:1 1 auto;min-height:0;display:flex;flex-direction:column;}
+  .players-sidebar.collapsed .sidebar-body{display:none;}
+  /* Always exactly 5 row tracks — the sidebar's height divided by the
+     game's fixed max player count (5), not by however many players are
+     actually seated. 2 players means 2 filled rows + 3 blank ones below,
+     never bigger cards; 5 players fills every row edge-to-edge with zero
+     scrollbar. grid-template-rows:repeat(5,1fr) needs a definite container
+     height to divide (from sidebar-body's own flex:1 1 auto sizing above),
+     which is why the mobile override further down switches back to
+     display:flex/content-sized rows instead. */
+  #players-list{display:grid;grid-template-rows:repeat(5,1fr);gap:8px;flex:1 1 auto;min-height:0;}
+  .player-card{display:flex;align-items:center;gap:10px;padding:6px 14px;border-radius:12px;background:var(--surface2);min-height:0;overflow:hidden;}
+  .player-card.current{outline:3px solid var(--accent);}
+  .player-card .pi{font-size:26px;flex:none;}
+  .player-card .pname{font-weight:700;font-size:15px;flex:1;}
+  .player-card .pscore{font-size:15px;color:var(--accent-text);font-weight:800;}
+  .player-card .pstatus{font-size:12px;color:var(--warn-text);font-weight:700;}
+  .view-hand-btn{background:var(--accent);color:var(--on-accent);border:1px solid var(--accent);border-radius:8px;padding:6px 10px;font-size:14px;flex:none;font-weight:800;min-height:32px;}
   .hand-panel .hp-view{margin-left:auto;background:var(--accent);color:var(--on-accent);padding:9px 16px;border-radius:8px;font-size:14px;font-weight:800;min-height:40px;}
 
-  .dice-panel{width:230px;flex:none;background:var(--surface);border-radius:16px;padding:14px;display:flex;flex-direction:column;align-items:center;border:1px solid var(--border);}
-  #dice{width:72px;height:72px;background:var(--paper);border-radius:14px;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);padding:11px;gap:5px;margin-bottom:12px;box-shadow:0 6px 14px rgba(0,0,0,.5);}
+  /* Dice sits right in the hand-panel row, immediately beside the roll
+     button, instead of in its own panel under the board. */
+  .hp-dice-wrap{display:flex;align-items:center;gap:10px;flex:none;}
+  #dice{width:56px;height:56px;flex:none;background:var(--paper);border-radius:14px;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);padding:8px;gap:3px;box-shadow:0 6px 14px rgba(0,0,0,.5);}
   #dice.rolling{animation:diceShake .12s infinite;}
   @keyframes diceShake{0%{transform:rotate(0deg);}25%{transform:rotate(6deg);}75%{transform:rotate(-6deg);}100%{transform:rotate(0deg);}}
 
@@ -186,8 +291,9 @@
   }
   .pip{border-radius:50%;background:transparent;}
   .pip.on{background:var(--on-accent);}
-  #roll-btn{background:var(--accent);color:var(--on-accent);padding:14px 22px;border-radius:12px;font-size:18px;width:100%;min-height:52px;}
-  .roll-hint{font-size:14px;color:var(--text-dim);margin-top:9px;text-align:center;font-weight:600;}
+  #roll-btn{background:var(--accent);color:var(--on-accent);padding:14px 26px;border-radius:12px;font-size:18px;width:auto;min-height:52px;flex:none;}
+  #roll-btn:disabled{opacity:.5;}
+  .roll-hint{font-size:13px;color:var(--text-dim);font-weight:600;max-width:140px;line-height:1.25;}
 
   .log-wrap{flex:none;width:100%;}
   .log-header{display:flex;justify-content:space-between;align-items:center;background:var(--surface2);padding:8px 16px;border-radius:12px 12px 0 0;font-size:13px;font-weight:700;color:var(--text-dim);cursor:pointer;border:1px solid var(--border);border-bottom:none;}
@@ -205,16 +311,33 @@
     .topbar h2{font-size:17px;}
     .village-progress{gap:4px;}
     .vdot{width:24px;height:24px;font-size:11px;}
-    .hand-panel{padding:7px 12px;gap:8px;}
+    .hand-panel{gap:6px;}
+    .hp-info-box,.hp-dice-box{padding:7px 12px;}
     .hand-panel .hp-item{font-size:17px;}
     .hand-panel .hp-item small{font-size:10px;}
     .hand-panel .hp-title{font-size:12px;width:100%;}
     .hand-panel .hp-view{font-size:12px;padding:6px 10px;}
-    .bottom-panels{flex-direction:column;}
-    .dice-panel{width:100%;flex-direction:row;justify-content:center;gap:12px;padding:8px;}
-    #dice{margin-bottom:0;width:54px;height:54px;}
-    #roll-btn{width:auto;padding:11px 20px;font-size:16px;}
-    #players-list{grid-template-columns:1fr;}
+    /* Sidebar doesn't work as a side column on a phone-width screen — stack
+       it below the board instead, full width; collapsing now shrinks its
+       height rather than its width (there's no width to spare either way). */
+    .game-main{flex-direction:column;}
+    .players-sidebar, .players-sidebar.collapsed{width:100%;}
+    /* On a phone-width, stacked-below layout the sidebar has no fixed
+       height to divide evenly (the page itself scrolls instead) — fall
+       back to normal content-sized cards rather than the desktop's
+       5-row-grid trick, which needs a definite container height. */
+    .sidebar-body{display:block;overflow-y:visible;}
+    #players-list{display:flex;flex-direction:column;}
+    .player-card{min-height:auto;overflow:visible;padding:12px 16px;}
+    .player-card .pi{font-size:30px;}
+    .player-card .pname{font-size:17px;}
+    .player-card .pscore{font-size:17px;}
+    .player-card .pstatus{font-size:13px;}
+    .view-hand-btn{padding:8px 12px;font-size:16px;min-height:40px;}
+    .hp-dice-wrap{gap:6px;}
+    #dice{width:46px;height:46px;padding:6px;}
+    .roll-hint{font-size:11px;max-width:90px;}
+    #roll-btn{padding:11px 20px;font-size:16px;}
     .legend{font-size:11px;gap:8px;}
     .log-panel{height:60px;font-size:11px;}
     .theme-switcher label{display:none;}
@@ -315,64 +438,88 @@
 <!-- ============ GAME SCREEN ============ -->
 <div id="game-screen" class="screen hidden">
   <div class="game-wrap">
-    <div class="topbar">
-      <div>
-        <h2 id="village-title">🏞️ หมู่บ้าน 1: เข้าถึง</h2>
-        <div class="village-progress" id="village-progress"></div>
-      </div>
-      <div class="actions">
-        <div class="theme-switcher">
-          <label for="theme-select-game">🎨</label>
-          <select id="theme-select-game" onchange="applyTheme(this.value)">
-            <option value="light">ขาว</option>
-            <option value="dark">ดำ</option>
-            <option value="green">เขียว</option>
-            <option value="red">แดง</option>
-            <option value="blue">ฟ้า</option>
-            <option value="colorful">Colorful 🌈</option>
-          </select>
+    <div class="topbar-wrap">
+      <div class="topbar" id="topbar">
+        <div>
+          <h2 id="village-title">🏞️ หมู่บ้าน 1: เข้าถึง</h2>
+          <div class="village-progress" id="village-progress"></div>
         </div>
-        <button id="download-save-btn">💾 บันทึกเกม (ดาวน์โหลดไฟล์)</button>
-        <button id="reset-btn">🔄 เกมใหม่</button>
-        <button id="save-score-btn" class="hidden">🏆 บันทึกคะแนน (CSV)</button>
+        <div class="actions">
+          <div class="theme-switcher">
+            <label for="theme-select-game">🎨</label>
+            <select id="theme-select-game" onchange="applyTheme(this.value)">
+              <option value="light">ขาว</option>
+              <option value="dark">ดำ</option>
+              <option value="green">เขียว</option>
+              <option value="red">แดง</option>
+              <option value="blue">ฟ้า</option>
+              <option value="colorful">Colorful 🌈</option>
+            </select>
+          </div>
+          <div class="bg-opacity-control" title="ความโปร่งแสงพื้นหลังแผนที่">
+            <button type="button" onclick="adjustBoardPhotoOpacity(-0.1)">🖼️−</button>
+            <span id="bg-opacity-label">50%</span>
+            <button type="button" onclick="adjustBoardPhotoOpacity(0.1)">🖼️+</button>
+          </div>
+          <button id="reset-btn">🔄 เกมใหม่</button>
+          <button id="download-save-btn">💾 บันทึกเกม (ดาวน์โหลดไฟล์)</button>
+          <button id="save-score-btn" class="hidden">🏆 บันทึกคะแนน (CSV)</button>
+        </div>
       </div>
+      <button class="topbar-toggle-btn" id="topbar-toggle-btn" onclick="toggleTopbar()">ซ่อนแถบด้านบน ▲</button>
     </div>
 
-    <div class="hand-panel" id="hand-panel"></div>
-
-    <div class="board-area">
-      <div id="board-bg" class="board-bg"></div>
-      <svg id="board-svg" viewBox="0 0 1000 520" preserveAspectRatio="xMidYMid meet">
-        <path id="trail-path" fill="none" stroke="#3a5a4a" stroke-width="26"
-          stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="2 20"/>
-      </svg>
-      <div id="tiles-layer"></div>
-      <div id="tokens-layer"></div>
-      <div class="legend">
-        <span><i style="background:var(--purple)"></i> บ้านป้อหลวง</span>
-        <span><i style="background:var(--house)"></i> บ้านชาวบ้าน (ภารกิจ)</span>
-        <span><i style="background:var(--teal)"></i> รพ.สต. (ความรู้)</span>
-        <span><i style="background:var(--ochre)"></i> กาดนัด (อาหาร)</span>
-        <span><i style="background:var(--brick)"></i> ขึด (อุปสรรค)</span>
-        <span><i style="background:linear-gradient(145deg,#FFD25A,#E0A72E)"></i> ศาลาประชาคม (จุดจบเกม)</span>
-        <span><i style="background:#fff;border:1px solid var(--border);"></i> จุดเริ่มต้น</span>
-        <span><i style="background:#2E7D32"></i> เส้นชัย (หมู่บ้านสุดท้าย)</span>
+    <div class="hand-panel" id="hand-panel">
+      <div class="hp-info-box">
+        <div class="hp-info" id="hp-info"></div>
       </div>
-    </div>
-
-    <div class="bottom-panels">
-      <div class="players-panel">
-        <h3 style="font-size:16px;color:var(--accent-text);">ผู้เล่น</h3>
-        <div id="players-list"></div>
-      </div>
-      <div class="dice-panel">
-        <div id="dice">
-          <div class="pip"></div><div class="pip"></div><div class="pip"></div>
-          <div class="pip"></div><div class="pip"></div><div class="pip"></div>
-          <div class="pip"></div><div class="pip"></div><div class="pip"></div>
+      <div class="hp-dice-box">
+        <div class="hp-dice-wrap">
+          <div id="dice">
+            <div class="pip"></div><div class="pip"></div><div class="pip"></div>
+            <div class="pip"></div><div class="pip"></div><div class="pip"></div>
+            <div class="pip"></div><div class="pip"></div><div class="pip"></div>
+          </div>
+          <div class="roll-hint" id="roll-hint">รอผู้เล่นทอยลูกเต๋า</div>
         </div>
         <button id="roll-btn">🎲 ทอยลูกเต๋า</button>
-        <div class="roll-hint" id="roll-hint">รอผู้เล่นทอยลูกเต๋า</div>
+      </div>
+    </div>
+
+    <div class="game-main">
+      <div class="game-left">
+        <div class="board-area">
+          <div id="board-photo-bg" class="board-photo-bg"></div>
+          <div id="board-bg" class="board-bg"></div>
+          <svg id="board-svg" viewBox="0 0 1000 520" preserveAspectRatio="xMidYMid meet">
+            <path id="trail-path-outer" fill="none" stroke="#2c4a3d" stroke-width="36"
+              stroke-linecap="round" stroke-linejoin="round"/>
+            <path id="trail-path" fill="none" stroke="#3a5a4a" stroke-width="26"
+              stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="2 20"/>
+          </svg>
+          <div id="tiles-layer"></div>
+          <div id="tokens-layer"></div>
+          <div class="legend">
+            <span><i style="background:var(--purple)"></i> บ้านป้อหลวง</span>
+            <span><i style="background:var(--house)"></i> บ้านชาวบ้าน (ภารกิจ)</span>
+            <span><i style="background:var(--teal)"></i> รพ.สต. (ความรู้)</span>
+            <span><i style="background:var(--ochre)"></i> กาดนัด (อาหาร)</span>
+            <span><i style="background:var(--brick)"></i> ขึด (อุปสรรค)</span>
+            <span><i style="background:linear-gradient(145deg,#FFD25A,#E0A72E)"></i> ศาลาประชาคม (จุดจบเกม)</span>
+            <span><i style="background:#fff;border:1px solid var(--border);"></i> จุดเริ่มต้น</span>
+            <span><i style="background:#2E7D32"></i> เส้นชัย (หมู่บ้านสุดท้าย)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="players-sidebar" id="players-sidebar">
+        <div class="sidebar-header" onclick="togglePlayersSidebar()">
+          <span class="sidebar-title">👥 ผู้เล่น</span>
+          <span id="players-toggle-icon">ซ่อน ▸</span>
+        </div>
+        <div class="sidebar-body" id="players-sidebar-body">
+          <div id="players-list"></div>
+        </div>
       </div>
     </div>
 
@@ -444,6 +591,85 @@ function adjustModalFont(direction){
 (function initModalFont(){
   const saved = parseInt(safeLocalGet(MODAL_FONT_KEY)) || 16;
   setModalFontSize(saved);
+})();
+
+/* ================= BOARD PHOTO BACKGROUND (per-village illustration) ================= */
+const BG_OPACITY_KEY = 'sodium_quest_bg_opacity';
+const VILLAGE_BOARD_PHOTOS = [
+  'assets/board/village-bg-0.png',
+  'assets/board/village-bg-1.png',
+  'assets/board/village-bg-2.png',
+  'assets/board/village-bg-3.png',
+  'assets/board/village-bg-4.png',
+];
+// One portrait of the village headman per stage, shown inside that
+// village's "บ้านป้อหลวง" (headman) tile — see renderTiles().
+const VILLAGE_HEADMAN_PHOTOS = [
+  'assets/tiles/headman-0.png',
+  'assets/tiles/headman-1.png',
+  'assets/tiles/headman-2.png',
+  'assets/tiles/headman-3.png',
+  'assets/tiles/headman-4.png',
+];
+// One รพ.สต. (clinic) building photo per stage, shown inside that
+// village's "รพ.สต." (clinic) tile — see renderTiles().
+const VILLAGE_CLINIC_PHOTOS = [
+  'assets/tiles/clinic-0.jpg',
+  'assets/tiles/clinic-1.jpg',
+  'assets/tiles/clinic-2.jpg',
+  'assets/tiles/clinic-3.jpg',
+  'assets/tiles/clinic-4.jpg',
+];
+// One กาดนัด (market) photo per stage, shown inside that village's
+// "กาดนัด" (market) tile — see renderTiles().
+const VILLAGE_MARKET_PHOTOS = [
+  'assets/tiles/market-0.jpg',
+  'assets/tiles/market-1.jpg',
+  'assets/tiles/market-2.jpg',
+  'assets/tiles/market-3.jpg',
+  'assets/tiles/market-4.jpg',
+];
+// One ขึด (obstacle) photo per stage, shown inside that village's "ขึด"
+// tile — see renderTiles().
+const VILLAGE_KHUEN_PHOTOS = [
+  'assets/tiles/khuen-0.jpg',
+  'assets/tiles/khuen-1.jpg',
+  'assets/tiles/khuen-2.jpg',
+  'assets/tiles/khuen-3.jpg',
+  'assets/tiles/khuen-4.jpg',
+];
+// 8 บ้านชาวบ้าน (house) photos per village — there are 8 house tiles per
+// stage (see buildTileSequence), so each one gets a different photo rather
+// than repeating the same image 8 times. Indexed
+// VILLAGE_HOUSE_PHOTOS[villageIdx][houseOccurrenceIdx] — see renderTiles(),
+// which counts house tiles as it encounters them in TILE_SEQUENCE order.
+const VILLAGE_HOUSE_PHOTOS = [0,1,2,3,4].map(v =>
+  [0,1,2,3,4,5,6,7].map(occ => `assets/tiles/house-${v}-${occ}.jpg`)
+);
+// Which tile TYPES get a per-village photo inside the tile (plus a name
+// caption below it) instead of the plain emoji — add more entries here if
+// more tile types get artwork later, no other renderTiles() changes needed.
+const TILE_TYPE_PHOTOS = {
+  headman: VILLAGE_HEADMAN_PHOTOS,
+  clinic: VILLAGE_CLINIC_PHOTOS,
+  market: VILLAGE_MARKET_PHOTOS,
+  khuen: VILLAGE_KHUEN_PHOTOS,
+};
+let boardPhotoOpacity = 0.5;
+function setBoardPhotoOpacity(v){
+  boardPhotoOpacity = Math.max(0, Math.min(1, Math.round(v*100)/100));
+  const el = document.getElementById('board-photo-bg');
+  if(el) el.style.opacity = boardPhotoOpacity;
+  const label = document.getElementById('bg-opacity-label');
+  if(label) label.textContent = Math.round(boardPhotoOpacity*100)+'%';
+  safeLocalSet(BG_OPACITY_KEY, boardPhotoOpacity);
+}
+function adjustBoardPhotoOpacity(delta){
+  setBoardPhotoOpacity(boardPhotoOpacity + delta);
+}
+(function initBoardPhotoOpacity(){
+  const saved = parseFloat(safeLocalGet(BG_OPACITY_KEY));
+  setBoardPhotoOpacity(Number.isFinite(saved) ? saved : 0.5);
 })();
 
 /* ================= AUDIO ENGINE (Web Audio API — synthesized, no files) ================= */
@@ -810,100 +1036,70 @@ document.getElementById('load-file-input').onchange = (e)=>{
 };
 
 /* ================= BOARD RENDER ================= */
-// Tile grid X range, in the shared 1000x520 design space — deliberately
-// short of the full 0-1000 canvas (not 0..1000) so the start/finish bookend
-// pads always have clear, on-canvas, non-overlapping room past either edge.
+// Horizontal span the grid covers, in the shared 1000x520 design space —
+// deliberately short of the full 0-1000 canvas (not 0..1000) so the
+// start/finish bookend pads always have clear, on-canvas, non-overlapping
+// room past either edge.
 const TILE_X0 = 130, TILE_X1 = 870;
 const BOOKEND_OFFSET = 90;  // design-space distance from the edge tile to its pad
 const BOOKEND_SCALE = 0.6;  // bookend pads render smaller than real tiles
-// Each village gets its own tile layout for variety. Whatever coordinates a
-// layout returns are used BOTH for the tile positions AND to draw the trail
-// line (via a Catmull-Rom curve that passes exactly through every point) —
-// so the path and the tiles can never disagree, no matter the shape.
+const MAP_Y_MARGIN = 90;    // keep this far from the top/bottom canvas edges for tile badges/captions
+const GRID_ROWS = 3, GRID_COLS = 4; // 3x4 snake grid (12 tiles) — ROWS must stay odd so the last row walks left-to-right and lands bottom-right
+// tension/accent/dash control how the trail LINE drawn through the grid
+// points looks (see buildSmoothPath) — kept different per village purely
+// for color variety; the grid shape itself is the same every village.
+const VILLAGE_MAP_STYLE = [
+  { tension:0.55, accent:'#7C9A5C', dash:'1 16' },  // 0 เข้าถึง
+  { tension:0.8,  accent:'#5B84A6', dash:'1 15' },  // 1 เข้าใจ
+  { tension:1.0,  accent:'#C97A4E', dash:'1 14' },  // 2 ไต่ถาม
+  { tension:1.15, accent:'#8E5E8B', dash:'1 13' },  // 3 ตัดสินใจ
+  { tension:1.3,  accent:'#D4A62A', dash:'2 10' },  // 4 นำไปใช้
+];
+// Boustrophedon ("snake") grid: row 0 walks left-to-right, row 1 right-to-
+// left, alternating down to the last row — tile 0 sits top-left, the final
+// tile sits bottom-right. Every row spans the exact same x range
+// (TILE_X0..TILE_X1), so tile 0 always has the minimum x across the WHOLE
+// path and the final tile always has the maximum — that's the property
+// computeBookendDesignCoords() relies on to place the start/finish pads
+// without ever colliding with the path, even though x isn't monotonic
+// row-to-row the way it would be along a single straight or curved line.
 function buildTileCoords(villageIdx){
-  // Randomized zigzag walk on a grid: horizontal runs are 1-2 tiles, but
-  // every vertical move is EXACTLY 1 tile, immediately followed by a
-  // forced move to the right (the map is short vertically, so continuing
-  // up/down or going left after a vertical hop would waste the wide
-  // horizontal space). Self-avoiding + bounds-checked, with a
-  // guaranteed-valid fallback shape if generation ever fails.
-  // Each village uses a different grid shape/start point so the paths
-  // are genuinely distinct from one another, not just randomly reshuffled
-  // versions of the same layout.
-  const CONFIGS = [
-    { cols:8, rows:2, startRow:'bottom', yRange:[80,460] },    // 0 — เข้าถึง
-    { cols:8, rows:2, startRow:'top',    yRange:[80,460] },    // 1 — เข้าใจ
-    { cols:8, rows:2, startRow:'bottom', yRange:[80,460] },    // 2 — ไต่ถาม
-    { cols:8, rows:2, startRow:'top',    yRange:[80,460] },    // 3 — ตัดสินใจ
-    { cols:8, rows:2, startRow:'bottom', yRange:[80,460] },    // 4 — นำไปใช้
-  ];
-  const cfg = CONFIGS[villageIdx] || CONFIGS[0];
-  const COLS = cfg.cols, ROWS = cfg.rows, TOTAL = 12;
-  const [yTop, yBottom] = cfg.yRange || [80, 460];
-  // The grid itself is kept short of the full 0-1000 canvas width (TILE_X0..
-  // TILE_X1, not 0..1000) so there's always clear space left of column 0 and
-  // right of the last column for the start/finish bookend pads below.
-  const xs = []; for(let c=0;c<COLS;c++) xs.push(TILE_X0 + c*((TILE_X1-TILE_X0)/(COLS-1)));
-  const ys = []; for(let r=0;r<ROWS;r++) ys.push(yTop + r*((yBottom-yTop)/(ROWS-1)));
-  const inBounds = (c,r) => c>=0 && c<COLS && r>=0 && r<ROWS;
-  const startR = cfg.startRow==='bottom' ? ROWS-1 : 0;
-
-  function attemptWalk(){
-    const visited = new Set(['0,'+startR]);
-    const cells = [{col:0, row:startR}];
-    let axis = 'v'; // forces the first run to be horizontal
-    let guard = 0;
-    while(cells.length < TOTAL && guard < 300){
-      guard++;
-      // after any vertical step, only "right" is offered (never left, never
-      // another vertical step in a row)
-      const perp = axis==='h' ? [{x:0,y:-1},{x:0,y:1}] : [{x:1,y:0}];
-      const options = perp.sort(()=>Math.random()-0.5);
-      let moved = false;
-      for(const dir of options){
-        const isVertical = dir.y !== 0;
-        const maxRun = isVertical ? 1 : Math.min(2, TOTAL-cells.length);
-        for(let runLen=maxRun; runLen>=1 && !moved; runLen--){
-          let {col,row} = cells[cells.length-1];
-          const trial = [];
-          let ok = true;
-          for(let s=0;s<runLen;s++){
-            col += dir.x; row += dir.y;
-            if(!inBounds(col,row) || visited.has(col+','+row)){ ok=false; break; }
-            trial.push({col,row});
-          }
-          if(ok){
-            trial.forEach(p=>{ visited.add(p.col+','+p.row); cells.push(p); });
-            axis = dir.x!==0 ? 'h' : 'v';
-            moved = true;
-          }
-        }
-        if(moved) break;
-      }
-      if(!moved) return null;
+  const colStep = (TILE_X1-TILE_X0)/(GRID_COLS-1);
+  const rowStep = (520-MAP_Y_MARGIN*2)/(GRID_ROWS-1);
+  const points = [];
+  for(let r=0;r<GRID_ROWS;r++){
+    const y = MAP_Y_MARGIN + r*rowStep;
+    const leftToRight = r%2===0;
+    for(let i=0;i<GRID_COLS;i++){
+      const c = leftToRight ? i : (GRID_COLS-1-i);
+      points.push({ x: TILE_X0 + c*colStep, y });
     }
-    return cells;
   }
-
-  let cells = null;
-  for(let attempt=0; attempt<200 && !cells; attempt++) cells = attemptWalk();
-  if(!cells){
-    // fallback: simple guaranteed-valid snake, only used if the random
-    // walk somehow can't find a path after many attempts
-    cells = [];
-    for(let r=0;r<ROWS;r++){
-      const rowCols = (r%2===0) ? [...Array(COLS).keys()] : [...Array(COLS).keys()].reverse();
-      rowCols.forEach(c=>cells.push({col:c,row:r}));
-    }
-    cells = cells.slice(0, TOTAL);
-  }
-  return cells.map(p => ({ x: xs[p.col], y: ys[p.row] }));
+  return points;
 }
-// Strict rectilinear path (straight horizontal/vertical segments only) —
-// matches the grid layout above exactly, so corners are always 90°.
-function buildRectPath(points){
-  if(points.length<2) return '';
-  return 'M ' + points.map(p=>`${p.x} ${p.y}`).join(' L ');
+// Smooth trail that still passes exactly through every tile center — a
+// uniform Catmull-Rom spline converted to chained cubic Beziers, so the
+// curve always lines up with the tiles no matter how curvy it looks (never
+// moves the tiles themselves, only how the line between them is drawn).
+// `tension` shapes how pronounced the curves are; varied per village below
+// purely for visual variety between stages.
+function buildSmoothPath(points, tension){
+  if(points.length < 2) return '';
+  if(points.length === 2) return `M ${points[0].x} ${points[0].y} L ${points[1].x} ${points[1].y}`;
+  const t = tension==null ? 1 : tension;
+  let d = `M ${points[0].x} ${points[0].y}`;
+  for(let i=0;i<points.length-1;i++){
+    const p0 = points[i-1] || points[i];
+    const p1 = points[i];
+    const p2 = points[i+1];
+    const p3 = points[i+2] || p2;
+    const cp1x = p1.x + (p2.x-p0.x)/6*t;
+    const cp1y = p1.y + (p2.y-p0.y)/6*t;
+    const cp2x = p2.x - (p3.x-p1.x)/6*t;
+    const cp2y = p2.y - (p3.y-p1.y)/6*t;
+    d += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${p2.x} ${p2.y}`;
+  }
+  return d;
 }
 // Two small "bookend" pads just past either end of the path, in the same
 // 1000x520 design space as buildTileCoords: a start pad (every village —
@@ -912,11 +1108,10 @@ function buildRectPath(points){
 // each neighbor so the trail into/out of them stays perfectly horizontal.
 // That second pad is every village's overshoot landing spot (see
 // moveSteps): "ศาลาพักคอย" in villages 1-4, "เส้นชัย" in the last one.
-// This is always collision-free: horizontal moves in the walk above are
-// rightward-only (never left), so column indices never decrease along the
-// path — tile 0 is therefore always the leftmost cell used, and the final
-// tile is always the rightmost, so nothing else in the path can ever sit
-// where these pads land, whatever shape the random walk took.
+// This is always collision-free: every row of the snake grid spans the exact
+// same x range, so tile 0 (top-left) always has the minimum x across the
+// WHOLE grid and the final tile (bottom-right) always has the maximum —
+// nothing else on the path can ever sit where these pads land.
 function computeBookendDesignCoords(design){
   const last = design[design.length-1];
   return {
@@ -952,15 +1147,22 @@ function buildBgPatternDataUri(icons){
 }
 function updateBoardBackground(villageIdx){
   const el = document.getElementById('board-bg');
-  if(!el) return;
-  const icons = VILLAGE_BG_ICONS[villageIdx] || VILLAGE_BG_ICONS[0];
-  el.style.backgroundImage = `url("${buildBgPatternDataUri(icons)}")`;
+  if(el){
+    const icons = VILLAGE_BG_ICONS[villageIdx] || VILLAGE_BG_ICONS[0];
+    el.style.backgroundImage = `url("${buildBgPatternDataUri(icons)}")`;
+  }
+  const photoEl = document.getElementById('board-photo-bg');
+  if(photoEl){
+    const photo = VILLAGE_BOARD_PHOTOS[villageIdx] || VILLAGE_BOARD_PHOTOS[0];
+    photoEl.style.backgroundImage = `url('${photo}')`;
+  }
 }
 
 let tilePositions = [];
 let startPixelPos = null;  // "off the board" pad players sit on before rolling
 let finishPixelPos = null; // "เส้นชัย" pad, last village only
 let boardScale = 1; // used to size tiles/tokens responsively
+let walkingPlayerId = null; // set by moveSteps() while a token is mid-step
 let cachedVillageIdx = -1;
 let cachedDesignCoords = null;
 let cachedBookendDesign = null;
@@ -1022,9 +1224,17 @@ function computeTilePositions(){
   startPixelPos = scalePt(cachedBookendDesign.start);
   finishPixelPos = cachedBookendDesign.finish ? scalePt(cachedBookendDesign.finish) : null;
   const path = document.getElementById('trail-path');
+  const outerPath = document.getElementById('trail-path-outer');
   const pathPoints = [startPixelPos, ...tilePositions, ...(finishPixelPos ? [finishPixelPos] : [])];
-  path.setAttribute('d', buildRectPath(pathPoints));
-  path.setAttribute('stroke-width', Math.max(20, 34*boardScale));
+  const style = VILLAGE_MAP_STYLE[state.villageIndex] || VILLAGE_MAP_STYLE[0];
+  const d = buildSmoothPath(pathPoints, style.tension);
+  const innerWidth = Math.max(16, 26*boardScale);
+  path.setAttribute('d', d);
+  path.setAttribute('stroke-width', innerWidth);
+  path.setAttribute('stroke', style.accent);
+  path.setAttribute('stroke-dasharray', style.dash);
+  outerPath.setAttribute('d', d);
+  outerPath.setAttribute('stroke-width', innerWidth + Math.max(8, 10*boardScale));
   updateBoardBackground(state.villageIndex);
 }
 // tilePositions are already in the SVG's real pixel units (1:1) — just add
@@ -1040,6 +1250,7 @@ function renderTiles(){
   const layer = document.getElementById('tiles-layer');
   layer.innerHTML='';
   const size = Math.max(61, Math.min(112, 96*boardScale));
+  let houseOccurrence = 0; // which of this village's 8 house tiles we're up to
   TILE_SEQUENCE.forEach((t,i)=>{
     const pos = toPixel(tilePositions[i]);
     const div = document.createElement('div');
@@ -1051,7 +1262,22 @@ function renderTiles(){
     div.style.height = size+'px';
     div.style.fontSize = Math.max(22, 35*boardScale)+'px';
     const badgeSize = Math.max(22, Math.min(34, 29*boardScale));
-    div.innerHTML = `<span class="tnum" style="width:${badgeSize}px;height:${badgeSize}px;font-size:${Math.max(10,badgeSize*0.55)}px;">${i+1}</span>${TILE_ICON[t.type]}`;
+    const numBadge = `<span class="tnum" style="width:${badgeSize}px;height:${badgeSize}px;font-size:${Math.max(10,badgeSize*0.55)}px;">${i+1}</span>`;
+    let photo = null;
+    if(t.type === 'house'){
+      const villageHousePhotos = VILLAGE_HOUSE_PHOTOS[state.villageIndex] || VILLAGE_HOUSE_PHOTOS[0];
+      photo = villageHousePhotos[houseOccurrence % villageHousePhotos.length];
+      houseOccurrence++;
+    } else if(TILE_TYPE_PHOTOS[t.type]){
+      const photos = TILE_TYPE_PHOTOS[t.type];
+      photo = photos[state.villageIndex] || photos[0];
+    }
+    if(photo){
+      div.style.backgroundImage = `url('${photo}')`;
+      div.innerHTML = `${numBadge}<div class="tile-caption">${t.label}</div>`;
+    } else {
+      div.innerHTML = `${numBadge}${TILE_ICON[t.type]}`;
+    }
     div.title = t.label;
     layer.appendChild(div);
   });
@@ -1099,28 +1325,57 @@ function tilePixelPos(i){
 function renderTokens(){
   const layer = document.getElementById('tokens-layer');
   layer.innerHTML='';
-  const size = Math.max(30, Math.min(48, 42*boardScale));
+  // Bigger, unmissable badge (was 30-48px) per the "players struggle to spot
+  // themselves" complaint — still scales with boardScale for small screens.
+  const badgeSize = Math.max(46, Math.min(76, 64*boardScale));
+  const tailHeight = Math.max(10, Math.round(badgeSize*0.22));
+  const labelFontSize = Math.max(13, Math.min(18, Math.round(badgeSize*0.24)));
+  const currentPlayer = state.players[state.currentPlayerIndex];
   const grouped = {};
   // position:-1 ("not yet on the board") is a valid group key here — it maps
-  // to the start pad via tilePixelPos, not to tile 0.
+  // to the start pad via tilePixelPos, not to tile 0. It's also the single
+  // most common overlap case: every player sits there together at once at
+  // the start of every village.
   state.players.forEach(p=>{ (grouped[p.position] = grouped[p.position]||[]).push(p); });
+  // Players sharing a tile overlap by ~40% of the badge within a row — up
+  // to 3 fit in a single row; beyond that they split into two rows (bottom
+  // row anchored at the tile, extra row stacked above it) rather than
+  // squeezing ever more overlap into one line. The current player is
+  // always moved to the end of the group so their badge renders on top
+  // (later siblings paint over earlier ones) and their glow ring is never
+  // hidden behind someone else's badge.
+  const overlapGap = badgeSize*0.6; // 60% center-to-center offset = 40% overlap
+  const rowGap = badgeSize + tailHeight + labelFontSize*1.6;
+  const maxPerRow = 3;
   Object.keys(grouped).forEach(posIdx=>{
-    const group = grouped[posIdx];
+    const group = grouped[posIdx].slice();
+    if(currentPlayer){
+      const ci = group.findIndex(p=>p.id===currentPlayer.id);
+      if(ci>-1) group.push(group.splice(ci,1)[0]);
+    }
     const base = tilePixelPos(posIdx);
-    group.forEach((p,gi)=>{
-      const offsetAngle = (gi / group.length) * Math.PI*2;
-      const r = group.length>1 ? Math.max(18, 24*boardScale) : 0;
-      const dx = Math.cos(offsetAngle)*r, dy = Math.sin(offsetAngle)*r;
-      const tok = document.createElement('div');
-      tok.className='token';
-      tok.id = 'token-'+p.id;
-      tok.textContent = p.icon;
-      tok.style.width = size+'px';
-      tok.style.height = size+'px';
-      tok.style.fontSize = Math.max(16, 22*boardScale)+'px';
-      tok.style.left = (base.x+dx-size/2)+'px';
-      tok.style.top = (base.y+dy-size/2)+'px';
-      layer.appendChild(tok);
+    const n = group.length;
+    const rows = n > maxPerRow
+      ? [group.slice(0, Math.ceil(n/2)), group.slice(Math.ceil(n/2))]
+      : [group];
+    rows.forEach((row,rowIdx)=>{
+      const dy = rowIdx===0 ? 0 : -rowGap;
+      const rn = row.length;
+      row.forEach((p,idx)=>{
+        const dx = rn>1 ? (idx-(rn-1)/2)*overlapGap : 0;
+        const isCurrent = !state.finished && currentPlayer && p.id === currentPlayer.id;
+        const tok = document.createElement('div');
+        tok.className = 'token' + (isCurrent ? ' current' : '') + (p.id === walkingPlayerId ? ' walking' : '');
+        tok.id = 'token-'+p.id;
+        tok.style.left = (base.x+dx)+'px';
+        tok.style.top = (base.y+dy)+'px';
+        tok.innerHTML = `
+          <div class="token-label" style="font-size:${labelFontSize}px;">${p.name}</div>
+          <div class="token-badge" style="width:${badgeSize}px;height:${badgeSize}px;font-size:${Math.round(badgeSize*0.5)}px;">${p.icon}</div>
+          <div class="token-tail" style="border-left-width:${Math.round(tailHeight*0.75)}px;border-right-width:${Math.round(tailHeight*0.75)}px;border-top-width:${tailHeight}px;"></div>
+        `;
+        layer.appendChild(tok);
+      });
     });
   });
 }
@@ -1137,28 +1392,43 @@ function renderPlayersList(){
     if(p.finished) statusText = isLastVillage ? '🏁 ถึงศาลาประชาคมแล้ว' : '🚩 ถึงจุดผ่านด่านแล้ว รอเพื่อน';
     else if(p.skipTurns>0) statusText = `⏸ หยุดเดินอีก ${p.skipTurns} ตา`;
     div.innerHTML = `<span class="pi">${p.icon}</span>
-      <div style="flex:1;">
+      <div style="flex:1;min-width:0;">
         <div class="pname">${p.name}</div>
-        <div class="phand">🍲${p.hand.food.length} 💡${p.hand.knowledge.length} 🤝${p.hand.support.length}</div>
         ${statusText ? `<div class="pstatus">${statusText}</div>`:''}
       </div>
-      <button class="view-hand-btn" id="viewhand-${p.id}" onclick="openHandModal(${p.id})" title="ดูการ์ดในมือ">🔎</button>
-      <div class="pscore">${p.score} แต้ม</div>`;
+      <div class="pscore">${p.score} แต้ม</div>
+      <button class="view-hand-btn" id="viewhand-${p.id}" onclick="openHandModal(${p.id})" title="ดูการ์ดในมือ (กดเพื่อดูรายละเอียด)">🔎</button>`;
     wrap.appendChild(div);
   });
   renderHandPanel();
 }
+// Recomputed fresh every render (rather than trusted from whatever the
+// button's own .disabled property happened to be last) because this whole
+// row — roll-btn included — gets rebuilt via innerHTML on every
+// renderPlayersList() call, including ones that fire *during* an in-flight
+// roll (see moveSteps()). Deriving "should this be disabled" from actual
+// game state here is what stops the button from silently popping back to
+// enabled mid-animation and letting a second roll sneak in.
+function isRollDisabled(){
+  return rolling || state.finished || state.players.every(p=>p.finished);
+}
+// #roll-btn is now a stable element (a direct child of #hand-panel, outside
+// this innerHTML template) so its disabled state is set imperatively here —
+// this function already runs on every renderPlayersList() call (including
+// ones mid-roll, see moveSteps()), so centralizing the sync here means it
+// can never go stale the way scattered one-off .disabled sets elsewhere can.
 function renderHandPanel(){
-  const wrap = document.getElementById('hand-panel');
-  if(!wrap || !state.players.length) return;
+  const infoWrap = document.getElementById('hp-info');
+  if(!infoWrap || !state.players.length) return;
   const p = state.players[state.currentPlayerIndex];
-  wrap.innerHTML = `
+  infoWrap.innerHTML = `
     <span class="hp-title">🎒 มือของ ${p.icon} ${p.name} (ตานี้):</span>
     <span class="hp-item">🍲 ${p.hand.food.length}<small>การ์ดอาหาร</small></span>
     <span class="hp-item">💡 ${p.hand.knowledge.length}<small>การ์ดความรู้</small></span>
     <span class="hp-item">🤝 ${p.hand.support.length}<small>การ์ดสนับสนุน</small></span>
     <button class="view-hand-btn hp-view" id="viewhand-panel-btn" onclick="openHandModal(${p.id})">ดูการ์ดทั้งหมด 🔎</button>
   `;
+  document.getElementById('roll-btn').disabled = isRollDisabled();
 }
 // Read-only card list (no pay/selection buttons) — reused everywhere a
 // player's hand needs to be shown: casual viewing, after receiving a card,
@@ -1265,6 +1535,22 @@ function toggleLog(){
   const collapsed = wrap.classList.toggle('collapsed');
   document.getElementById('log-toggle-icon').textContent = collapsed ? 'แสดง ▴' : 'ซ่อน ▾';
 }
+// Collapsing the sidebar changes #board-svg's rendered width, which the
+// existing ResizeObserver (see below) already reacts to — no extra
+// board-recompute call needed here.
+function togglePlayersSidebar(){
+  const wrap = document.getElementById('players-sidebar');
+  const collapsed = wrap.classList.toggle('collapsed');
+  document.getElementById('players-toggle-icon').textContent = collapsed ? '◂' : 'ซ่อน ▸';
+}
+// Hides just the topmost info bar (title/village dots/theme/save/reset) —
+// deliberately does not touch #hand-panel (current player + dice), which
+// lives outside #topbar entirely and always stays visible during play.
+function toggleTopbar(){
+  const topbar = document.getElementById('topbar');
+  const collapsed = topbar.classList.toggle('collapsed');
+  document.getElementById('topbar-toggle-btn').textContent = collapsed ? 'แสดงแถบด้านบน ▼' : 'ซ่อนแถบด้านบน ▲';
+}
 
 /* ================= DICE ================= */
 const dicePipLayout = {
@@ -1278,7 +1564,13 @@ function showDiceFace(n){
 showDiceFace(1);
 
 let rolling = false;
-document.getElementById('roll-btn').onclick = async ()=>{
+// #roll-btn now lives inside #hand-panel's innerHTML (rebuilt on every
+// renderPlayersList(), see renderHandPanel()) rather than being a fixed
+// element from page load — a direct .onclick assignment would only ever
+// reach the very first copy of the button and go silent after the first
+// re-render. Delegating the listener to #hand-panel itself (which is never
+// replaced, only its children) keeps it working across every rebuild.
+async function handleRollClick(){
   if(rolling || state.finished) return;
   const player = state.players[state.currentPlayerIndex];
   if(player.finished){ nextTurn(); return; }
@@ -1290,7 +1582,7 @@ document.getElementById('roll-btn').onclick = async ()=>{
     return;
   }
   rolling = true;
-  document.getElementById('roll-btn').disabled = true;
+  renderPlayersList(); // re-renders #roll-btn as disabled via isRollDisabled()
   document.getElementById('roll-hint').textContent = 'กำลังทอย...';
   const diceEl = document.getElementById('dice');
   diceEl.classList.add('rolling');
@@ -1308,8 +1600,11 @@ document.getElementById('roll-btn').onclick = async ()=>{
   await sleep(450);
   await moveSteps(player, result);
   rolling = false;
-  document.getElementById('roll-btn').disabled = false;
-};
+  renderPlayersList(); // re-enables #roll-btn now that rolling is false again
+}
+document.getElementById('hand-panel').addEventListener('click', (e)=>{
+  if(e.target.closest('#roll-btn')) handleRollClick();
+});
 function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
 
 /* ================= MOVEMENT ================= */
@@ -1347,6 +1642,11 @@ function finalizeVillageFinish(player, overshoot){
 async function moveSteps(player, steps, silent){
   const lastIndex = TILE_SEQUENCE.length-1; // the last numbered tile (12)
   let overshoot = false;
+  // renderTokens() rebuilds every marker from scratch each call, so a plain
+  // per-element class would just get wiped on the next redraw — tracking
+  // "who's mid-step" here instead lets renderTokens() re-apply the subtle
+  // walking bob every time without moveSteps needing to know about markup.
+  walkingPlayerId = player.id;
   for(let s=0; s<steps; s++){
     if(player.position >= lastIndex){ overshoot = true; break; }
     player.position++;
@@ -1364,6 +1664,7 @@ async function moveSteps(player, steps, silent){
     renderTokens();
     await sleep(560);
   }
+  walkingPlayerId = null;
   clearHighlight();
   const atFinish = player.position >= lastIndex; // true whether landed exactly or overshot into the pavilion
   const tileType = overshoot ? null : TILE_SEQUENCE[player.position].type;

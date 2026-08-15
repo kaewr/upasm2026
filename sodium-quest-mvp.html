@@ -879,39 +879,68 @@ function drawUniqueCards(pool, existingHand, count){
   }
   return out;
 }
-function drawRandomCards(type, count, existingHand){
-  const pool = type==='food' ? FOOD : type==='knowledge' ? KNOWLEDGE : SUPPORT;
-  return drawUniqueCards(pool, existingHand || [], count);
+// Cards already dealt to ANY player this game (tracked in
+// state.drawnCardIds, one id list per card type) are excluded from future
+// draws of that type wherever possible, so the same card is never handed
+// to two different players and a card already opened is never opened
+// again. Falls back to the unfiltered pool once every card of that type
+// has already been drawn, so a small deck (knowledge/support are only 20
+// cards each) can never run dry and halt the game — this mirrors
+// drawUniqueCards' own per-hand fallback above, just at the whole-game
+// scope instead of a single hand's scope.
+function excludeGloballyDrawn(pool, type, drawnCardIds){
+  const drawn = new Set(drawnCardIds[type]);
+  const remaining = pool.filter(c=>!drawn.has(c.id));
+  return remaining.length ? remaining : pool;
+}
+function markGloballyDrawn(cards, type, drawnCardIds){
+  cards.forEach(c=>{ if(!drawnCardIds[type].includes(c.id)) drawnCardIds[type].push(c.id); });
+}
+function drawRandomCards(type, count, existingHand, drawnCardIds){
+  const basePool = type==='food' ? FOOD : type==='knowledge' ? KNOWLEDGE : SUPPORT;
+  const pool = excludeGloballyDrawn(basePool, type, drawnCardIds);
+  const cards = drawUniqueCards(pool, existingHand || [], count);
+  markGloballyDrawn(cards, type, drawnCardIds);
+  return cards;
 }
 // Starting food hand: guarantee at least one card from every sodium zone
 // (green/yellow/red) so every player can compare colors from turn one,
-// then fill the rest randomly (no duplicates) and shuffle so the order
-// isn't predictable.
-function drawStartingFoodHand(count){
+// then fill the rest randomly (no duplicates, and never a card already
+// dealt to an earlier player) and shuffle so the order isn't predictable.
+function drawStartingFoodHand(count, drawnCardIds){
   const zones = ['green','yellow','red'];
+  const basePool = excludeGloballyDrawn(FOOD, 'food', drawnCardIds);
   const byZone = {
-    green: FOOD.filter(c=>c.sodium.zone==='green'),
-    yellow: FOOD.filter(c=>c.sodium.zone==='yellow'),
-    red: FOOD.filter(c=>c.sodium.zone==='red'),
+    green: basePool.filter(c=>c.sodium.zone==='green'),
+    yellow: basePool.filter(c=>c.sodium.zone==='yellow'),
+    red: basePool.filter(c=>c.sodium.zone==='red'),
   };
   const picks = [];
   zones.filter(z=>byZone[z].length>0).forEach(z=>{ picks.push(drawUniqueCards(byZone[z], picks, 1)[0]); });
-  while(picks.length < count) picks.push(drawUniqueCards(FOOD, picks, 1)[0]);
+  while(picks.length < count) picks.push(drawUniqueCards(basePool, picks, 1)[0]);
   for(let i=picks.length-1;i>0;i--){
     const j = Math.floor(Math.random()*(i+1));
     [picks[i],picks[j]] = [picks[j],picks[i]];
   }
+  markGloballyDrawn(picks, 'food', drawnCardIds);
   return picks;
 }
 
 function newState(playerConfigs){
+  // Tracks every card id already dealt to ANY player this game, per card
+  // type — built fresh here (not read from the not-yet-existing global
+  // `state`) so the starting hands dealt below are already globally
+  // deduplicated from turn one, then carried forward on the returned state
+  // for every later draw (openFoodCard, mission/obstacle picks, etc.) to
+  // keep using.
+  const drawnCardIds = { food:[], knowledge:[], support:[], mission:[], obstacle:[] };
   return {
     players: playerConfigs.map((p,i)=>({
       // position:-1 = "not yet on the board" so the first roll moves onto tile
       // 0 (headman) the same way any other tile is landed on, instead of
       // starting the game already standing there and skipping its card forever
       id:i, name:p.name, icon:p.icon, position:-1, score:0,
-      hand:{ food: drawStartingFoodHand(6), knowledge: drawRandomCards('knowledge',1,[]), support: [] },
+      hand:{ food: drawStartingFoodHand(6, drawnCardIds), knowledge: drawRandomCards('knowledge',1,[],drawnCardIds), support: [] },
       skipTurns:0, finished:false, nextDrawPenalty:0,
       // Per-village score breakdown: stageScores[i] is the points earned
       // while playing village i (not cumulative). scoreAtStageStart tracks
@@ -922,7 +951,8 @@ function newState(playerConfigs){
     currentPlayerIndex: 0,
     log: [],
     villageIndex: 0,
-    finished:false
+    finished:false,
+    drawnCardIds,
   };
 }
 
@@ -1192,6 +1222,17 @@ function restoreSaveData(parsed){
     if(!Array.isArray(p.stageScores)) p.stageScores = [0,0,0,0,0];
     if(typeof p.scoreAtStageStart !== 'number') p.scoreAtStageStart = 0;
   });
+  // Back-fill the global no-duplicate-card tracker for save files written
+  // before it existed — an empty tracker just means "nothing's excluded
+  // yet", so resuming an older save simply starts deduplicating from that
+  // point forward rather than crashing on the missing field.
+  if(!loadedState.drawnCardIds || typeof loadedState.drawnCardIds !== 'object'){
+    loadedState.drawnCardIds = { food:[], knowledge:[], support:[], mission:[], obstacle:[] };
+  } else {
+    ['food','knowledge','support','mission','obstacle'].forEach(t=>{
+      if(!Array.isArray(loadedState.drawnCardIds[t])) loadedState.drawnCardIds[t] = [];
+    });
+  }
   state = loadedState;
   const board = parsed && parsed.board;
   if(board && board.design && board.villageIndex === state.villageIndex){
@@ -1717,10 +1758,11 @@ function showVillageDoneBanner(){
     <span class="ctype" style="background:var(--teal);">🎉 ผ่านด่านแล้ว</span>
     <h3>ผู้เล่นทุกคนถึงจุดผ่านด่านของหมู่บ้าน "${v.name}" (หมู่บ้านแห่งการ${v.hl}) แล้ว!</h3>
     <div class="scenario">คะแนนและการ์ดในมือของทุกคนจะติดตัวไปหมู่บ้านถัดไปตามเดิม</div>
-    <button class="btn-ack" onclick="advanceVillage()">ไปหมู่บ้านถัดไป ➜</button>
+    <button class="btn-ack" onclick="advanceVillage(${nextModalGeneration()})">ไปหมู่บ้านถัดไป ➜</button>
   `);
 }
-function advanceVillage(){
+function advanceVillage(gen){
+  if(modalActionGuardTripped(gen)) return;
   closeModal();
   state.villageIndex++;
   // Deterministic restart: whoever finished last village first goes first
@@ -1835,11 +1877,47 @@ function openCardForTile(player, tileType){
   else if(tileType==='headman') openSupportCard(player);
 }
 
+// Guards every modal "confirm/continue/choice" action (ackFood, ackObstacle,
+// resolveMultipleChoiceMission, closeModalAndNext, etc.) against a rapid
+// double-click/double-tap on the SAME button — which would otherwise run
+// the handler twice (two ordinary, fully-sequential calls; JS is
+// single-threaded so there's no true concurrency to catch with an
+// in-flight flag the way `rolling` guards the roll button) and silently
+// skip a player's turn or double-apply a card's effects.
+//
+// A plain boolean reset inside showModal() doesn't work: the SAME action
+// often calls showModal() again itself as its own next step (e.g.
+// ackSupport -> showReceivedCardModal -> showModal for the "ได้รับการ์ด"
+// screen), which would clear the guard before a rapid second click on the
+// ORIGINAL button has been blocked. Instead, every guarded button's
+// onclick captures the modal "generation" number that was current when
+// IT was rendered; showModal() bumps the generation on every new screen
+// (including that same follow-up screen), so a stale second click on an
+// already-superseded button can always be detected structurally — no
+// timing heuristics, and it never blocks a legitimate click on a
+// genuinely new button.
+let modalGeneration = 0;
+function nextModalGeneration(){ return ++modalGeneration; }
 function showModal(html){
   document.getElementById('card-modal-content').innerHTML = html;
   document.getElementById('card-overlay').classList.remove('hidden');
 }
-function closeModal(){ document.getElementById('card-overlay').classList.add('hidden'); }
+// "Terminal" actions (ackObstacle, closeModalAndNext, advanceVillage) end
+// by calling closeModal() instead of showing a follow-up screen — without
+// this, their generation would never advance after being rendered, so a
+// second stale click would still match and run again. Bumping the
+// generation here closes that gap the same way a new showModal() would.
+function closeModal(){
+  document.getElementById('card-overlay').classList.add('hidden');
+  nextModalGeneration();
+}
+// Call at the very top of any modal action that must only ever run once per
+// screen, passing the `gen` value that was baked into its onclick string.
+// Returns true (meaning "abort, already handled or superseded") when gen
+// no longer matches the current generation.
+function modalActionGuardTripped(gen){
+  return gen !== modalGeneration;
+}
 
 function parseCard(cardStr){ return typeof cardStr==='string' ? JSON.parse(cardStr.replace(/&quot;/g,'"')) : cardStr; }
 function cardTypeName(t){ return t==='knowledge'?'ความรู้':t==='support'?'สนับสนุน':'อาหาร'; }
@@ -1847,12 +1925,13 @@ function cardTypeIcon(t){ return t==='knowledge'?'💡':t==='support'?'🤝':'�
 
 // Shown after any card is gained (knowledge/food/support/mission reward) —
 // confirms what was received, current score, and the player's full hand.
-function showReceivedCardModal(player, type, card, onContinueAttr){
+function showReceivedCardModal(player, type, card){
+  const gen = nextModalGeneration();
   showModal(`
     <div class="result-banner result-good">🎉 ได้รับการ์ด${cardTypeName(type)}: ${card.name}</div>
     <div class="scenario" style="font-weight:700;">คะแนนสะสม: ${player.score} แต้ม</div>
     ${renderHandSummaryHTML(player)}
-    <button class="btn-ack" ${onContinueAttr}>ไปต่อ</button>
+    <button class="btn-ack" onclick="closeModalAndNext(${gen})">ไปต่อ</button>
   `);
 }
 
@@ -1883,7 +1962,9 @@ function describeCardEffect(eff, player){
   return '';
 }
 function openObstacleCard(player){
-  const card = rndPick(OBSTACLES);
+  const pool = excludeGloballyDrawn(OBSTACLES, 'obstacle', state.drawnCardIds);
+  const card = rndPick(pool);
+  markGloballyDrawn([card], 'obstacle', state.drawnCardIds);
   const cardEnc = JSON.stringify(card).replace(/"/g,'&quot;');
   const effectLines = card.effects.map(eff=>describeCardEffect(eff, player));
   showModal(`
@@ -1892,7 +1973,7 @@ function openObstacleCard(player){
     <div class="scenario">${card.scenario}</div>
     ${card.scope==='all' ? `<div class="req-box">⚠️ อุปสรรคนี้ส่งผลกับผู้เล่นทุกคน (ตามการ์ดที่แต่ละคนถืออยู่)</div>` : ''}
     ${effectLines.map(l=>`<div class="effect-line">${l}</div>`).join('')}
-    <button class="btn-ack" onclick="ackObstacle(${player.id}, ${cardEnc})">รับทราบ</button>
+    <button class="btn-ack" onclick="ackObstacle(${player.id}, ${cardEnc}, ${nextModalGeneration()})">รับทราบ</button>
   `);
 }
 // Applies one card effect to one player, logging that player's own
@@ -1917,10 +1998,12 @@ function applyCardEffect(player, eff){
     }
     if(n>0) log(`${player.name}: สุ่มทิ้งการ์ด${cardTypeName(eff.cardType)} — ${removedNames.join(', ')}`, 'lg-bad', player, scoreBefore);
   } else if(eff.type === 'drawCard'){
-    let pool = eff.cardType==='food' ? FOOD : eff.cardType==='knowledge' ? KNOWLEDGE : SUPPORT;
-    if(eff.cardType==='food' && eff.zone) pool = FOOD.filter(f=>f.sodium.zone===eff.zone);
+    let basePool = eff.cardType==='food' ? FOOD : eff.cardType==='knowledge' ? KNOWLEDGE : SUPPORT;
+    if(eff.cardType==='food' && eff.zone) basePool = basePool.filter(f=>f.sodium.zone===eff.zone);
+    const pool = excludeGloballyDrawn(basePool, eff.cardType, state.drawnCardIds);
     const gained = drawUniqueCards(pool, player.hand[eff.cardType], eff.count);
     player.hand[eff.cardType].push(...gained);
+    markGloballyDrawn(gained, eff.cardType, state.drawnCardIds);
     log(`${player.name}: ได้การ์ด${cardTypeName(eff.cardType)}เพิ่ม — ${gained.map(c=>c.name).join(', ')}`, 'lg-good', player, scoreBefore);
   } else if(eff.type === 'knowledgeCheck'){
     if(player.hand.knowledge.length > 0){
@@ -1939,7 +2022,7 @@ function applyCardEffect(player, eff){
   } else if(eff.type === 'swapFoodZone'){
     const idxs = player.hand.food.map((c,i)=>i).filter(i=>player.hand.food[i].sodium.zone===eff.fromZone);
     if(idxs.length){
-      const pool = FOOD.filter(f=>eff.toZones.includes(f.sodium.zone));
+      const pool = excludeGloballyDrawn(FOOD.filter(f=>eff.toZones.includes(f.sodium.zone)), 'food', state.drawnCardIds);
       // Track cards kept (not being swapped) plus each newly-drawn card as we
       // go, so the replacements can't duplicate each other or the rest of
       // the hand either.
@@ -1950,6 +2033,7 @@ function applyCardEffect(player, eff){
         const [newCard] = drawUniqueCards(pool, runningHand, 1);
         player.hand.food[i] = newCard;
         runningHand.push(newCard);
+        markGloballyDrawn([newCard], 'food', state.drawnCardIds);
         gainedNames.push(newCard.name);
       });
       log(`${player.name}: แลกการ์ดอาหาร — เสีย ${lostNames.join(', ')} ได้ ${gainedNames.join(', ')} แทน`, 'lg-bad', player, scoreBefore);
@@ -1958,7 +2042,8 @@ function applyCardEffect(player, eff){
     }
   }
 }
-function ackObstacle(pid, cardStr){
+function ackObstacle(pid, cardStr, gen){
+  if(modalActionGuardTripped(gen)) return;
   const card = parseCard(cardStr);
   const acting = state.players.find(p=>p.id===pid);
   const targets = card.scope === 'all' ? state.players : [acting];
@@ -1971,7 +2056,9 @@ function ackObstacle(pid, cardStr){
 }
 
 function openKnowledgeCard(player){
-  const card = drawUniqueCards(KNOWLEDGE, player.hand.knowledge, 1)[0];
+  const pool = excludeGloballyDrawn(KNOWLEDGE, 'knowledge', state.drawnCardIds);
+  const card = drawUniqueCards(pool, player.hand.knowledge, 1)[0];
+  markGloballyDrawn([card], 'knowledge', state.drawnCardIds);
   const kImgTag = card.image?.src ?
     `<img src="${card.image.src}" alt="${card.image.alt||card.name}" style="width:100%;max-height:190px;object-fit:cover;border-radius:10px;margin-bottom:10px;" onerror="this.style.display='none'">` : '';
   showModal(`
@@ -1981,21 +2068,24 @@ function openKnowledgeCard(player){
     <div class="scenario">${card.knowledgeFact}</div>
     <div class="effect-line" style="font-style:italic;">"${card.flavorText}"</div>
     <div class="effect-line">ได้รับการ์ดความรู้ 1 ใบ (เก็บไว้ใช้ทีหลัง)</div>
-    <button class="btn-ack" onclick="ackKnowledge(${player.id}, ${JSON.stringify(card).replace(/"/g,'&quot;')})">รับการ์ด</button>
+    <button class="btn-ack" onclick="ackKnowledge(${player.id}, ${JSON.stringify(card).replace(/"/g,'&quot;')}, ${nextModalGeneration()})">รับการ์ด</button>
   `);
 }
-function ackKnowledge(pid, cardStr){
+function ackKnowledge(pid, cardStr, gen){
+  if(modalActionGuardTripped(gen)) return;
   const card = parseCard(cardStr);
   const player = state.players.find(p=>p.id===pid);
   player.hand.knowledge.push(card);
   playSuccessSound();
   log(`💡 ${player.name} ได้รับการ์ดความรู้ที่ รพ.สต.: ${card.name}`, 'lg-good', player);
   renderPlayersList();
-  showReceivedCardModal(player, 'knowledge', card, 'onclick="closeModalAndNext()"');
+  showReceivedCardModal(player, 'knowledge', card);
 }
 
 function openFoodCard(player){
-  const card = drawUniqueCards(FOOD, player.hand.food, 1)[0];
+  const pool = excludeGloballyDrawn(FOOD, 'food', state.drawnCardIds);
+  const card = drawUniqueCards(pool, player.hand.food, 1)[0];
+  markGloballyDrawn([card], 'food', state.drawnCardIds);
   const sodiumMg = Math.round(card.sodium.amountMg || 0);
   const servingNote = card.sodium.servingNote ? ` (${card.sodium.servingNote})` : '';
   const warnIcons = (card.warningIcons||[]).map(w => w==='sugar' ? '🥄 หวาน' : '🧂 เค็ม').join('  ');
@@ -2011,21 +2101,24 @@ function openFoodCard(player){
     <div class="effect-line" style="background:${ZONE_COLOR[card.sodium.zone]};color:${zoneTextColor(card.sodium.zone)};">โซเดียม ${sodiumMg} มก.${servingNote} (${ZONE_LABEL[card.sodium.zone]})</div>
     ${nutritionLine ? `<div class="effect-line">${nutritionLine}</div>` : ''}
     ${card.flavorText ? `<div class="scenario">${card.flavorText}</div>` : ''}
-    <button class="btn-ack" onclick="ackFood(${player.id}, '${card.id}')">รับการ์ดอาหาร</button>
+    <button class="btn-ack" onclick="ackFood(${player.id}, '${card.id}', ${nextModalGeneration()})">รับการ์ดอาหาร</button>
   `);
 }
-function ackFood(pid, cardId){
+function ackFood(pid, cardId, gen){
+  if(modalActionGuardTripped(gen)) return;
   const card = FOOD.find(c=>c.id===cardId);
   const player = state.players.find(p=>p.id===pid);
   player.hand.food.push(card);
   playSuccessSound();
   log(`🧺 ${player.name} ได้การ์ดอาหารจากกาดนัด: ${card.name}`, 'lg-good', player);
   renderPlayersList();
-  showReceivedCardModal(player, 'food', card, 'onclick="closeModalAndNext()"');
+  showReceivedCardModal(player, 'food', card);
 }
 
 function openSupportCard(player){
-  const card = drawUniqueCards(SUPPORT, player.hand.support, 1)[0];
+  const pool = excludeGloballyDrawn(SUPPORT, 'support', state.drawnCardIds);
+  const card = drawUniqueCards(pool, player.hand.support, 1)[0];
+  markGloballyDrawn([card], 'support', state.drawnCardIds);
   const cardEnc = JSON.stringify(card).replace(/"/g,'&quot;');
   const effectLines = card.effects.map(eff=>describeCardEffect(eff, player));
   const heroBg = card.image?.src ? ` style="background-image:url('${card.image.src}')"` : '';
@@ -2039,10 +2132,11 @@ function openSupportCard(player){
     <div class="scenario">${card.scenario}</div>
     ${card.scope==='all' ? `<div class="req-box">🤝 การสนับสนุนนี้ส่งผลกับผู้เล่นทุกคน</div>` : ''}
     ${effectLines.map(l=>`<div class="effect-line">${l}</div>`).join('')}
-    <button class="btn-ack" onclick="ackSupport(${player.id}, ${cardEnc})">รับผลดี</button>
+    <button class="btn-ack" onclick="ackSupport(${player.id}, ${cardEnc}, ${nextModalGeneration()})">รับผลดี</button>
   `);
 }
-function ackSupport(pid, cardStr){
+function ackSupport(pid, cardStr, gen){
+  if(modalActionGuardTripped(gen)) return;
   const card = parseCard(cardStr);
   const acting = state.players.find(p=>p.id===pid);
   const targets = card.scope === 'all' ? state.players : [acting];
@@ -2051,14 +2145,21 @@ function ackSupport(pid, cardStr){
   log(`🤝 ${acting.name} ได้รับการสนับสนุนจากชุมชน: ${card.name}${card.scope==='all' ? ' (ส่งผลกับทุกคน)' : ''}`, 'lg-good');
   targets.forEach(p => card.effects.forEach(eff => applyCardEffect(p, eff)));
   renderPlayersList();
-  showReceivedCardModal(acting, 'support', card, 'onclick="closeModalAndNext()"');
+  showReceivedCardModal(acting, 'support', card);
 }
 
 /* ---- Mission: pick from current village's pool, route by challengeType ---- */
 function openMissionCard(player){
   const villageNum = state.villageIndex + 1; // MISSIONS use 1-indexed village numbers
-  const pool = MISSIONS.filter(m => m.village === villageNum);
-  const card = rndPick(pool.length ? pool : MISSIONS);
+  const villagePool = MISSIONS.filter(m => m.village === villageNum);
+  // Excluded-globally-drawn falls back to the unfiltered pool once every
+  // mission for THIS village has been used — deliberately scoped to this
+  // village's own 8-mission pool rather than spilling into another
+  // village's pool once exhausted, so repeats (once unavoidable) still stay
+  // thematically relevant to the village currently being played.
+  const pool = excludeGloballyDrawn(villagePool.length ? villagePool : MISSIONS, 'mission', state.drawnCardIds);
+  const card = rndPick(pool);
+  markGloballyDrawn([card], 'mission', state.drawnCardIds);
   if(card.challengeType === 'food_card_select_threshold'){
     openFoodThresholdMission(player, card);
   } else {
@@ -2093,11 +2194,15 @@ function renderReferenceFoodCards(card){
 
 function openMultipleChoiceMission(player, card){
   const cardEnc = JSON.stringify(card).replace(/"/g,'&quot;');
+  // All choice buttons are alternatives on the SAME screen, so they share
+  // one generation number (captured once, not per button) — picking any
+  // one of them still correctly supersedes the others.
+  const gen = nextModalGeneration();
   // Shuffle the display order so the correct answer isn't always the first
   // button — resolveMultipleChoiceMission looks choices up by id, so the
   // shuffle is purely cosmetic and doesn't affect scoring.
   const buttons = shuffleArray(card.choices).map(c =>
-    `<button type="button" class="mc-choice-btn" onclick="resolveMultipleChoiceMission(${player.id}, ${cardEnc}, ${c.id})">${c.label}</button>`
+    `<button type="button" class="mc-choice-btn" onclick="resolveMultipleChoiceMission(${player.id}, ${cardEnc}, ${c.id}, ${gen})">${c.label}</button>`
   ).join('');
   showModal(`
     <span class="ctype" style="background:var(--house);">🏠 ${card.title}</span>
@@ -2109,7 +2214,8 @@ function openMultipleChoiceMission(player, card){
   `);
 }
 
-function resolveMultipleChoiceMission(pid, cardStr, choiceId){
+function resolveMultipleChoiceMission(pid, cardStr, choiceId, gen){
+  if(modalActionGuardTripped(gen)) return;
   const card = parseCard(cardStr);
   const player = state.players.find(p=>p.id===pid);
   const scoreBefore = player.score;
@@ -2195,7 +2301,7 @@ function renderFoodThresholdPicker(){
     <div class="scenario">${card.scenario}</div>
     <div class="req-box">📋 ${ruleText}${progress}</div>
     ${items}
-    <button class="btn-ack" ${allMet?'':'disabled'} onclick="confirmFoodThresholdPick()">✅ ยืนยันการ์ดที่เลือก</button>
+    <button class="btn-ack" ${allMet?'':'disabled'} onclick="confirmFoodThresholdPick(${nextModalGeneration()})">✅ ยืนยันการ์ดที่เลือก</button>
   `);
 }
 function toggleFoodThresholdSelect(idx){
@@ -2209,7 +2315,8 @@ function toggleFoodThresholdSelect(idx){
   }
   renderFoodThresholdPicker();
 }
-function confirmFoodThresholdPick(){
+function confirmFoodThresholdPick(gen){
+  if(modalActionGuardTripped(gen)) return;
   const { playerId, card, selected } = foodThresholdPickState;
   const player = state.players.find(p=>p.id===playerId);
   const rule = card.cardSelectRule;
@@ -2256,15 +2363,16 @@ function resolveFoodThresholdOutcome(pid, card, outcomeKey, selectedIndices){
 }
 
 function showMissionResultModal(player, success, title, detail){
+  const gen = nextModalGeneration();
   showModal(`
     <div class="result-banner ${success?'result-good':'result-bad'}">${success?'✅ สำเร็จ':'❌ ไม่สำเร็จ'} — ${title}</div>
     <div class="scenario">${detail}</div>
     <div class="scenario" style="font-weight:700;">คะแนนสะสมตอนนี้: ${player.score} แต้ม</div>
     ${renderHandSummaryHTML(player)}
-    <button class="btn-ack" onclick="closeModalAndNext()">ไปต่อ</button>
+    <button class="btn-ack" onclick="closeModalAndNext(${gen})">ไปต่อ</button>
   `);
 }
-function closeModalAndNext(){ closeModal(); nextTurn(); }
+function closeModalAndNext(gen){ if(modalActionGuardTripped(gen)) return; closeModal(); nextTurn(); }
 
 /* ================= SAVE / LOAD ================= */
 // File-based save/load is the only persistence path — no localStorage

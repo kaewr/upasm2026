@@ -388,6 +388,11 @@
   .result-banner{font-size:0.95em;font-weight:700;padding:12px;border-radius:10px;margin-bottom:10px;}
   .result-good{background:#dcefdf;color:#1e5c2b;}
   .result-bad{background:#f6dad3;color:#7a2a1c;}
+  /* Card-swap notices ("lost card X, got card Y instead") need to stand out
+     from plain .effect-line entries so a player can't miss which card left
+     their hand and which one replaced it — bright amber fill + solid border,
+     distinct from the neutral beige used everywhere else in the modal. */
+  .card-modal .card-swap-line{font-size:0.95em;background:linear-gradient(135deg,#ffe3b3,#ffcf7a);border:2px solid #d98c1f;color:#5c3a00;padding:10px 12px;border-radius:8px;margin-bottom:7px;font-weight:800;box-shadow:0 2px 6px rgba(0,0,0,.12);}
 </style>
 </head>
 <body>
@@ -1925,10 +1930,11 @@ function cardTypeIcon(t){ return t==='knowledge'?'💡':t==='support'?'🤝':'�
 
 // Shown after any card is gained (knowledge/food/support/mission reward) —
 // confirms what was received, current score, and the player's full hand.
-function showReceivedCardModal(player, type, card){
+function showReceivedCardModal(player, type, card, notes){
   const gen = nextModalGeneration();
   showModal(`
     <div class="result-banner result-good">🎉 ได้รับการ์ด${cardTypeName(type)}: ${card.name}</div>
+    ${renderNoteLines(notes)}
     <div class="scenario" style="font-weight:700;">คะแนนสะสม: ${player.score} แต้ม</div>
     ${renderHandSummaryHTML(player)}
     <button class="btn-ack" onclick="closeModalAndNext(${gen})">ไปต่อ</button>
@@ -1944,7 +1950,10 @@ function showReceivedCardModal(player, type, card){
 function describeCardEffect(eff, player){
   if(eff.type === 'score') return `${eff.operation==='subtract'?'-':'+'}${eff.value} คะแนน`;
   if(eff.type === 'skipTurn') return `หยุดเดิน ${eff.value} ตา`;
-  if(eff.type === 'discardCard') return `ทิ้งการ์ด${cardTypeName(eff.cardType)} ${eff.count} ใบ (สุ่ม)`;
+  if(eff.type === 'discardCard'){
+    if(eff.cardType === 'food') return `สุ่มการ์ดอาหารออก ${eff.count} ใบ แล้วได้การ์ดโซเดียมสูง (แดง) มาแทน`;
+    return `ทิ้งการ์ด${cardTypeName(eff.cardType)} ${eff.count} ใบ (สุ่ม)`;
+  }
   if(eff.type === 'drawCard'){
     const zoneNote = eff.zone ? ` โซน${ZONE_LABEL[eff.zone].split(' - ')[0]}` : '';
     return `ได้การ์ด${cardTypeName(eff.cardType)}เพิ่ม ${eff.count} ใบ${zoneNote}`;
@@ -1981,22 +1990,39 @@ function openObstacleCard(player){
 // (score/skipTurn/discardCard/drawCard) plus the two obstacle-only types.
 function applyCardEffect(player, eff){
   const scoreBefore = player.score;
+  let note = '';
+  let isSwap = false; // true only for "lost card X, got card Y instead" notes
+  let swap = null; // { verbLost, lostCards, verbGained, gainedCards } — set alongside isSwap
   if(eff.type === 'score'){
     player.score += (eff.operation==='subtract' ? -eff.value : eff.value);
-    log(`${player.name}: ${eff.operation==='subtract'?'-':'+'}${eff.value} คะแนน`, 'lg-bad', player, scoreBefore);
+    note = `${eff.operation==='subtract'?'-':'+'}${eff.value} คะแนน`;
+    log(`${player.name}: ${note}`, 'lg-bad', player, scoreBefore);
   } else if(eff.type === 'skipTurn'){
     player.skipTurns += eff.value;
-    log(`${player.name}: หยุดเดิน ${eff.value} ตา`, 'lg-bad', player, scoreBefore);
+    note = `หยุดเดิน ${eff.value} ตา`;
+    log(`${player.name}: ${note}`, 'lg-bad', player, scoreBefore);
   } else if(eff.type === 'discardCard'){
     const arr = player.hand[eff.cardType];
     const n = Math.min(eff.count, arr.length);
-    const removedNames = [];
+    const removedCards = [];
     for(let i=0;i<n;i++){
       const idx = Math.floor(Math.random()*arr.length);
-      removedNames.push(arr[idx].name);
+      removedCards.push(arr[idx]);
       arr.splice(idx, 1);
     }
-    if(n>0) log(`${player.name}: สุ่มทิ้งการ์ด${cardTypeName(eff.cardType)} — ${removedNames.join(', ')}`, 'lg-bad', player, scoreBefore);
+    if(n>0 && eff.cardType === 'food'){
+      const pool = excludeGloballyDrawn(FOOD.filter(f=>f.sodium.zone==='red'), 'food', state.drawnCardIds);
+      const gained = drawUniqueCards(pool, arr, n);
+      arr.push(...gained);
+      markGloballyDrawn(gained, 'food', state.drawnCardIds);
+      note = `โดนสุ่มการ์ดอาหารออก — เสีย ${removedCards.map(c=>c.name).join(', ')} ได้การ์ดโซเดียมสูง ${gained.map(c=>c.name).join(', ')} แทน`;
+      isSwap = true;
+      swap = { verbLost: 'โดนสุ่มการ์ดอาหารออก', lostCards: removedCards, verbGained: 'ได้การ์ดโซเดียมสูงแทน', gainedCards: gained };
+      log(`${player.name}: ${note}`, 'lg-bad', player, scoreBefore);
+    } else if(n>0){
+      note = `สุ่มทิ้งการ์ด${cardTypeName(eff.cardType)} — ${removedCards.map(c=>c.name).join(', ')}`;
+      log(`${player.name}: ${note}`, 'lg-bad', player, scoreBefore);
+    }
   } else if(eff.type === 'drawCard'){
     let basePool = eff.cardType==='food' ? FOOD : eff.cardType==='knowledge' ? KNOWLEDGE : SUPPORT;
     if(eff.cardType==='food' && eff.zone) basePool = basePool.filter(f=>f.sodium.zone===eff.zone);
@@ -2004,20 +2030,25 @@ function applyCardEffect(player, eff){
     const gained = drawUniqueCards(pool, player.hand[eff.cardType], eff.count);
     player.hand[eff.cardType].push(...gained);
     markGloballyDrawn(gained, eff.cardType, state.drawnCardIds);
-    log(`${player.name}: ได้การ์ด${cardTypeName(eff.cardType)}เพิ่ม — ${gained.map(c=>c.name).join(', ')}`, 'lg-good', player, scoreBefore);
+    note = `ได้การ์ด${cardTypeName(eff.cardType)}เพิ่ม — ${gained.map(c=>c.name).join(', ')}`;
+    log(`${player.name}: ${note}`, 'lg-good', player, scoreBefore);
   } else if(eff.type === 'knowledgeCheck'){
     if(player.hand.knowledge.length > 0){
       if(eff.consume){
         player.hand.knowledge.splice(Math.floor(Math.random()*player.hand.knowledge.length), 1);
-        log(`${player.name}: ใช้การ์ดความรู้สุขภาพรับมือสถานการณ์ (ทิ้ง 1 ใบ)`, 'lg-good', player, scoreBefore);
+        note = 'ใช้การ์ดความรู้สุขภาพรับมือสถานการณ์ (ทิ้ง 1 ใบ)';
+        log(`${player.name}: ${note}`, 'lg-good', player, scoreBefore);
       } else {
-        log(`${player.name}: มีการ์ดความรู้สุขภาพ รับมือสถานการณ์ได้`, 'lg-good', player, scoreBefore);
+        note = 'มีการ์ดความรู้สุขภาพ รับมือสถานการณ์ได้';
+        log(`${player.name}: ${note}`, 'lg-good', player, scoreBefore);
       }
     } else if(eff.penaltyIfMissing){
       player.score -= eff.penaltyIfMissing;
-      log(`${player.name}: ไม่มีการ์ดความรู้สุขภาพ`, 'lg-bad', player, scoreBefore);
+      note = 'ไม่มีการ์ดความรู้สุขภาพ';
+      log(`${player.name}: ${note}`, 'lg-bad', player, scoreBefore);
     } else {
-      log(`${player.name}: ไม่มีการ์ดความรู้สุขภาพ (ไม่มีบทลงโทษ)`, 'lg-bad', player, scoreBefore);
+      note = 'ไม่มีการ์ดความรู้สุขภาพ (ไม่มีบทลงโทษ)';
+      log(`${player.name}: ${note}`, 'lg-bad', player, scoreBefore);
     }
   } else if(eff.type === 'swapFoodZone'){
     const idxs = player.hand.food.map((c,i)=>i).filter(i=>player.hand.food[i].sodium.zone===eff.fromZone);
@@ -2027,20 +2058,79 @@ function applyCardEffect(player, eff){
       // go, so the replacements can't duplicate each other or the rest of
       // the hand either.
       const runningHand = player.hand.food.filter((c,i)=>!idxs.includes(i));
-      const lostNames = idxs.map(i=>player.hand.food[i].name);
-      const gainedNames = [];
+      const lostCards = idxs.map(i=>player.hand.food[i]);
+      const gainedCards = [];
       idxs.forEach(i=>{
         const [newCard] = drawUniqueCards(pool, runningHand, 1);
         player.hand.food[i] = newCard;
         runningHand.push(newCard);
         markGloballyDrawn([newCard], 'food', state.drawnCardIds);
-        gainedNames.push(newCard.name);
+        gainedCards.push(newCard);
       });
-      log(`${player.name}: แลกการ์ดอาหาร — เสีย ${lostNames.join(', ')} ได้ ${gainedNames.join(', ')} แทน`, 'lg-bad', player, scoreBefore);
+      note = `แลกการ์ดอาหาร — เสีย ${lostCards.map(c=>c.name).join(', ')} ได้ ${gainedCards.map(c=>c.name).join(', ')} แทน`;
+      isSwap = true;
+      swap = { verbLost: 'แลกการ์ดอาหารออก', lostCards, verbGained: 'ได้การ์ดแทน', gainedCards };
+      log(`${player.name}: ${note}`, 'lg-bad', player, scoreBefore);
     } else {
-      log(`${player.name}: ไม่มีการ์ดอาหารโซนเขียวให้แลก`, 'lg-good', player, scoreBefore);
+      note = 'ไม่มีการ์ดอาหารโซนเขียวให้แลก';
+      log(`${player.name}: ${note}`, 'lg-good', player, scoreBefore);
     }
   }
+  return note ? { text: note, isSwap, swap } : null;
+}
+// Shown after acknowledging an obstacle ("ขึด") card — reports exactly what
+// each applied effect actually did (which cards were lost/gained, etc.),
+// since the effect PREVIEW shown before clicking can't know the random
+// outcome yet.
+// A single food card as a small colored badge (name + sodium mg, tinted by
+// its green/yellow/red zone) — used inside the two swap-report lines below
+// so the player can see at a glance how "bad" the card they lost/gained is.
+function foodCardBadge(c){
+  const bg = ZONE_COLOR[c.sodium.zone];
+  const color = zoneTextColor(c.sodium.zone);
+  return `<span style="display:inline-block;background:${bg};color:${color};padding:3px 10px;border-radius:6px;font-weight:800;margin:2px 6px 2px 0;">${c.name} · ${Math.round(c.sodium.amountMg||0)} มก.</span>`;
+}
+// Card-swap notes render on TWO separate highlighted lines — one for what
+// was lost, one for what was gained instead — each card shown as its own
+// zone-colored badge, so a player can't miss which card left their hand and
+// which one (and how salty) replaced it. Plain notes ({text, isSwap}) still
+// render as a single highlighted/plain line as before.
+// Turns one applyCardEffect() return value into a note object for
+// renderNoteLines(), optionally prefixing the acting player's name (used
+// when a scope:"all" card affects more than one player at once).
+function buildResultNote(result, player, prefixWithName){
+  if(!prefixWithName) return { text: result.text, isSwap: result.isSwap, swap: result.swap };
+  if(result.swap){
+    return { text: result.text, isSwap: result.isSwap, swap: { ...result.swap, verbLost: `${player.name}: ${result.swap.verbLost}` } };
+  }
+  return { text: `${player.name}: ${result.text}`, isSwap: result.isSwap };
+}
+// Plain-text form of a note, for the (text-only) game log — swap notes
+// don't carry a pre-built .text, so stitch one together from their card
+// lists on demand.
+function noteText(n){
+  if(n.text) return n.text;
+  if(n.swap) return `${n.swap.verbLost} ${n.swap.lostCards.map(c=>c.name).join(', ')} — ${n.swap.verbGained} ${n.swap.gainedCards.map(c=>c.name).join(', ')}`;
+  return '';
+}
+function renderNoteLines(notes){
+  return (notes||[]).map(n=>{
+    if(n.isSwap && n.swap){
+      return `<div class="card-swap-line">🔻 ${n.swap.verbLost}: ${n.swap.lostCards.map(foodCardBadge).join('')}</div>`
+           + `<div class="card-swap-line">🔺 ${n.swap.verbGained}: ${n.swap.gainedCards.map(foodCardBadge).join('')}</div>`;
+    }
+    return `<div class="${n.isSwap ? 'card-swap-line' : 'effect-line'}">${n.text}</div>`;
+  }).join('');
+}
+function showObstacleResultModal(acting, card, notes){
+  const gen = nextModalGeneration();
+  showModal(`
+    <div class="result-banner result-bad">⚠️ เจอ "ขึด": ${card.name}${card.scope==='all' ? ' (ส่งผลกับทุกคน)' : ''}</div>
+    ${renderNoteLines(notes)}
+    <div class="scenario" style="font-weight:700;">คะแนนสะสม: ${acting.score} แต้ม</div>
+    ${renderHandSummaryHTML(acting)}
+    <button class="btn-ack" onclick="closeModalAndNext(${gen})">ไปต่อ</button>
+  `);
 }
 function ackObstacle(pid, cardStr, gen){
   if(modalActionGuardTripped(gen)) return;
@@ -2049,10 +2139,13 @@ function ackObstacle(pid, cardStr, gen){
   const targets = card.scope === 'all' ? state.players : [acting];
   playFailSound();
   log(`⚠️ ${acting.name} เจอ "ขึด": ${card.name}${card.scope==='all' ? ' (ส่งผลกับทุกคน)' : ''}`, 'lg-bad');
-  targets.forEach(p => card.effects.forEach(eff => applyCardEffect(p, eff)));
+  const notes = [];
+  targets.forEach(p => card.effects.forEach(eff => {
+    const result = applyCardEffect(p, eff);
+    if(result) notes.push(buildResultNote(result, p, targets.length > 1));
+  }));
   renderPlayersList();
-  closeModal();
-  nextTurn();
+  showObstacleResultModal(acting, card, notes);
 }
 
 function openKnowledgeCard(player){
@@ -2143,9 +2236,13 @@ function ackSupport(pid, cardStr, gen){
   acting.hand.support.push(card);
   playSuccessSound();
   log(`🤝 ${acting.name} ได้รับการสนับสนุนจากชุมชน: ${card.name}${card.scope==='all' ? ' (ส่งผลกับทุกคน)' : ''}`, 'lg-good');
-  targets.forEach(p => card.effects.forEach(eff => applyCardEffect(p, eff)));
+  const notes = [];
+  targets.forEach(p => card.effects.forEach(eff => {
+    const result = applyCardEffect(p, eff);
+    if(result) notes.push(buildResultNote(result, p, targets.length > 1));
+  }));
   renderPlayersList();
-  showReceivedCardModal(acting, 'support', card);
+  showReceivedCardModal(acting, 'support', card, notes);
 }
 
 /* ---- Mission: pick from current village's pool, route by challengeType ---- */
@@ -2228,31 +2325,40 @@ function resolveMultipleChoiceMission(pid, cardStr, choiceId, gen){
       player.score += delta; scoreDelta += delta;
     } else if(eff.type==='skipTurn'){
       player.skipTurns += eff.value;
-      notes.push(`หยุดเดิน ${eff.value} ตา`);
+      notes.push({ text: `หยุดเดิน ${eff.value} ตา`, isSwap: false });
     } else if(eff.type==='discardCard'){
       const arr = player.hand[eff.cardType];
       const n = Math.min(eff.count, arr.length);
-      const removedNames = [];
+      const removedCards = [];
       for(let i=0;i<n;i++){
         const idx = Math.floor(Math.random()*arr.length);
-        removedNames.push(arr[idx].name);
+        removedCards.push(arr[idx]);
         arr.splice(idx, 1);
       }
-      if(n>0) notes.push(`สุ่มทิ้งการ์ด${cardTypeName(eff.cardType)}: ${removedNames.join(', ')}`);
+      if(n>0 && eff.cardType==='food'){
+        const pool = excludeGloballyDrawn(FOOD.filter(f=>f.sodium.zone==='red'), 'food', state.drawnCardIds);
+        const gained = drawUniqueCards(pool, arr, n);
+        arr.push(...gained);
+        markGloballyDrawn(gained, 'food', state.drawnCardIds);
+        notes.push({ isSwap: true, swap: { verbLost: 'โดนสุ่มการ์ดอาหารออก', lostCards: removedCards, verbGained: 'ได้การ์ดโซเดียมสูงแทน', gainedCards: gained } });
+      } else if(n>0){
+        notes.push({ text: `สุ่มทิ้งการ์ด${cardTypeName(eff.cardType)}: ${removedCards.map(c=>c.name).join(', ')}`, isSwap: false });
+      }
     } else if(eff.type==='drawCard'){
-      const gained = drawRandomCards(eff.cardType, eff.count, player.hand[eff.cardType]);
+      const gained = drawRandomCards(eff.cardType, eff.count, player.hand[eff.cardType], state.drawnCardIds);
       player.hand[eff.cardType].push(...gained);
-      notes.push(`ได้การ์ด${cardTypeName(eff.cardType)}เพิ่ม — ${gained.map(c=>c.name).join(', ')}`);
+      notes.push({ text: `ได้การ์ด${cardTypeName(eff.cardType)}เพิ่ม — ${gained.map(c=>c.name).join(', ')}`, isSwap: false });
     }
   });
   // A choice that earns no points at all is not a success, even if it
   // wasn't penalized either — only a genuine point gain counts.
   const success = scoreDelta > 0;
   if(success) playSuccessSound(); else playFailSound();
-  log(`${success?'✅':'❌'} ${player.name} เลือก "${choice.label}" ในภารกิจ "${card.title}" (${scoreDelta>=0?'+':''}${scoreDelta}${notes.length ? ' · '+notes.join(', ') : ''})`, success?'lg-good':'lg-bad', player, scoreBefore);
+  const noteTexts = notes.map(noteText);
+  log(`${success?'✅':'❌'} ${player.name} เลือก "${choice.label}" ในภารกิจ "${card.title}" (${scoreDelta>=0?'+':''}${scoreDelta}${noteTexts.length ? ' · '+noteTexts.join(', ') : ''})`, success?'lg-good':'lg-bad', player, scoreBefore);
   renderPlayersList();
-  const detail = `${scoreDelta>=0?'+':''}${scoreDelta} คะแนน${notes.length ? ' · '+notes.join(', ') : ''}`;
-  showMissionResultModal(player, success, card.title, detail);
+  const detail = `${scoreDelta>=0?'+':''}${scoreDelta} คะแนน`;
+  showMissionResultModal(player, success, card.title, detail, notes);
 }
 
 /* ---- Mission: select food card(s) from hand meeting a sodium condition ---- */
@@ -2357,16 +2463,31 @@ function resolveFoodThresholdOutcome(pid, card, outcomeKey, selectedIndices){
   const success = scoreDelta > 0;
   if(success) playSuccessSound(); else playFailSound();
   const label = FOOD_THRESHOLD_OUTCOME_LABELS[outcomeKey] || outcomeKey;
-  log(`${success?'✅':'❌'} ${player.name} ภารกิจ "${card.title}" — ${label} (${scoreDelta>=0?'+':''}${scoreDelta})`, success?'lg-good':'lg-bad', player, scoreBefore);
+  // Cards the player actually put forward for this mission are spent —
+  // remove them and draw fresh ones so the hand always stays at 6.
+  let usedCards = [];
+  let gainedCards = [];
+  if(selectedIndices && selectedIndices.length){
+    usedCards = selectedIndices.map(idx=>player.hand.food[idx]);
+    [...selectedIndices].sort((a,b)=>b-a).forEach(idx=>player.hand.food.splice(idx,1));
+    const pool = excludeGloballyDrawn(FOOD, 'food', state.drawnCardIds);
+    gainedCards = drawUniqueCards(pool, player.hand.food, usedCards.length);
+    player.hand.food.push(...gainedCards);
+    markGloballyDrawn(gainedCards, 'food', state.drawnCardIds);
+  }
+  const notes = usedCards.length ? [{ isSwap: true, swap: { verbLost: 'ใช้การ์ดอาหารไป', lostCards: usedCards, verbGained: 'ได้การ์ดแทน', gainedCards } }] : [];
+  const swapLogText = notes.length ? noteText(notes[0]) : '';
+  log(`${success?'✅':'❌'} ${player.name} ภารกิจ "${card.title}" — ${label} (${scoreDelta>=0?'+':''}${scoreDelta})${swapLogText ? ' | '+swapLogText : ''}`, success?'lg-good':'lg-bad', player, scoreBefore);
   renderPlayersList();
-  showMissionResultModal(player, success, card.title, `${label}: ${scoreDelta>=0?'+':''}${scoreDelta} คะแนน`);
+  showMissionResultModal(player, success, card.title, `${label}: ${scoreDelta>=0?'+':''}${scoreDelta} คะแนน`, notes);
 }
 
-function showMissionResultModal(player, success, title, detail){
+function showMissionResultModal(player, success, title, detail, notes){
   const gen = nextModalGeneration();
   showModal(`
     <div class="result-banner ${success?'result-good':'result-bad'}">${success?'✅ สำเร็จ':'❌ ไม่สำเร็จ'} — ${title}</div>
     <div class="scenario">${detail}</div>
+    ${renderNoteLines(notes)}
     <div class="scenario" style="font-weight:700;">คะแนนสะสมตอนนี้: ${player.score} แต้ม</div>
     ${renderHandSummaryHTML(player)}
     <button class="btn-ack" onclick="closeModalAndNext(${gen})">ไปต่อ</button>

@@ -1789,12 +1789,36 @@ function csvEscape(val){
   const s = String(val);
   return /[",\r\n]/.test(s) ? '"' + s.replace(/"/g,'""') + '"' : s;
 }
+// All game-facing timestamps (CSV export, downloaded filenames) use Thai
+// conventions: D/M/Y H:MM, Buddhist Era year (ค.ศ. + 543), local device
+// time — e.g. "8/8/2569 9:10".
+function thaiDateTimeParts(date){
+  return {
+    d: date.getDate(),
+    m: date.getMonth() + 1,
+    y: date.getFullYear() + 543,
+    hh: date.getHours(),
+    mm: String(date.getMinutes()).padStart(2, '0'),
+    ss: String(date.getSeconds()).padStart(2, '0'),
+  };
+}
+function formatThaiDateTime(date){
+  const p = thaiDateTimeParts(date);
+  return `${p.d}/${p.m}/${p.y} ${p.hh}:${p.mm}`;
+}
+// Filesystem-safe variant for downloaded filenames — "/" and ":" aren't
+// valid in Windows filenames, so this pads everything and swaps in "-"/"_".
+function formatThaiDateTimeForFilename(date){
+  const p = thaiDateTimeParts(date);
+  const pad2 = n => String(n).padStart(2, '0');
+  return `${p.y}-${pad2(p.m)}-${pad2(p.d)}_${pad2(p.hh)}-${p.mm}-${p.ss}`;
+}
 // Exports just {rank, name, icon, score} per player — a small, spreadsheet-
 // friendly file meant for feeding a separate progress-tracking dashboard
 // across many play sessions, distinct from the full-state save/load files.
 function downloadResultsCsv(){
   const sorted = [...state.players].sort((a,b)=>b.score-a.score);
-  const playedAt = new Date().toISOString();
+  const playedAt = formatThaiDateTime(new Date());
   const header = ['username','stage_1_score','stage_2_score','stage_3_score','stage_4_score','stage_5_score','total_score','played_at','rank','icon','game_version'];
   const rows = sorted.map((p,i)=>{
     // Each stage's score is recorded independently as it's earned (see
@@ -1810,7 +1834,7 @@ function downloadResultsCsv(){
   const csvText = '\uFEFF' + [header, ...rows].map(row=>row.map(csvEscape).join(',')).join('\r\n');
   const blob = new Blob([csvText], {type:'text/csv;charset=utf-8;'});
   const url = URL.createObjectURL(blob);
-  const stamp = new Date().toISOString().slice(0,19).replace(/[:T]/g,'-');
+  const stamp = formatThaiDateTimeForFilename(new Date());
   const a = document.createElement('a');
   a.href = url;
   a.download = `sodium-quest-results-${stamp}.csv`;
@@ -2512,7 +2536,7 @@ document.getElementById('reset-btn').onclick = ()=>{
 document.getElementById('download-save-btn').onclick = ()=>{
   const blob = new Blob([JSON.stringify(buildSaveData(), null, 2)], {type:'application/json'});
   const url = URL.createObjectURL(blob);
-  const stamp = new Date().toISOString().slice(0,19).replace(/[:T]/g,'-');
+  const stamp = formatThaiDateTimeForFilename(new Date());
   const a = document.createElement('a');
   a.href = url;
   a.download = `sodium-quest-save-${stamp}.json`;

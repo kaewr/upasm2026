@@ -112,6 +112,18 @@
   .link-row a{flex:1;min-width:150px;text-align:center;background:transparent;color:var(--text-dim);padding:13px 16px;border:1px solid var(--border);border-radius:10px;font-size:15px;min-height:44px;display:flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;}
   .link-row a:hover{border-color:var(--accent);color:var(--text);}
   .note{font-size:14px;color:var(--text-dim);margin-top:14px;line-height:1.65;}
+  .tts-box{background:var(--surface2);border-radius:10px;padding:12px 14px;margin-bottom:14px;}
+  .tts-box #tts-status{font-size:13px;color:var(--text);line-height:1.5;}
+  .tts-recheck-btn{background:transparent;color:var(--text-dim);border:1px solid var(--border);border-radius:8px;padding:6px 12px;font-size:12px;margin-top:8px;}
+  /* Rendered inside a .card-modal (the settings button reuses the same
+     card-overlay/showModal() plumbing as game cards), so — like every
+     other .card-modal element — it uses the modal's fixed "paper" palette
+     instead of the page's theme variables. */
+  .card-modal .tts-settings-row{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
+  .card-modal .tts-settings-row:last-child{margin-bottom:0;}
+  .card-modal .tts-settings-row label{min-width:130px;font-size:0.85em;color:#5a5040;}
+  .card-modal .tts-settings-row input[type="range"]{flex:1;}
+  .card-modal .tts-settings-row .tts-value{min-width:42px;text-align:right;font-size:0.85em;color:#5a5040;font-variant-numeric:tabular-nums;}
 
   /* ---------- Game screen ---------- */
   .game-wrap{width:100%;max-width:1900px;margin:0 auto;display:flex;flex-direction:column;gap:8px;min-height:0;}
@@ -351,6 +363,8 @@
   .modal-font-controls button{width:38px;height:38px;border-radius:8px;background:#e7dcc0;color:#28221a;font-weight:800;font-size:15px;border:1px solid #cabb92;}
   .card-modal .ctype{display:inline-block;padding:5px 14px;border-radius:20px;font-size:0.8em;font-weight:800;color:#fff;margin-bottom:12px;}
   .card-modal h3{font-size:1.35em;margin-bottom:10px;}
+  .card-modal .tts-btn{background:var(--teal);color:#fff;border-radius:20px;padding:7px 16px;font-size:0.82em;font-weight:700;display:inline-flex;align-items:center;gap:6px;margin-bottom:12px;}
+  .card-modal .tts-btn:active{opacity:0.75;}
   .card-modal .scenario{font-size:1em;line-height:1.7;margin-bottom:14px;color:#3a3020;}
   .card-modal .effect-line{font-size:0.95em;background:#e7dcc0;padding:10px 12px;border-radius:8px;margin-bottom:7px;font-weight:700;}
   .card-modal .req-box{background:#fff6e0;border:1px dashed var(--ochre);padding:12px;border-radius:10px;font-size:0.95em;margin-bottom:14px;}
@@ -417,6 +431,7 @@
         </select>
       </div>
     </div>
+    
 
     <div style="margin-bottom:14px;">
       <div style="font-size:13px;margin-bottom:8px;color:var(--text-dim);">จำนวนผู้เล่น (สูงสุด 5 คน)</div>
@@ -426,6 +441,14 @@
     <div id="player-rows"></div>
 
     <button class="primary-btn" id="start-btn">เริ่มเกม 🎲</button>
+    <br><br>
+    <div class="tts-box">
+      <div id="tts-status">🔎 กำลังตรวจสอบระบบอ่านออกเสียง...</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button type="button" class="tts-recheck-btn" id="tts-recheck-btn">🔄 ตรวจสอบอีกครั้ง</button>
+        <button type="button" class="tts-recheck-btn hidden" id="tts-open-settings-btn" onclick="openTtsSettingsModal()">⚙️ ตั้งค่าการอ่านออกเสียง</button>
+      </div>
+    </div>
     <button class="secondary-btn" id="load-file-btn" style="width:100%;margin-top:8px;">📂 โหลดเกมจากไฟล์...</button>
     <input type="file" id="load-file-input" accept="application/json,.json" class="hidden">
 
@@ -795,6 +818,201 @@ function showBigCelebration(onDone){
   bursts.forEach(([cx,cy],i)=> setTimeout(()=>burst(cx,cy), i*350));
   setTimeout(()=>{ layer.remove(); if(onDone) onDone(); }, bursts.length*350 + 1000);
 }
+
+/* ================= TEXT-TO-SPEECH (Web Speech API — reads card text aloud
+   for players who find small on-screen text hard to read; entirely
+   device-local once a Thai voice is installed, no network call at play
+   time) ================= */
+const TTS_RATE_KEY = 'sodium_quest_tts_rate';
+const TTS_VOLUME_KEY = 'sodium_quest_tts_volume';
+const TTS_GAP_KEY = 'sodium_quest_tts_gap_sec';
+// hasThaiVoice: a th-* voice exists at all. offlineReady: that voice also
+// reports localService:true, meaning it can actually speak without a
+// network round-trip — some browsers (mobile Chrome especially) list
+// network-only voices too, which would silently require internet.
+let ttsState = { supported: false, hasThaiVoice: false, offlineReady: false, voice: null };
+// Set right before showModal() by every card-opening function that offers a
+// speak button — one array entry per "paragraph" (title, scenario, each
+// effect line, each choice, ...), read only when that button is clicked.
+let ttsSpeakParts = [];
+function setSpeakParts(parts){ ttsSpeakParts = parts; }
+// Only emit the button's markup when speech synthesis actually exists —
+// no point showing a control that can't do anything.
+function ttsButtonHtml(){
+  return ttsState.supported ? `<button type="button" class="tts-btn" onclick="speakCardText()">🔊 ฟังเสียงการ์ดนี้</button>` : '';
+}
+// Kept in memory (not just localStorage) so a slider change always takes
+// effect for the rest of THIS session even if localStorage throws/is
+// blocked (this game is normally opened as a bare local file:// page,
+// where storage access isn't guaranteed — see safeLocalGet/Set above).
+// localStorage is still written on every change purely so the choice
+// survives a reload when storage does happen to work.
+let ttsRate = 1;
+let ttsVolume = 1;
+// The gap held between paragraphs — a plain long utterance reads as one
+// breathless run-on, especially awkward between a mission's scenario and
+// its list of choices, so each part is spoken as its own utterance and
+// chained via onend + a timed pause rather than one big string. Stored in
+// seconds (matching the settings slider); default 0.25s, capped at 1s.
+let ttsGapSec = 0.25;
+function getTtsRate(){ return ttsRate; }
+function getTtsVolume(){ return ttsVolume; }
+function getTtsGapMs(){ return Math.round(ttsGapSec*1000); }
+function setTtsRate(v){
+  v = Math.max(0.5, Math.min(2, Math.round(v*10)/10));
+  ttsRate = v;
+  safeLocalSet(TTS_RATE_KEY, v);
+  const label = document.getElementById('tts-rate-label');
+  if(label) label.textContent = v.toFixed(1)+'x';
+  return v;
+}
+function setTtsVolume(v){
+  v = Math.max(0, Math.min(1, Math.round(v*10)/10));
+  ttsVolume = v;
+  safeLocalSet(TTS_VOLUME_KEY, v);
+  const label = document.getElementById('tts-volume-label');
+  if(label) label.textContent = Math.round(v*100)+'%';
+  return v;
+}
+function setTtsGapSec(v){
+  v = Math.max(0, Math.min(1, Math.round(v*20)/20));
+  ttsGapSec = v;
+  safeLocalSet(TTS_GAP_KEY, v);
+  const label = document.getElementById('tts-gap-label');
+  if(label) label.textContent = v.toFixed(2)+'s';
+  return v;
+}
+// Bumped on every speakParts() call so a stale chain (from a card the
+// player already left, or a rapid second click) can't keep firing its own
+// queued paragraphs on top of a newer reading — each step in the chain
+// checks its captured `gen` against the current one before proceeding.
+let ttsSpeechGeneration = 0;
+function speakParts(parts, gapMs){
+  const gen = ++ttsSpeechGeneration;
+  if(!ttsState.supported) return;
+  try { speechSynthesis.cancel(); } catch(e) {}
+  const clean = (parts||[]).filter(Boolean);
+  if(!clean.length) return;
+  let i = 0;
+  function speakNext(){
+    if(gen !== ttsSpeechGeneration) return;
+    if(i >= clean.length) return;
+    let utter;
+    try { utter = new SpeechSynthesisUtterance(clean[i]); } catch(e) { return; }
+    utter.lang = 'th-TH';
+    if(ttsState.voice) utter.voice = ttsState.voice;
+    utter.rate = getTtsRate();
+    utter.volume = getTtsVolume();
+    utter.onend = () => {
+      if(gen !== ttsSpeechGeneration) return;
+      i++;
+      if(i < clean.length) setTimeout(speakNext, gapMs);
+    };
+    try { speechSynthesis.speak(utter); } catch(e) {}
+  }
+  speakNext();
+}
+// Called from showModal()/closeModal() so speech never survives past the
+// screen it was read for — opening a new card cuts off whatever the
+// previous card was still saying (so nothing appears to "auto-read" a card
+// the player hasn't pressed the speak button on yet), and picking an
+// answer or closing a card cuts it off immediately rather than finishing.
+function stopSpeaking(){
+  ttsSpeechGeneration++;
+  if(ttsState.supported){ try { speechSynthesis.cancel(); } catch(e) {} }
+}
+function speakCardText(){
+  speakParts(ttsSpeakParts, getTtsGapMs());
+}
+function renderTtsStatus(){
+  const el = document.getElementById('tts-status');
+  if(el){
+    if(!ttsState.supported){
+      el.textContent = '❌ เบราว์เซอร์นี้ไม่รองรับระบบอ่านออกเสียง (Web Speech API)';
+    } else if(ttsState.hasThaiVoice && ttsState.offlineReady){
+      el.textContent = `✅ พร้อมอ่านออกเสียงภาษาไทยแบบ offline — เสียง: ${ttsState.voice.name}`;
+    } else if(ttsState.hasThaiVoice && !ttsState.offlineReady){
+      el.textContent = '⚠️ พบเสียงภาษาไทย แต่เป็นเสียงที่ต้องต่ออินเทอร์เน็ตขณะอ่าน (ไม่ offline)';
+    } else {
+      el.textContent = '❌ ไม่พบเสียงพูดภาษาไทยในเครื่องนี้ — กรุณาติดตั้ง Thai voice ในระบบก่อนใช้งาน';
+    }
+  }
+  const settingsBtn = document.getElementById('tts-open-settings-btn');
+  if(settingsBtn) settingsBtn.classList.toggle('hidden', !ttsState.supported);
+}
+// Rate/volume sliders live inside a modal (opened on demand from the setup
+// screen) rather than sitting permanently on the setup screen itself — with
+// the status line, recheck button, and both card/game screens all competing
+// for space there already, an always-visible settings panel just added
+// clutter for a control most players set once and forget.
+function openTtsSettingsModal(){
+  showModal(`
+    <span class="ctype" style="background:var(--teal);">🔊 ตั้งค่าการอ่านออกเสียง</span>
+    <h3>ความเร็ว / ความดังของเสียงอ่าน</h3>
+    <div class="tts-settings-row">
+      <label for="tts-rate-slider">ความเร็วในการอ่าน</label>
+      <input type="range" id="tts-rate-slider" min="0.5" max="2" step="0.1">
+      <span class="tts-value" id="tts-rate-label"></span>
+    </div>
+    <div class="tts-settings-row">
+      <label for="tts-volume-slider">ระดับความดัง</label>
+      <input type="range" id="tts-volume-slider" min="0" max="1" step="0.1">
+      <span class="tts-value" id="tts-volume-label"></span>
+    </div>
+    <div class="tts-settings-row">
+      <label for="tts-gap-slider">หน่วงเวลาระหว่างย่อหน้า</label>
+      <input type="range" id="tts-gap-slider" min="0" max="1" step="0.05">
+      <span class="tts-value" id="tts-gap-label"></span>
+    </div>
+    <button type="button" class="btn-ack" onclick="closeModal()">ปิด</button>
+  `);
+  wireTtsSliders();
+}
+function wireTtsSliders(){
+  const rateSlider = document.getElementById('tts-rate-slider');
+  const volSlider = document.getElementById('tts-volume-slider');
+  const gapSlider = document.getElementById('tts-gap-slider');
+  if(rateSlider){ rateSlider.value = getTtsRate(); setTtsRate(getTtsRate()); rateSlider.oninput = e => setTtsRate(parseFloat(e.target.value)); }
+  if(volSlider){ volSlider.value = getTtsVolume(); setTtsVolume(getTtsVolume()); volSlider.oninput = e => setTtsVolume(parseFloat(e.target.value)); }
+  if(gapSlider){ gapSlider.value = ttsGapSec; setTtsGapSec(ttsGapSec); gapSlider.oninput = e => setTtsGapSec(parseFloat(e.target.value)); }
+}
+// Voice lists load asynchronously in some browsers (empty on the very
+// first getVoices() call, populated once 'voiceschanged' fires) — this
+// covers both cases instead of assuming a synchronous result.
+function detectTts(){
+  if(!('speechSynthesis' in window)){
+    ttsState.supported = false;
+    renderTtsStatus();
+    return;
+  }
+  ttsState.supported = true;
+  const pickVoice = () => {
+    let voices = [];
+    try { voices = speechSynthesis.getVoices() || []; } catch(e) {}
+    const thaiVoices = voices.filter(v => v.lang && v.lang.toLowerCase().startsWith('th'));
+    ttsState.hasThaiVoice = thaiVoices.length > 0;
+    ttsState.voice = thaiVoices.find(v=>v.localService) || thaiVoices[0] || null;
+    ttsState.offlineReady = !!(ttsState.voice && ttsState.voice.localService);
+    renderTtsStatus();
+  };
+  pickVoice();
+  try { speechSynthesis.onvoiceschanged = pickVoice; } catch(e) {}
+}
+(function initTts(){
+  // Hydrate from localStorage if a previous session saved a preference;
+  // setTtsRate/setTtsVolume/setTtsGapSec already default safely otherwise.
+  // The sliders themselves don't exist yet here — they're only created
+  // inside openTtsSettingsModal() — so this just primes the values/labels.
+  const savedRate = parseFloat(safeLocalGet(TTS_RATE_KEY));
+  const savedVolume = parseFloat(safeLocalGet(TTS_VOLUME_KEY));
+  const savedGap = parseFloat(safeLocalGet(TTS_GAP_KEY));
+  setTtsRate(Number.isFinite(savedRate) ? savedRate : 1);
+  setTtsVolume(Number.isFinite(savedVolume) ? savedVolume : 1);
+  setTtsGapSec(Number.isFinite(savedGap) ? savedGap : 0.25);
+  const recheckBtn = document.getElementById('tts-recheck-btn');
+  if(recheckBtn) recheckBtn.onclick = detectTts;
+  detectTts();
+})();
 
 /* ================= GAME DATA ================= */
 const ICON_GROUPS = [
@@ -1928,6 +2146,11 @@ function openCardForTile(player, tileType){
 let modalGeneration = 0;
 function nextModalGeneration(){ return ++modalGeneration; }
 function showModal(html){
+  // Every screen transition — a brand-new card, or a choice/ack leading to
+  // a result screen — cuts off whatever the PREVIOUS screen was reading, so
+  // nothing ever keeps talking over (or is mistaken for) a screen the
+  // player hasn't pressed the speak button on yet.
+  stopSpeaking();
   document.getElementById('card-modal-content').innerHTML = html;
   document.getElementById('card-overlay').classList.remove('hidden');
 }
@@ -1937,6 +2160,7 @@ function showModal(html){
 // second stale click would still match and run again. Bumping the
 // generation here closes that gap the same way a new showModal() would.
 function closeModal(){
+  stopSpeaking();
   document.getElementById('card-overlay').classList.add('hidden');
   nextModalGeneration();
 }
@@ -2000,9 +2224,11 @@ function openObstacleCard(player){
   markGloballyDrawn([card], 'obstacle', state.drawnCardIds);
   const cardEnc = JSON.stringify(card).replace(/"/g,'&quot;');
   const effectLines = card.effects.map(eff=>describeCardEffect(eff, player));
+  setSpeakParts([card.name, card.scenario, ...effectLines]);
   showModal(`
     <span class="ctype" style="background:var(--brick);">⚠️ การ์ดอุปสรรคหมู่บ้าน (ขึด)</span>
     <h3>${card.name}</h3>
+    ${ttsButtonHtml()}
     <div class="scenario">${card.scenario}</div>
     ${card.scope==='all' ? `<div class="req-box">⚠️ อุปสรรคนี้ส่งผลกับผู้เล่นทุกคน (ตามการ์ดที่แต่ละคนถืออยู่)</div>` : ''}
     ${effectLines.map(l=>`<div class="effect-line">${l}</div>`).join('')}
@@ -2178,9 +2404,11 @@ function openKnowledgeCard(player){
   markGloballyDrawn([card], 'knowledge', state.drawnCardIds);
   const kImgTag = card.image?.src ?
     `<img src="${card.image.src}" alt="${card.image.alt||card.name}" style="width:100%;max-height:190px;object-fit:cover;border-radius:10px;margin-bottom:10px;" onerror="this.style.display='none'">` : '';
+  setSpeakParts([card.name, card.knowledgeFact, card.flavorText]);
   showModal(`
     <span class="ctype" style="background:var(--teal);">💡 การ์ดความรู้สุขภาพ</span>
     <h3>${card.name}</h3>
+    ${ttsButtonHtml()}
     ${kImgTag}
     <div class="scenario">${card.knowledgeFact}</div>
     <div class="effect-line" style="font-style:italic;">"${card.flavorText}"</div>
@@ -2211,9 +2439,11 @@ function openFoodCard(player){
     `⚡ ${Math.round(n.energyKcal)} kcal · 🥓 ไขมัน ${n.fatG??'-'} ก. · 🍗 โปรตีน ${n.proteinG??'-'} ก. · 🍚 คาร์บ ${n.carbG??'-'} ก.` : '';
   const imgTag = card.image?.src ?
     `<img src="${card.image.src}" alt="${card.image.alt||card.name}" style="width:100%;max-height:190px;object-fit:cover;border-radius:10px;margin-bottom:10px;" onerror="this.style.display='none'">` : '';
+  setSpeakParts([card.name, `โซเดียม ${sodiumMg} มิลลิกรัม${servingNote} ระดับ${ZONE_LABEL[card.sodium.zone]}`, card.flavorText]);
   showModal(`
     <span class="ctype" style="background:var(--ochre);color:#3a2a00;">🧺 การ์ดเมนูอาหาร (กาดนัด) ${warnIcons ? '· '+warnIcons : ''}</span>
     <h3>${card.name}</h3>
+    ${ttsButtonHtml()}
     ${imgTag}
     <div class="effect-line" style="background:${ZONE_COLOR[card.sodium.zone]};color:${zoneTextColor(card.sodium.zone)};">โซเดียม ${sodiumMg} มก.${servingNote} (${ZONE_LABEL[card.sodium.zone]})</div>
     ${nutritionLine ? `<div class="effect-line">${nutritionLine}</div>` : ''}
@@ -2239,6 +2469,7 @@ function openSupportCard(player){
   const cardEnc = JSON.stringify(card).replace(/"/g,'&quot;');
   const effectLines = card.effects.map(eff=>describeCardEffect(eff, player));
   const heroBg = card.image?.src ? ` style="background-image:url('${card.image.src}')"` : '';
+  setSpeakParts([card.name, card.scenario, ...effectLines]);
   showModal(`
     <div class="support-hero"${heroBg}>
       <div class="hero-scrim">
@@ -2246,6 +2477,7 @@ function openSupportCard(player){
         <h3>${card.name}</h3>
       </div>
     </div>
+    ${ttsButtonHtml()}
     <div class="scenario">${card.scenario}</div>
     ${card.scope==='all' ? `<div class="req-box">🤝 การสนับสนุนนี้ส่งผลกับผู้เล่นทุกคน</div>` : ''}
     ${effectLines.map(l=>`<div class="effect-line">${l}</div>`).join('')}
@@ -2329,15 +2561,20 @@ function openMultipleChoiceMission(player, card){
   // Shuffle the display order so the correct answer isn't always the first
   // button — resolveMultipleChoiceMission looks choices up by id, so the
   // shuffle is purely cosmetic and doesn't affect scoring.
-  const buttons = shuffleArray(card.choices).map(c =>
+  const shuffledChoices = shuffleArray(card.choices);
+  const buttons = shuffledChoices.map(c =>
     `<button type="button" class="mc-choice-btn" onclick="resolveMultipleChoiceMission(${player.id}, ${cardEnc}, ${c.id}, ${gen})">${c.label}</button>`
   ).join('');
+  const leadIn = questionLeadIn(card.instructions);
+  const choiceSpeechParts = shuffledChoices.map((c,i)=>`ตัวเลือกที่ ${i+1}: ${c.label}`);
+  setSpeakParts([card.title, card.scenario, leadIn, ...choiceSpeechParts]);
   showModal(`
     <span class="ctype" style="background:var(--house);">🏠 ${card.title}</span>
     <h3>สถานการณ์</h3>
+    ${ttsButtonHtml()}
     <div class="scenario">${card.scenario}</div>
     ${renderReferenceFoodCards(card)}
-    <div class="req-box">📋 ${questionLeadIn(card.instructions)}</div>
+    <div class="req-box">📋 ${leadIn}</div>
     <div class="choice-list">${buttons}</div>
   `);
 }
@@ -2432,9 +2669,11 @@ function renderFoodThresholdPicker(){
     : `เลือกการ์ดอาหาร ${rule.count} ใบ รวมโซเดียมไม่เกิน ${rule.thresholdMg} มก.`;
   const progress = ` (เลือกแล้ว ${selected.length}/${rule.count}${rule.condition==='sodium_sum_max' && selected.length ? ', รวม '+Math.round(sumMg)+' มก.' : ''})`;
   const allMet = selected.length === rule.count;
+  setSpeakParts([card.title, card.scenario, ruleText]);
   showModal(`
     <span class="ctype" style="background:var(--house);">🏠 ${card.title}</span>
     <h3>สถานการณ์</h3>
+    ${ttsButtonHtml()}
     <div class="scenario">${card.scenario}</div>
     <div class="req-box">📋 ${ruleText}${progress}</div>
     ${items}

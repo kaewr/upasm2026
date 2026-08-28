@@ -574,6 +574,26 @@
 </div>
 
 <script>
+/* ================= SEEDED RNG (card draws / shuffles) ================= */
+// Math.random() is already reseeded by the browser on every real page
+// load — but players reported getting the same mission card the first
+// time they landed on a house tile across separate playthroughs, which
+// looked like the draw order wasn't actually varying run to run. Rather
+// than rely on the engine's opaque internal seeding, every card draw and
+// shuffle in this game now goes through this small mulberry32 generator,
+// EXPLICITLY seeded from the current wall-clock time (mixed with
+// performance.now()'s sub-millisecond precision so two loads even a
+// few milliseconds apart still get different seeds) — so the very first
+// card of a brand new game is provably tied to real time, not whatever
+// state Math.random() happened to carry over.
+let rngState = ((Date.now() ^ Math.floor(performance.now()*1000)) >>> 0) || 1;
+function rng(){
+  rngState |= 0; rngState = (rngState + 0x6D2B79F5) | 0;
+  let t = Math.imul(rngState ^ (rngState >>> 15), 1 | rngState);
+  t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+  return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+}
+
 /* ================= SAFE LOCALSTORAGE ================= */
 // localStorage.getItem/setItem can THROW (not just fail silently) — e.g.
 // Firefox raises SecurityError for file:// pages ("opaque origin"), and
@@ -1142,7 +1162,7 @@ function drawStartingFoodHand(count, drawnCardIds){
   zones.filter(z=>byZone[z].length>0).forEach(z=>{ picks.push(drawUniqueCards(byZone[z], picks, 1)[0]); });
   while(picks.length < count) picks.push(drawUniqueCards(basePool, picks, 1)[0]);
   for(let i=picks.length-1;i>0;i--){
-    const j = Math.floor(Math.random()*(i+1));
+    const j = Math.floor(rng()*(i+1));
     [picks[i],picks[j]] = [picks[j],picks[i]];
   }
   markGloballyDrawn(picks, 'food', drawnCardIds);
@@ -2106,11 +2126,11 @@ function nextTurn(){
 }
 
 /* ================= CARD LOGIC ================= */
-function rndPick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+function rndPick(arr){ return arr[Math.floor(rng()*arr.length)]; }
 function shuffleArray(arr){
   const copy = arr.slice();
   for(let i=copy.length-1;i>0;i--){
-    const j = Math.floor(Math.random()*(i+1));
+    const j = Math.floor(rng()*(i+1));
     [copy[i],copy[j]] = [copy[j],copy[i]];
   }
   return copy;
@@ -2256,7 +2276,7 @@ function applyCardEffect(player, eff){
     const n = Math.min(eff.count, arr.length);
     const removedCards = [];
     for(let i=0;i<n;i++){
-      const idx = Math.floor(Math.random()*arr.length);
+      const idx = Math.floor(rng()*arr.length);
       removedCards.push(arr[idx]);
       arr.splice(idx, 1);
     }
@@ -2285,7 +2305,7 @@ function applyCardEffect(player, eff){
   } else if(eff.type === 'knowledgeCheck'){
     if(player.hand.knowledge.length > 0){
       if(eff.consume){
-        player.hand.knowledge.splice(Math.floor(Math.random()*player.hand.knowledge.length), 1);
+        player.hand.knowledge.splice(Math.floor(rng()*player.hand.knowledge.length), 1);
         note = 'ใช้การ์ดความรู้สุขภาพรับมือสถานการณ์ (ทิ้ง 1 ใบ)';
         log(`${player.name}: ${note}`, 'lg-good', player, scoreBefore);
       } else {
@@ -2599,7 +2619,7 @@ function resolveMultipleChoiceMission(pid, cardStr, choiceId, gen){
       const n = Math.min(eff.count, arr.length);
       const removedCards = [];
       for(let i=0;i<n;i++){
-        const idx = Math.floor(Math.random()*arr.length);
+        const idx = Math.floor(rng()*arr.length);
         removedCards.push(arr[idx]);
         arr.splice(idx, 1);
       }

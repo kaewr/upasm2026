@@ -12,15 +12,15 @@
         "alt": "ข้าวซอยเนื้อ"
       },
       "sodium": {
-        "amountMg": 979.0,
+        "amountMg": 979,
         "zone": "red",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 800.0,
-        "fatG": 45.0,
-        "proteinG": 35.0,
-        "carbG": 50.0
+        "energyKcal": 800,
+        "fatG": 45,
+        "proteinG": 35,
+        "carbG": 50
       },
       "warningIcons": [
         "salt"
@@ -36,12 +36,12 @@
         "alt": "น้ำพริกหนุ่ม"
       },
       "sodium": {
-        "amountMg": 971.0,
+        "amountMg": 971,
         "zone": "red",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 55.0,
+        "energyKcal": 55,
         "fatG": 0.5,
         "proteinG": 2.1,
         "carbG": 10.5
@@ -60,12 +60,12 @@
         "alt": "น้ำพริกแมงดา"
       },
       "sodium": {
-        "amountMg": 2130.0,
+        "amountMg": 2130,
         "zone": "red",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 241.0,
+        "energyKcal": 241,
         "fatG": 17.7,
         "proteinG": 7.4,
         "carbG": 11.5
@@ -84,12 +84,12 @@
         "alt": "น้ำพริกน้ำปู๋"
       },
       "sodium": {
-        "amountMg": 6305.0,
+        "amountMg": 6305,
         "zone": "red",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 105.0,
+        "energyKcal": 105,
         "fatG": 1.2,
         "proteinG": 9.8,
         "carbG": 13.7
@@ -97,7 +97,7 @@
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "ดื่มน้ำตามเยอะๆ งดเค็มทั้งวัน กินคู่มะเขือเปราะ หน่อไม้"
+      "flavorText": "ดื่มน้ำตามเยอะๆ, งดเค็มทั้งวัน, กินคู่มะเขือเปราะ หน่อไม้"
     },
     {
       "id": "food_005",
@@ -108,12 +108,12 @@
         "alt": "ขนมจีนน้ำเงี้ยว"
       },
       "sodium": {
-        "amountMg": 1850.0,
+        "amountMg": 1850,
         "zone": "red",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 380.0,
+        "energyKcal": 380,
         "fatG": 14.5,
         "proteinG": 18.2,
         "carbG": 44.1
@@ -132,20 +132,20 @@
         "alt": "ข้าวซอยไก่"
       },
       "sodium": {
-        "amountMg": 2738.0,
+        "amountMg": 2738,
         "zone": "red",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 506.0,
-        "fatG": 21.0,
-        "proteinG": 23.0,
+        "energyKcal": 506,
+        "fatG": 21,
+        "proteinG": 23,
         "carbG": 56.2
       },
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "ความนัวระดับตำนาน ซดน้ำ 3 คำพอ เน้นกินหอมแดง"
+      "flavorText": "ความนัวระดับตำนาน, ซดน้ำ 3 คำพอ, เน้นกินหอมแดง"
     },
     {
       "id": "food_007",
@@ -156,12 +156,12 @@
         "alt": "แกงแคหมูสามชั้น"
       },
       "sodium": {
-        "amountMg": 1650.0,
+        "amountMg": 1650,
         "zone": "red",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 345.0,
+        "energyKcal": 345,
         "fatG": 26.5,
         "proteinG": 15.2,
         "carbG": 11.4
@@ -180,12 +180,12 @@
         "alt": "ตำลาว"
       },
       "sodium": {
-        "amountMg": 1950.0,
+        "amountMg": 1950,
         "zone": "red",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 75.0,
+        "energyKcal": 75,
         "fatG": 0.8,
         "proteinG": 3.2,
         "carbG": 13.8
@@ -204,12 +204,12 @@
         "alt": "จิ้นส้ม"
       },
       "sodium": {
-        "amountMg": 1190.0,
+        "amountMg": 1190,
         "zone": "red",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 185.0,
+        "energyKcal": 185,
         "fatG": 11.2,
         "proteinG": 17.5,
         "carbG": 3.5
@@ -228,15 +228,15 @@
         "alt": "แกงโฮ๊ะ"
       },
       "sodium": {
-        "amountMg": 1480.0,
+        "amountMg": 1480,
         "zone": "red",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 190.0,
+        "energyKcal": 190,
         "fatG": 9.5,
         "proteinG": 11.2,
-        "carbG": 15.0
+        "carbG": 15
       },
       "warningIcons": [
         "salt"
@@ -252,12 +252,12 @@
         "alt": "ไส้อั่ว"
       },
       "sodium": {
-        "amountMg": 1480.0,
+        "amountMg": 1480,
         "zone": "red",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 342.0,
+        "energyKcal": 342,
         "fatG": 28.5,
         "proteinG": 16.8,
         "carbG": 4.2
@@ -265,7 +265,7 @@
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "สมุนไพรแน่นจมูก แต่ความเค็มและไขมันพุ่งชนเพดาน"
+      "flavorText": "สมุนไพรแน่นจมูก, แต่ความเค็มและไขมันพุ่งชนเพดาน"
     },
     {
       "id": "food_012",
@@ -276,20 +276,20 @@
         "alt": "แกงฮังเล"
       },
       "sodium": {
-        "amountMg": 1250.0,
+        "amountMg": 1250,
         "zone": "red",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 390.0,
-        "fatG": 32.0,
+        "energyKcal": 390,
+        "fatG": 32,
         "proteinG": 14.5,
-        "carbG": 11.0
+        "carbG": 11
       },
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "เนื้อนุ่มละลายในปาก กินคู่ขิงซอยสด เลี่ยงตักน้ำแกงชุ่มๆ"
+      "flavorText": "เนื้อนุ่มละลายในปาก, กินคู่ขิงซอยสด, เลี่ยงตักน้ำแกงชุ่มๆ"
     },
     {
       "id": "food_013",
@@ -300,20 +300,20 @@
         "alt": "แกงอ่อมหมู"
       },
       "sodium": {
-        "amountMg": 1150.0,
+        "amountMg": 1150,
         "zone": "red",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 165.0,
+        "energyKcal": 165,
         "fatG": 9.8,
         "proteinG": 17.2,
-        "carbG": 2.0
+        "carbG": 2
       },
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "ให้ตักเน้นเนื้อและผัก ซดน้ำแกงขลุกขลิกแค่พอเคลือบลิ้น"
+      "flavorText": "ให้ตักเน้นเนื้อและผัก, ซดน้ำแกงขลุกขลิกแค่พอเคลือบลิ้น"
     },
     {
       "id": "food_014",
@@ -324,12 +324,12 @@
         "alt": "น้ำพริกตาแดง"
       },
       "sodium": {
-        "amountMg": 2340.0,
+        "amountMg": 2340,
         "zone": "red",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 148.0,
+        "energyKcal": 148,
         "fatG": 3.5,
         "proteinG": 5.8,
         "carbG": 23.3
@@ -348,20 +348,20 @@
         "alt": "แกงบ่าหนุนใส่กระดูกหมู"
       },
       "sodium": {
-        "amountMg": 1680.0,
+        "amountMg": 1680,
         "zone": "red",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 210.0,
-        "fatG": 9.0,
+        "energyKcal": 210,
+        "fatG": 9,
         "proteinG": 18.5,
         "carbG": 13.8
       },
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "แกงเข้มข้นจากถั่วเน่า/กะปิ ล้างหน่อไม้ 2 น้ำก่อนแกง"
+      "flavorText": "แกงเข้มข้นจากถั่วเน่า/กะปิ, ล้างหน่อไม้ 2 น้ำก่อนแกง"
     },
     {
       "id": "food_016",
@@ -372,20 +372,20 @@
         "alt": "แกงส้มบะหน่อไม้ส้ม"
       },
       "sodium": {
-        "amountMg": 1320.0,
+        "amountMg": 1320,
         "zone": "red",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 185.0,
+        "energyKcal": 185,
         "fatG": 8.5,
-        "proteinG": 12.0,
+        "proteinG": 12,
         "carbG": 15.2
       },
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "เน้นเคี้ยวเนื้อขนุนและมะเขือเทศ ส่วนน้ำแกงรสเปรี้ยวเค็มให้ตักราดข้าวพอหายอยาก"
+      "flavorText": "เน้นเคี้ยวเนื้อขนุนและมะเขือเทศ, ส่วนน้ำแกงรสเปรี้ยวเค็มให้ตักราดข้าวพอหายอยาก"
     },
     {
       "id": "food_017",
@@ -396,15 +396,15 @@
         "alt": "น้ำพริกปลาฮ้า"
       },
       "sodium": {
-        "amountMg": 2850.0,
+        "amountMg": 2850,
         "zone": "red",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 110.0,
+        "energyKcal": 110,
         "fatG": 2.1,
         "proteinG": 14.8,
-        "carbG": 8.0
+        "carbG": 8
       },
       "warningIcons": [
         "salt"
@@ -420,12 +420,12 @@
         "alt": "ต๋ำบะหนุน (ตำขนุน)"
       },
       "sodium": {
-        "amountMg": 1820.0,
+        "amountMg": 1820,
         "zone": "red",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 215.0,
+        "energyKcal": 215,
         "fatG": 11.8,
         "proteinG": 8.5,
         "carbG": 18.7
@@ -433,7 +433,7 @@
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "เมนูมงคล ดื่มน้ำเปล่าตามเพิ่ม 1-2 แก้ว เพิ่มถั่วฝักยาว แตงขวา มะเขือเปราะ"
+      "flavorText": "เมนูมงคล, ดื่มน้ำเปล่าตามเพิ่ม 1-2 แก้ว, เพิ่มถั่วฝักยาว แตงขวา มะเขือเปราะ"
     },
     {
       "id": "food_019",
@@ -444,12 +444,12 @@
         "alt": "แกงผักปลังต้มจืด"
       },
       "sodium": {
-        "amountMg": 240.0,
+        "amountMg": 240,
         "zone": "green",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 90.0,
+        "energyKcal": 90,
         "fatG": 3.5,
         "proteinG": 8.2,
         "carbG": 6.4
@@ -468,12 +468,12 @@
         "alt": "คั่วเห็ดถอบ"
       },
       "sodium": {
-        "amountMg": 280.0,
+        "amountMg": 280,
         "zone": "green",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 145.0,
+        "energyKcal": 145,
         "fatG": 6.5,
         "proteinG": 9.2,
         "carbG": 12.4
@@ -481,7 +481,7 @@
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "กรุบกรอบดังก๊อบเบาใจ สมุนไพรชูรสแทนน้ำปลา ไตยิ้มร่า"
+      "flavorText": "กรุบกรอบดังก๊อบเบาใจ, สมุนไพรชูรสแทนน้ำปลา, ไตยิ้มร่า"
     },
     {
       "id": "food_021",
@@ -492,12 +492,12 @@
         "alt": "แกงผักหวานใส่ไข่มดแดง"
       },
       "sodium": {
-        "amountMg": 320.0,
+        "amountMg": 320,
         "zone": "green",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 125.0,
+        "energyKcal": 125,
         "fatG": 4.2,
         "proteinG": 10.5,
         "carbG": 11.3
@@ -505,7 +505,7 @@
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "รสหวานธรรมชาติจากป่าลึก โปรตีนพุ่ง ใยอาหารแน่น สบายไตสุดๆ"
+      "flavorText": "รสหวานธรรมชาติจากป่าลึก, โปรตีนพุ่ง ใยอาหารแน่น, สบายไตสุดๆ"
     },
     {
       "id": "food_022",
@@ -516,12 +516,12 @@
         "alt": "ส้าผักกาด"
       },
       "sodium": {
-        "amountMg": 310.0,
+        "amountMg": 310,
         "zone": "green",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 85.0,
+        "energyKcal": 85,
         "fatG": 3.8,
         "proteinG": 4.5,
         "carbG": 8.2
@@ -529,7 +529,7 @@
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "กรอบสดชื่นสะท้านลิ้น วิตามินซีเต็มพิกัด พลังงานต่ำเซฟไตขั้นสุด"
+      "flavorText": "กรอบสดชื่นสะท้านลิ้น, วิตามินซีเต็มพิกัด, พลังงานต่ำเซฟไตขั้นสุด"
     },
     {
       "id": "food_023",
@@ -540,12 +540,12 @@
         "alt": "แกงบ่าปลี"
       },
       "sodium": {
-        "amountMg": 290.0,
+        "amountMg": 290,
         "zone": "green",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 115.0,
+        "energyKcal": 115,
         "fatG": 4.2,
         "proteinG": 9.5,
         "carbG": 12.8
@@ -553,7 +553,7 @@
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "คลังใยอาหารจากสวนหลังบ้าน รสฝาดหวานละมุน สบายท้อง ดีต่อใจและไต"
+      "flavorText": "คลังใยอาหารจากสวนหลังบ้าน, รสฝาดหวานละมุน สบายท้อง, ดีต่อใจและไต"
     },
     {
       "id": "food_024",
@@ -564,12 +564,12 @@
         "alt": "ตำส้มโอใส่ใส่มะแว้ง/ใบชะพลู"
       },
       "sodium": {
-        "amountMg": 280.0,
+        "amountMg": 280,
         "zone": "green",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 110.0,
+        "energyKcal": 110,
         "fatG": 2.2,
         "proteinG": 3.8,
         "carbG": 19.5
@@ -577,7 +577,7 @@
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "รสเปรี้ยว หวาน ขม ซ่า ทะลวงทุกต่อมรับรส วิตามินซีสูงลิ่ว ดับร้อน ชะล้างโซเดียม"
+      "flavorText": "รสเปรี้ยว หวาน ขม ซ่า ทะลวงทุกต่อมรับรส, วิตามินซีสูงลิ่ว ดับร้อน, ชะล้างโซเดียม"
     },
     {
       "id": "food_025",
@@ -588,12 +588,12 @@
         "alt": "แกงเห็ดลม"
       },
       "sodium": {
-        "amountMg": 260.0,
+        "amountMg": 260,
         "zone": "green",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 75.0,
+        "energyKcal": 75,
         "fatG": 1.5,
         "proteinG": 5.2,
         "carbG": 10.2
@@ -601,7 +601,7 @@
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "เนื้อสัมผัสหนึบหนับดั่งเนื้อสัตว์ ซุปใสซดคล่องคอ เสริมภูมิคุ้มกัน"
+      "flavorText": "เนื้อสัมผัสหนึบหนับดั่งเนื้อสัตว์, ซุปใสซดคล่องคอ, เสริมภูมิคุ้มกัน"
     },
     {
       "id": "food_026",
@@ -612,20 +612,20 @@
         "alt": "แกงผักกาดจอ (ไม่ใส่ถั่วเน่า/กะปิ)"
       },
       "sodium": {
-        "amountMg": 150.0,
+        "amountMg": 150,
         "zone": "green",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 110.0,
-        "fatG": 5.0,
+        "energyKcal": 110,
+        "fatG": 5,
         "proteinG": 7.5,
         "carbG": 8.8
       },
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "รสเปรี้ยวอมหวานฉ่ำ ไร้กลิ่นคาวกะปิ ใยอาหารและแคลเซียมสูงลิ่ว"
+      "flavorText": "รสเปรี้ยวอมหวานฉ่ำ, ไร้กลิ่นคาวกะปิ, ใยอาหารและแคลเซียมสูงลิ่ว"
     },
     {
       "id": "food_027",
@@ -636,12 +636,12 @@
         "alt": "แกงตูนใส่ปลา"
       },
       "sodium": {
-        "amountMg": 340.0,
+        "amountMg": 340,
         "zone": "green",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 95.0,
+        "energyKcal": 95,
         "fatG": 1.8,
         "proteinG": 13.5,
         "carbG": 6.2
@@ -649,7 +649,7 @@
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "ฟองน้ำธรรมชาติ โปรตีนปลาเนื้อแน่น แคลอรี่ต่ำ เซฟไตขั้นสุด"
+      "flavorText": "ฟองน้ำธรรมชาติ, โปรตีนปลาเนื้อแน่น แคลอรี่ต่ำ, เซฟไตขั้นสุด"
     },
     {
       "id": "food_028",
@@ -660,12 +660,12 @@
         "alt": "ผักเซียงดาผัดไข่"
       },
       "sodium": {
-        "amountMg": 290.0,
+        "amountMg": 290,
         "zone": "green",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 160.0,
+        "energyKcal": 160,
         "fatG": 11.2,
         "proteinG": 8.5,
         "carbG": 6.8
@@ -673,7 +673,7 @@
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "ราชินีผักพื้นบ้าน รสขมหวานละมุนตัดความมันไข่ สยบน้ำตาลในเลือด"
+      "flavorText": "ราชินีผักพื้นบ้าน, รสขมหวานละมุนตัดความมันไข่, สยบน้ำตาลในเลือด"
     },
     {
       "id": "food_029",
@@ -684,12 +684,12 @@
         "alt": "แกงสะแลใส่ปลาแห้ง"
       },
       "sodium": {
-        "amountMg": 234.0,
+        "amountMg": 234,
         "zone": "green",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 65.0,
+        "energyKcal": 65,
         "fatG": 0.8,
         "proteinG": 5.2,
         "carbG": 9.2
@@ -697,7 +697,7 @@
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "ผักป่าหายาก เนื้อสัมผัสกรุบมันนัวซุปใส รสเปรี้ยวกลมกล่อมทดแทนความเค็ม"
+      "flavorText": "ผักป่าหายาก, เนื้อสัมผัสกรุบมันนัวซุปใส, รสเปรี้ยวกลมกล่อมทดแทนความเค็ม"
     },
     {
       "id": "food_030",
@@ -708,12 +708,12 @@
         "alt": "แกงผักเสี้ยวป่า"
       },
       "sodium": {
-        "amountMg": 280.0,
+        "amountMg": 280,
         "zone": "green",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 90.0,
+        "energyKcal": 90,
         "fatG": 1.5,
         "proteinG": 12.8,
         "carbG": 6.5
@@ -721,7 +721,7 @@
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "รสเปรี้ยวฝาดตามธรรมชาติ แคลอรี่ต่ำ ไม่บวมน้ำ"
+      "flavorText": "รสเปรี้ยวฝาดตามธรรมชาติ, แคลอรี่ต่ำ, ไม่บวมน้ำ"
     },
     {
       "id": "food_031",
@@ -732,20 +732,20 @@
         "alt": "ยำชิ้นไก่"
       },
       "sodium": {
-        "amountMg": 360.0,
+        "amountMg": 360,
         "zone": "green",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 150.0,
+        "energyKcal": 150,
         "fatG": 4.5,
-        "proteinG": 22.0,
+        "proteinG": 22,
         "carbG": 5.4
       },
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "มะแขว่น และดีปลี ช่วยกระตุ้นต่อมรับรสทำงานได้ดีโดยไม่ต้องพึ่งความเค็ม"
+      "flavorText": "มะแขว่น และดีปลี ช่วยกระตุ้นต่อมรับรสทำงานได้ดี, โดยไม่ต้องพึ่งความเค็ม"
     },
     {
       "id": "food_032",
@@ -756,12 +756,12 @@
         "alt": "หน่ออั่วนึ่ง"
       },
       "sodium": {
-        "amountMg": 340.0,
+        "amountMg": 340,
         "zone": "green",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 140.0,
+        "energyKcal": 140,
         "fatG": 5.5,
         "proteinG": 14.2,
         "carbG": 8.5
@@ -780,12 +780,12 @@
         "alt": "แกงบ่าค้อนก่อมใส่ไก่"
       },
       "sodium": {
-        "amountMg": 310.0,
+        "amountMg": 310,
         "zone": "green",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 110.0,
+        "energyKcal": 110,
         "fatG": 2.8,
         "proteinG": 12.5,
         "carbG": 8.7
@@ -793,7 +793,7 @@
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "มะรุมมีสารต้านอนุมูลอิสระและช่วยลดความดันโลหิตสูง บำรุงหัวใจ"
+      "flavorText": "มะรุมมีสารต้านอนุมูลอิสระและช่วยลดความดันโลหิตสูง, บำรุงหัวใจ"
     },
     {
       "id": "food_034",
@@ -804,20 +804,20 @@
         "alt": "ตำมะเขือยาวใส่ไก่อกฉีก (ลดปลาร้า"
       },
       "sodium": {
-        "amountMg": 310.0,
+        "amountMg": 310,
         "zone": "green",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 95.0,
+        "energyKcal": 95,
         "fatG": 1.5,
-        "proteinG": 10.0,
-        "carbG": 11.0
+        "proteinG": 10,
+        "carbG": 11
       },
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "มะเขือยาวเผามีโพแทสเซียมสูง ซึ่งช่วยขับโซเดียมออกจากร่างกาย"
+      "flavorText": "มะเขือยาวเผามีโพแทสเซียมสูง, ซึ่งช่วยขับโซเดียมออกจากร่างกาย"
     },
     {
       "id": "food_035",
@@ -828,20 +828,20 @@
         "alt": "ยำผักส้ม"
       },
       "sodium": {
-        "amountMg": 1044.0,
+        "amountMg": 1044,
         "zone": "red",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 260.0,
-        "fatG": 1.0,
-        "proteinG": 3.0,
-        "carbG": 14.0
+        "energyKcal": 260,
+        "fatG": 1,
+        "proteinG": 3,
+        "carbG": 14
       },
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "เมนูผักล้วนที่ให้พลังงานต่ำมาก เหมาะกับคนลดน้ำหนัก"
+      "flavorText": "เมนูผักล้วนที่ให้พลังงานต่ำมาก, เหมาะกับคนลดน้ำหนัก"
     },
     {
       "id": "food_036",
@@ -852,20 +852,20 @@
         "alt": "ยำเตา"
       },
       "sodium": {
-        "amountMg": 310.0,
+        "amountMg": 310,
         "zone": "green",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 90.0,
-        "fatG": 2.0,
-        "proteinG": 6.0,
-        "carbG": 12.0
+        "energyKcal": 90,
+        "fatG": 2,
+        "proteinG": 6,
+        "carbG": 12
       },
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "สาหร่ายน้ำจืดให้แร่ธาตุสูง ปรุงรสด้วยมะเขือแจ้เปรี้ยวเพื่อลดการใช้ปลาร้า"
+      "flavorText": "สาหร่ายน้ำจืดให้แร่ธาตุสูง, ปรุงรสด้วยมะเขือแจ้เปรี้ยวเพื่อลดการใช้ปลาร้า"
     },
     {
       "id": "food_037",
@@ -876,15 +876,15 @@
         "alt": "นึ่งปลาช่อน จิ้มแจ่วผักนึ่ง"
       },
       "sodium": {
-        "amountMg": 290.0,
+        "amountMg": 290,
         "zone": "green",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 210.0,
+        "energyKcal": 210,
         "fatG": 3.5,
-        "proteinG": 32.0,
-        "carbG": 12.0
+        "proteinG": 32,
+        "carbG": 12
       },
       "warningIcons": [
         "salt"
@@ -900,20 +900,20 @@
         "alt": "แกงบอน"
       },
       "sodium": {
-        "amountMg": 350.0,
+        "amountMg": 350,
         "zone": "green",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 140.0,
-        "fatG": 6.0,
-        "proteinG": 8.0,
-        "carbG": 14.0
+        "energyKcal": 140,
+        "fatG": 6,
+        "proteinG": 8,
+        "carbG": 14
       },
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "บอนต้องต้มให้เปื่อยเพื่อลดสารกาลเซียมออกซาเลต รสชาติเปรี้ยวลดเค็ม"
+      "flavorText": "บอนต้องต้มให้เปื่อยเพื่อลดสารกาลเซียมออกซาเลต, รสชาติเปรี้ยวลดเค็ม"
     },
     {
       "id": "food_039",
@@ -924,20 +924,20 @@
         "alt": "ส้ามมะเขือฝอย"
       },
       "sodium": {
-        "amountMg": 280.0,
+        "amountMg": 280,
         "zone": "green",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 85.0,
+        "energyKcal": 85,
         "fatG": 2.5,
-        "proteinG": 5.0,
-        "carbG": 11.0
+        "proteinG": 5,
+        "carbG": 11
       },
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "ข่าอ่อนซอย และ ใบขิงฝอย เพิ่มความเผ็ดร้อน ช่วยให้ลดเค็ม"
+      "flavorText": "ข่าอ่อนซอย และ ใบขิงฝอย เพิ่มความเผ็ดร้อน, ช่วยให้ลดเค็ม"
     },
     {
       "id": "food_040",
@@ -948,20 +948,20 @@
         "alt": "ข้าวกั้นจิ้น"
       },
       "sodium": {
-        "amountMg": 580.0,
+        "amountMg": 580,
         "zone": "yellow",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 310.0,
-        "fatG": 9.0,
-        "proteinG": 13.0,
-        "carbG": 44.0
+        "energyKcal": 310,
+        "fatG": 9,
+        "proteinG": 13,
+        "carbG": 44
       },
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "ทานคู่กับหอมแดงสดและแตงกวาเยอะๆ เพื่อใช้โพแทสเซียมในผักช่วยขับโซเดียม"
+      "flavorText": "ทานคู่กับหอมแดงสดและแตงกวาเยอะๆ, เพื่อใช้โพแทสเซียมในผักช่วยขับโซเดียม"
     },
     {
       "id": "food_041",
@@ -972,20 +972,20 @@
         "alt": "ยำผักเฮือด"
       },
       "sodium": {
-        "amountMg": 450.0,
+        "amountMg": 450,
         "zone": "yellow",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 140.0,
-        "fatG": 6.0,
-        "proteinG": 9.0,
-        "carbG": 13.0
+        "energyKcal": 140,
+        "fatG": 6,
+        "proteinG": 9,
+        "carbG": 13
       },
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "เน้นรสเปรี้ยวอมฝาดของตัวผักเฮือด เปรี้ยวจากมะเขือเทศ เพื่อลดปริมาณกะปิ"
+      "flavorText": "เน้นรสเปรี้ยวอมฝาดของตัวผักเฮือด, เปรี้ยวจากมะเขือเทศ, เพื่อลดปริมาณกะปิ"
     },
     {
       "id": "food_042",
@@ -996,15 +996,15 @@
         "alt": "น้ำพริกอ๋อง"
       },
       "sodium": {
-        "amountMg": 520.0,
+        "amountMg": 520,
         "zone": "yellow",
         "servingNote": "ลดกะปิ น้ำปลา"
       },
       "nutrition": {
-        "energyKcal": 160.0,
-        "fatG": 7.0,
-        "proteinG": 14.0,
-        "carbG": 11.0
+        "energyKcal": 160,
+        "fatG": 7,
+        "proteinG": 14,
+        "carbG": 11
       },
       "warningIcons": [
         "salt"
@@ -1020,15 +1020,15 @@
         "alt": "น้ำพริกอีเก๋"
       },
       "sodium": {
-        "amountMg": 480.0,
+        "amountMg": 480,
         "zone": "yellow",
         "servingNote": "ลดกะปิ น้ำปลา"
       },
       "nutrition": {
-        "energyKcal": 65.0,
-        "fatG": 1.0,
-        "proteinG": 3.0,
-        "carbG": 11.0
+        "energyKcal": 65,
+        "fatG": 1,
+        "proteinG": 3,
+        "carbG": 11
       },
       "warningIcons": [
         "salt"
@@ -1044,20 +1044,20 @@
         "alt": "แกงหยวกใส่ไก่"
       },
       "sodium": {
-        "amountMg": 460.0,
+        "amountMg": 460,
         "zone": "yellow",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 160.0,
-        "fatG": 4.0,
-        "proteinG": 16.0,
-        "carbG": 15.0
+        "energyKcal": 160,
+        "fatG": 4,
+        "proteinG": 16,
+        "carbG": 15
       },
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "หยวกกล้วย กระตุ้นการขับถ่าย ลดระดับน้ำตาล"
+      "flavorText": "หยวกกล้วย, กระตุ้นการขับถ่าย, ลดระดับน้ำตาล"
     },
     {
       "id": "food_045",
@@ -1068,20 +1068,20 @@
         "alt": "ผัดเซียงดาใส่ไข่"
       },
       "sodium": {
-        "amountMg": 430.0,
+        "amountMg": 430,
         "zone": "yellow",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 180.0,
-        "fatG": 11.0,
-        "proteinG": 10.0,
-        "carbG": 9.0
+        "energyKcal": 180,
+        "fatG": 11,
+        "proteinG": 10,
+        "carbG": 9
       },
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "ใบเซียงดามีสารลดระดับน้ำตาล ผัดด้วยน้ำหรือใช้น้ำมันรำข้าว ช่วยลดไขมัน"
+      "flavorText": "ใบเซียงดามีสารลดระดับน้ำตาล, ผัดด้วยน้ำหรือใช้น้ำมันรำข้าว, ช่วยลดไขมัน"
     },
     {
       "id": "food_046",
@@ -1092,15 +1092,15 @@
         "alt": "แอ๊บปลา (ลดเกลือและกะปิ)"
       },
       "sodium": {
-        "amountMg": 490.0,
+        "amountMg": 490,
         "zone": "yellow",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 140.0,
+        "energyKcal": 140,
         "fatG": 3.5,
-        "proteinG": 22.0,
-        "carbG": 5.0
+        "proteinG": 22,
+        "carbG": 5
       },
       "warningIcons": [
         "salt"
@@ -1116,20 +1116,20 @@
         "alt": "แกงผักกาดตงใส่ปลาแห้ง"
       },
       "sodium": {
-        "amountMg": 440.0,
+        "amountMg": 440,
         "zone": "yellow",
         "servingNote": "กะปิเหลือ 1 ช้อนชา"
       },
       "nutrition": {
-        "energyKcal": 105.0,
-        "fatG": 1.0,
-        "proteinG": 14.0,
-        "carbG": 10.0
+        "energyKcal": 105,
+        "fatG": 1,
+        "proteinG": 14,
+        "carbG": 10
       },
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "เลือกใช้ปลาแห้งย่างที่ไม่ผ่านการหมักเกลือ เพื่อป้องกันโซเดียมแฝง"
+      "flavorText": "เลือกใช้ปลาแห้งย่างที่ไม่ผ่านการหมักเกลือ, เพื่อป้องกันโซเดียมแฝง"
     },
     {
       "id": "food_048",
@@ -1140,20 +1140,20 @@
         "alt": "อ๊อกปลานิล"
       },
       "sodium": {
-        "amountMg": 460.0,
+        "amountMg": 460,
         "zone": "yellow",
         "servingNote": "ลดกะปิ"
       },
       "nutrition": {
-        "energyKcal": 165.0,
+        "energyKcal": 165,
         "fatG": 4.5,
-        "proteinG": 24.0,
-        "carbG": 7.0
+        "proteinG": 24,
+        "carbG": 7
       },
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "ปลามีโอเมก้า 3 บำรุงสมอง พริกแกงมีฤทธิ์ต้านการอักเสบ"
+      "flavorText": "ปลามีโอเมก้า 3 บำรุงสมอง, พริกแกงมีฤทธิ์ต้านการอักเสบ"
     },
     {
       "id": "food_049",
@@ -1164,15 +1164,15 @@
         "alt": "ลาบคั่วเหนือ"
       },
       "sodium": {
-        "amountMg": 620.0,
+        "amountMg": 620,
         "zone": "yellow",
         "servingNote": "งดใส่เลือด ใช้ซีอิ๊วขาวแทนน้ำปลา"
       },
       "nutrition": {
-        "energyKcal": 220.0,
-        "fatG": 10.0,
-        "proteinG": 26.0,
-        "carbG": 4.0
+        "energyKcal": 220,
+        "fatG": 10,
+        "proteinG": 26,
+        "carbG": 4
       },
       "warningIcons": [
         "salt"
@@ -1188,15 +1188,15 @@
         "alt": "แกงผักขี้หูด"
       },
       "sodium": {
-        "amountMg": 430.0,
+        "amountMg": 430,
         "zone": "yellow",
         "servingNote": "กะปิเหลือ 1 ช้อนชา ไม่เติมเกลือ"
       },
       "nutrition": {
-        "energyKcal": 110.0,
+        "energyKcal": 110,
         "fatG": 1.5,
-        "proteinG": 15.0,
-        "carbG": 9.0
+        "proteinG": 15,
+        "carbG": 9
       },
       "warningIcons": [
         "salt"
@@ -1212,20 +1212,20 @@
         "alt": "แกงคั่วหอยขม (ลดกะปิ)"
       },
       "sodium": {
-        "amountMg": 490.0,
+        "amountMg": 490,
         "zone": "yellow",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 135.0,
+        "energyKcal": 135,
         "fatG": 2.5,
-        "proteinG": 14.0,
-        "carbG": 12.0
+        "proteinG": 14,
+        "carbG": 12
       },
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "หอยขมบำรุงเลือด ใบชะพลู ชะอมบำรุงกระดูกและสายตา"
+      "flavorText": "หอยขมบำรุงเลือด, ใบชะพลู ชะอมบำรุงกระดูกและสายตา"
     },
     {
       "id": "food_052",
@@ -1236,15 +1236,15 @@
         "alt": "ไข่ป่าม"
       },
       "sodium": {
-        "amountMg": 420.0,
+        "amountMg": 420,
         "zone": "yellow",
         "servingNote": "ซีอิ๊วขาว 1 ช้อนชา"
       },
       "nutrition": {
-        "energyKcal": 155.0,
-        "fatG": 10.0,
-        "proteinG": 13.0,
-        "carbG": 3.0
+        "energyKcal": 155,
+        "fatG": 10,
+        "proteinG": 13,
+        "carbG": 3
       },
       "warningIcons": [
         "salt"
@@ -1260,15 +1260,15 @@
         "alt": "แกงกระด้าง"
       },
       "sodium": {
-        "amountMg": 510.0,
+        "amountMg": 510,
         "zone": "yellow",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 190.0,
-        "fatG": 11.0,
-        "proteinG": 19.0,
-        "carbG": 3.0
+        "energyKcal": 190,
+        "fatG": 11,
+        "proteinG": 19,
+        "carbG": 3
       },
       "warningIcons": [
         "salt"
@@ -1284,20 +1284,20 @@
         "alt": "แกงผักกูดใส่ปลาย่าง"
       },
       "sodium": {
-        "amountMg": 420.0,
+        "amountMg": 420,
         "zone": "yellow",
         "servingNote": "ลดกะปิ ใส่ซีอิ๊วแทนน้ำปลา"
       },
       "nutrition": {
-        "energyKcal": 115.0,
+        "energyKcal": 115,
         "fatG": 1.5,
-        "proteinG": 15.0,
-        "carbG": 10.0
+        "proteinG": 15,
+        "carbG": 10
       },
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "ผักกูดบำรุงสายตา บำรุงโลหิต คุมความดันโลหิต"
+      "flavorText": "ผักกูดบำรุงสายตา, บำรุงโลหิต, คุมความดันโลหิต"
     },
     {
       "id": "food_055",
@@ -1308,20 +1308,20 @@
         "alt": "แกงหน่อไม้ปลาดุก"
       },
       "sodium": {
-        "amountMg": 540.0,
+        "amountMg": 540,
         "zone": "yellow",
         "servingNote": "น้ำปลาร้า 1 ชช. ลดกะปิ"
       },
       "nutrition": {
-        "energyKcal": 195.0,
-        "fatG": 7.0,
-        "proteinG": 21.0,
-        "carbG": 12.0
+        "energyKcal": 195,
+        "fatG": 7,
+        "proteinG": 21,
+        "carbG": 12
       },
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "น้ำใบย่านาง มีฤทธิ์เย็น ช่วยดับร้อน ผู้ป่วยเก๊าต์ไม่ควรกิน"
+      "flavorText": "น้ำใบย่านาง, มีฤทธิ์เย็น ช่วยดับร้อน, ผู้ป่วยเก๊าต์ไม่ควรกิน"
     },
     {
       "id": "food_056",
@@ -1332,15 +1332,15 @@
         "alt": "ไก่นึ่งสมุนไพร"
       },
       "sodium": {
-        "amountMg": 480.0,
+        "amountMg": 480,
         "zone": "yellow",
         "servingNote": "ใช้ซีอิ๊วขาว 1 ช้อนชา"
       },
       "nutrition": {
-        "energyKcal": 180.0,
-        "fatG": 6.0,
-        "proteinG": 28.0,
-        "carbG": 4.0
+        "energyKcal": 180,
+        "fatG": 6,
+        "proteinG": 28,
+        "carbG": 4
       },
       "warningIcons": [
         "salt"
@@ -1356,15 +1356,15 @@
         "alt": "คั่วแห้งไก่"
       },
       "sodium": {
-        "amountMg": 530.0,
+        "amountMg": 530,
         "zone": "yellow",
         "servingNote": "ลดกะปิ ใช้ซีอิ๊ว"
       },
       "nutrition": {
-        "energyKcal": 190.0,
-        "fatG": 7.0,
-        "proteinG": 26.0,
-        "carbG": 5.0
+        "energyKcal": 190,
+        "fatG": 7,
+        "proteinG": 26,
+        "carbG": 5
       },
       "warningIcons": [
         "salt"
@@ -1380,15 +1380,15 @@
         "alt": "ทอดไข่ใส่มดแดง"
       },
       "sodium": {
-        "amountMg": 440.0,
+        "amountMg": 440,
         "zone": "yellow",
         "servingNote": "ใช้ซีอิ๊วขาว 1 ช้อนชา"
       },
       "nutrition": {
-        "energyKcal": 440.0,
-        "fatG": 13.0,
-        "proteinG": 16.0,
-        "carbG": 3.0
+        "energyKcal": 440,
+        "fatG": 13,
+        "proteinG": 16,
+        "carbG": 3
       },
       "warningIcons": [
         "salt"
@@ -1404,15 +1404,15 @@
         "alt": "ตำมะเขือ"
       },
       "sodium": {
-        "amountMg": 450.0,
+        "amountMg": 450,
         "zone": "yellow",
         "servingNote": "ลดกะปิ/ปลาร้าเหลือ ½ ช้อนชา"
       },
       "nutrition": {
-        "energyKcal": 95.0,
+        "energyKcal": 95,
         "fatG": 1.5,
-        "proteinG": 4.0,
-        "carbG": 16.0
+        "proteinG": 4,
+        "carbG": 16
       },
       "warningIcons": [
         "salt"
@@ -1428,20 +1428,20 @@
         "alt": "ข้าวแคบ (รสเค็ม/งา)"
       },
       "sodium": {
-        "amountMg": 120.0,
+        "amountMg": 120,
         "zone": "green",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 70.0,
-        "fatG": 1.0,
-        "proteinG": 2.0,
-        "carbG": 13.0
+        "energyKcal": 70,
+        "fatG": 1,
+        "proteinG": 2,
+        "carbG": 13
       },
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "แผ่นแป้งบางกรอบ แคลอรีต่ำและโซเดียมน้อย แต่ต้องระวังอย่าเคี้ยวเพลินหมดเป็นปึก"
+      "flavorText": "แผ่นแป้งบางกรอบ, แคลอรีต่ำและโซเดียมน้อย, แต่ต้องระวังอย่าเคี้ยวเพลินหมดเป็นปึก"
     },
     {
       "id": "food_061",
@@ -1452,20 +1452,20 @@
         "alt": "ข้าวควบ (ข้าวโป่ง) สูตรดั้งเดิม"
       },
       "sodium": {
-        "amountMg": 180.0,
+        "amountMg": 180,
         "zone": "green",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 110.0,
+        "energyKcal": 110,
         "fatG": 0.5,
-        "proteinG": 2.0,
-        "carbG": 24.0
+        "proteinG": 2,
+        "carbG": 24
       },
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "ข้าวเหนียวตำแผ่ปิ้งจนพองโต หอมกลิ่นไหม้จางๆ เค็มปะแล่มกำลังดี เป็นของว่างที่ปลอดภัย"
+      "flavorText": "ข้าวเหนียวตำแผ่ปิ้งจนพองโต, หอมกลิ่นไหม้จางๆ, เค็มปะแล่มกำลังดี, เป็นของว่างที่ปลอดภัย"
     },
     {
       "id": "food_062",
@@ -1476,20 +1476,20 @@
         "alt": "ข้าวนุกงา (ข้าวหนุกงา)"
       },
       "sodium": {
-        "amountMg": 240.0,
+        "amountMg": 240,
         "zone": "green",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 220.0,
-        "fatG": 5.0,
-        "proteinG": 4.0,
-        "carbG": 40.0
+        "energyKcal": 220,
+        "fatG": 5,
+        "proteinG": 4,
+        "carbG": 40
       },
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "ข้าวเหนียวใหม่นวดผสมงาขี้ม้อน มีโพแทสเซียมสูงจากงา ซึ่งช่วยขับโซเดียมออกจากร่างกายได้ดี"
+      "flavorText": "ข้าวเหนียวใหม่นวดผสมงาขี้ม้อน, มีโพแทสเซียมสูงจากงา, ซึ่งช่วยขับโซเดียมออกจากร่างกายได้ดี"
     },
     {
       "id": "food_063",
@@ -1500,20 +1500,20 @@
         "alt": "ข้าวแต๋นน้ำแตงโม (หน้าธัญพืช)"
       },
       "sodium": {
-        "amountMg": 350.0,
+        "amountMg": 350,
         "zone": "yellow",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 190.0,
-        "fatG": 8.0,
-        "proteinG": 3.0,
-        "carbG": 26.0
+        "energyKcal": 190,
+        "fatG": 8,
+        "proteinG": 3,
+        "carbG": 26
       },
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "กรุบกรอบหอมหวานอมเค็มจากน้ำตาลเคี่ยว หักห้ามใจกินแค่แผ่นเดียวพอ เพราะมีโซเดียมและไขมันจากการทอด"
+      "flavorText": "กรุบกรอบหอมหวานอมเค็มจากน้ำตาลเคี่ยว, หักห้ามใจกินแค่แผ่นเดียวพอ, เพราะมีโซเดียมและไขมันจากการทอด"
     },
     {
       "id": "food_064",
@@ -1524,20 +1524,20 @@
         "alt": "ขนมจ๊อก (ไส้เค็ม)"
       },
       "sodium": {
-        "amountMg": 580.0,
+        "amountMg": 580,
         "zone": "yellow",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 210.0,
-        "fatG": 7.0,
-        "proteinG": 4.0,
-        "carbG": 33.0
+        "energyKcal": 210,
+        "fatG": 7,
+        "proteinG": 4,
+        "carbG": 33
       },
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "ขนมเทียนไส้เค็มเนื้อนุ่มหนึบ แต่ไส้ข้างในผัดพริกไทยเกลือเข้มข้น แนะนำให้ตักแบ่งกินเพื่อลดการรับโซเดียม"
+      "flavorText": "ขนมเทียนไส้เค็มเนื้อนุ่มหนึบ, แต่ไส้ข้างในผัดพริกไทยเกลือเข้มข้น, แนะนำให้ตักแบ่งกินเพื่อลดการรับโซเดียม"
     },
     {
       "id": "food_065",
@@ -1548,20 +1548,20 @@
         "alt": "ข้าวต้มหัวหงอก (จิ้มมะพร้าวเกลือ)"
       },
       "sodium": {
-        "amountMg": 650.0,
+        "amountMg": 650,
         "zone": "red",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 280.0,
-        "fatG": 10.0,
-        "proteinG": 4.0,
-        "carbG": 44.0
+        "energyKcal": 280,
+        "fatG": 10,
+        "proteinG": 4,
+        "carbG": 44
       },
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "ตัวอันตรายอยู่ที่เกลือที่คลุกมากับมะพร้าวขูด ควรเขี่ยเกลือออก หรือหลีกเลี่ยงการจิ้มน้ำตาลผสมเกลือเพิ่ม"
+      "flavorText": "ตัวอันตรายอยู่ที่เกลือที่คลุกมากับมะพร้าวขูด, ควรเขี่ยเกลือออก, หรือหลีกเลี่ยงการจิ้มน้ำตาลผสมเกลือเพิ่ม"
     },
     {
       "id": "food_066",
@@ -1572,20 +1572,20 @@
         "alt": "ขนมเกลือ (หนมเกลือ)"
       },
       "sodium": {
-        "amountMg": 780.0,
+        "amountMg": 780,
         "zone": "red",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 180.0,
-        "fatG": 8.0,
-        "proteinG": 2.0,
-        "carbG": 25.0
+        "energyKcal": 180,
+        "fatG": 8,
+        "proteinG": 2,
+        "carbG": 25
       },
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "ขนมโบราณเนื้อนุ่มที่ทำจากแป้งและกะทิ ชื่อบอกชัดเจนว่าขนมเกลือ มีโซเดียมสูงมาก ไม่เหมาะกับผู้ป่วยโรคไต"
+      "flavorText": "ขนมโบราณเนื้อนุ่มที่ทำจากแป้งและกะทิ, ชื่อบอกชัดเจนว่าขนมเกลือ, มีโซเดียมสูงมาก, ไม่เหมาะกับผู้ป่วยโรคไต"
     },
     {
       "id": "food_067",
@@ -1596,20 +1596,20 @@
         "alt": "ข้าวเหนียวหน้าปลาแห้ง"
       },
       "sodium": {
-        "amountMg": 890.0,
+        "amountMg": 890,
         "zone": "red",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 360.0,
-        "fatG": 12.0,
-        "proteinG": 8.0,
-        "carbG": 55.0
+        "energyKcal": 360,
+        "fatG": 12,
+        "proteinG": 8,
+        "carbG": 55
       },
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "ข้าวเหนียวมูนมันเยิ้ม โดนโซเดียมคูณสองจากทั้งน้ำกะทิที่ใช้มูนข้าวและปลาแห้งป่นรสเค็มจัดด้านบน"
+      "flavorText": "ข้าวเหนียวมูนมันเยิ้ม, โดนโซเดียมคูณสองจากทั้งน้ำกะทิที่ใช้มูนข้าวและปลาแห้งป่นรสเค็มจัดด้านบน"
     },
     {
       "id": "food_068",
@@ -1620,20 +1620,20 @@
         "alt": "ข้าวตอกน้ำกะทิ (สูตรใส่เกลือตัดหวาน)"
       },
       "sodium": {
-        "amountMg": 610.0,
+        "amountMg": 610,
         "zone": "red",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 290.0,
-        "fatG": 14.0,
-        "proteinG": 2.0,
-        "carbG": 39.0
+        "energyKcal": 290,
+        "fatG": 14,
+        "proteinG": 2,
+        "carbG": 39
       },
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "ข้าวตอกคั่วหอมๆ มักถูกราดด้วยน้ำกะทิเคี่ยวที่ใส่เกลือปริมาณมากเพื่อตัดรสหวานให้กลมกล่อม โซเดียมแฝงสูงจากกะทิและเกลือปรุงรส"
+      "flavorText": "ข้าวตอกคั่วหอมๆ มักถูกราดด้วยน้ำกะทิเคี่ยวที่ใส่เกลือปริมาณมากเพื่อตัดรสหวานให้กลมกล่อม, โซเดียมแฝงสูงจากกะทิและเกลือปรุงรส"
     },
     {
       "id": "food_069",
@@ -1644,20 +1644,20 @@
         "alt": "ข้าวเหนียวหัวหงอก (จิ้มมะพร้าวขูดโรยเกลือ)"
       },
       "sodium": {
-        "amountMg": 680.0,
+        "amountMg": 680,
         "zone": "red",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 320.0,
-        "fatG": 9.0,
-        "proteinG": 4.0,
-        "carbG": 56.0
+        "energyKcal": 320,
+        "fatG": 9,
+        "proteinG": 4,
+        "carbG": 56
       },
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "ข้าวเหนียวนึ่งสุกนำมาคลุกหรือจิ้มกินกับมะพร้าวขูดขาว (ที่ดูเหมือนหัวหงอก) ตัวอันตรายอยู่ที่การสาดเกลือป่นลงไปคลุกกับมะพร้าวเพื่อให้มีรสเค็มมัน ยิ่งกินเพลินไตยิ่งทำงานหนัก"
+      "flavorText": "ข้าวเหนียวนึ่งสุกนำมาคลุกหรือจิ้มกินกับมะพร้าวขูดขาว (ที่ดูเหมือนหัวหงอก), ตัวอันตรายอยู่ที่การสาดเกลือป่นลงไปคลุกกับมะพร้าวเพื่อให้มีรสเค็มมัน, ยิ่งกินเพลินไตยิ่งทำงานหนัก"
     },
     {
       "id": "food_070",
@@ -1668,20 +1668,20 @@
         "alt": "ข้าวหนมแป้น (ขนมแป้นสูตรโบราณ)"
       },
       "sodium": {
-        "amountMg": 380.0,
+        "amountMg": 380,
         "zone": "yellow",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 190.0,
-        "fatG": 6.0,
-        "proteinG": 3.0,
-        "carbG": 31.0
+        "energyKcal": 190,
+        "fatG": 6,
+        "proteinG": 3,
+        "carbG": 31
       },
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "ขนมแป้งข้าวเหนียวห่อไส้มะพร้าวขูดคลุกน้ำตาลอ้อย แม้ตัวไส้จะหวาน แต่ในแป้งสูตรโบราณมักนวดผสมเกลือเพื่อตัดรสชาติให้กลมกล่อมและไม่เลี่ยน"
+      "flavorText": "ขนมแป้งข้าวเหนียวห่อไส้มะพร้าวขูดคลุกน้ำตาลอ้อย, แม้ตัวไส้จะหวาน, แต่ในแป้งสูตรโบราณมักนวดผสมเกลือเพื่อตัดรสชาติให้กลมกล่อมและไม่เลี่ยน"
     },
     {
       "id": "food_071",
@@ -1692,21 +1692,21 @@
         "alt": "ขนมปังปี๊บไส้สับปะรด (ขนมยอดฮิตติดบ้าน)"
       },
       "sodium": {
-        "amountMg": 720.0,
+        "amountMg": 720,
         "zone": "red",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 340.0,
-        "fatG": 12.0,
-        "proteinG": 4.0,
-        "carbG": 54.0
+        "energyKcal": 340,
+        "fatG": 12,
+        "proteinG": 4,
+        "carbG": 54
       },
       "warningIcons": [
         "salt",
         "sugar"
       ],
-      "flavorText": "ตัวร้ายในคราบของว่าง! ตัวแครกเกอร์โรยเกลือเม็ดเป้งให้รสเค็มจัด ส่วนไส้สับปะรดกวนก็หวานเจี๊ยบ กินเพลินจนเบาหวานและไตถามหาพร้อมกัน"
+      "flavorText": "ตัวร้ายในคราบของว่าง! ตัวแครกเกอร์โรยเกลือเม็ดเป้งให้รสเค็มจัด, ส่วนไส้สับปะรดกวนก็หวานเจี๊ยบ, กินเพลินจนเบาหวานและไตถามหาพร้อมกัน"
     },
     {
       "id": "food_072",
@@ -1717,15 +1717,15 @@
         "alt": "โรตีทอดนมข้น-น้ำตาล"
       },
       "sodium": {
-        "amountMg": 590.0,
+        "amountMg": 590,
         "zone": "red",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 450.0,
-        "fatG": 22.0,
-        "proteinG": 6.0,
-        "carbG": 57.0
+        "energyKcal": 450,
+        "fatG": 22,
+        "proteinG": 6,
+        "carbG": 57
       },
       "warningIcons": [
         "salt",
@@ -1742,21 +1742,21 @@
         "alt": "ขนมขาไก่ (รสเค็มดั้งเดิม)"
       },
       "sodium": {
-        "amountMg": 840.0,
+        "amountMg": 840,
         "zone": "red",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 290.0,
-        "fatG": 11.0,
-        "proteinG": 5.0,
-        "carbG": 43.0
+        "energyKcal": 290,
+        "fatG": 11,
+        "proteinG": 5,
+        "carbG": 43
       },
       "warningIcons": [
         "salt",
         "sugar"
       ],
-      "flavorText": "ขนมขบเคี้ยวที่ละลายทรัพย์สุขภาพ แป้งกรอบๆ เคลือบด้วยน้ำตาลเคี่ยวปรุงรสซีอิ๊วและเกลือป่น เค็มๆ หวานๆ กินสี่ห้าชิ้น โซเดียมพุ่งทะลุหลอด"
+      "flavorText": "ขนมขบเคี้ยวที่ละลายทรัพย์สุขภาพ, แป้งกรอบๆ เคลือบด้วยน้ำตาลเคี่ยวปรุงรสซีอิ๊วและเกลือป่น, เค็มๆ หวานๆ กินสี่ห้าชิ้น, โซเดียมพุ่งทะลุหลอด"
     },
     {
       "id": "food_074",
@@ -1767,21 +1767,21 @@
         "alt": "กล้วยฉาบ (รสเค็ม-หวาน)"
       },
       "sodium": {
-        "amountMg": 390.0,
+        "amountMg": 390,
         "zone": "yellow",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 260.0,
-        "fatG": 9.0,
-        "proteinG": 2.0,
-        "carbG": 43.0
+        "energyKcal": 260,
+        "fatG": 9,
+        "proteinG": 2,
+        "carbG": 43
       },
       "warningIcons": [
         "salt",
         "sugar"
       ],
-      "flavorText": "ของฝากรถเข็นที่ดูเหมือนธรรมชาติ แต่ผ่านการทอดและคลุกเคล้าน้ำเชื่อมผสมเกลือป่น เพื่อให้ได้รสชาติหวานมันเค็มเคลือบตัวกล้วย"
+      "flavorText": "ของฝากรถเข็นที่ดูเหมือนธรรมชาติ, แต่ผ่านการทอดและคลุกเคล้าน้ำเชื่อมผสมเกลือป่น, เพื่อให้ได้รสชาติหวานมันเค็มเคลือบตัวกล้วย"
     },
     {
       "id": "food_075",
@@ -1792,20 +1792,20 @@
         "alt": "ข้าวเกรียบปลาทอด"
       },
       "sodium": {
-        "amountMg": 790.0,
+        "amountMg": 790,
         "zone": "red",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 320.0,
-        "fatG": 15.0,
-        "proteinG": 6.0,
-        "carbG": 40.0
+        "energyKcal": 320,
+        "fatG": 15,
+        "proteinG": 6,
+        "carbG": 40
       },
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "ขนมขบเคี้ยวขวัญใจเด็กๆ และผู้ใหญ่ตอนดูทีวี แป้งผสมเนื้อปลาที่มีเกลือสูงอยู่แล้ว แถมยังปรุงรสด้วยผงชูรสและน้ำตาลเพิ่ม หวานเค็มกลมกล่อมแต่ไตพัง"
+      "flavorText": "ขนมขบเคี้ยวขวัญใจเด็กๆ และผู้ใหญ่ตอนดูทีวี, แป้งผสมเนื้อปลาที่มีเกลือสูงอยู่แล้ว, แถมยังปรุงรสด้วยผงชูรสและน้ำตาลเพิ่ม, หวานเค็มกลมกล่อมแต่ไตพัง"
     },
     {
       "id": "food_076",
@@ -1816,21 +1816,21 @@
         "alt": "ขนมเปี๊ยะโบราณ (ไส้ถั่วไข่เค็ม)"
       },
       "sodium": {
-        "amountMg": 480.0,
+        "amountMg": 480,
         "zone": "yellow",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 290.0,
-        "fatG": 11.0,
-        "proteinG": 5.0,
-        "carbG": 42.0
+        "energyKcal": 290,
+        "fatG": 11,
+        "proteinG": 5,
+        "carbG": 42
       },
       "warningIcons": [
         "salt",
         "sugar"
       ],
-      "flavorText": "ขนมไหว้และของฝากยอดนิยม ไส้ถั่วกวนหวานละมุนตัดรสด้วยไข่แดงเค็มชิ้นโต โซเดียมส่วนใหญ่มาจากไข่เค็มและแป้งชั้นนอกที่มีส่วนผสมของเกลือ"
+      "flavorText": "ขนมไหว้และของฝากยอดนิยม, ไส้ถั่วกวนหวานละมุนตัดรสด้วยไข่แดงเค็มชิ้นโต, โซเดียมส่วนใหญ่มาจากไข่เค็มและแป้งชั้นนอกที่มีส่วนผสมของเกลือ"
     },
     {
       "id": "food_077",
@@ -1841,21 +1841,21 @@
         "alt": "พัฟเค้กสอดไส้ครีมคัสตาร์ด"
       },
       "sodium": {
-        "amountMg": 320.0,
+        "amountMg": 320,
         "zone": "yellow",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 200.0,
-        "fatG": 9.0,
-        "proteinG": 3.0,
-        "carbG": 27.0
+        "energyKcal": 200,
+        "fatG": 9,
+        "proteinG": 3,
+        "carbG": 27
       },
       "warningIcons": [
         "salt",
         "sugar"
       ],
-      "flavorText": "ขนมยอดฮิตที่ลูกหลานชอบซื้อมาฝากผู้สูงอายุเพราะเนื้อนุ่มเคี้ยวง่าย แต่ระวังโซเดียมแฝงจากผงฟูและเกลือในเนื้อแป้ง รวมถึงน้ำตาลปริมาณสูงในไส้ครีม"
+      "flavorText": "ขนมยอดฮิตที่ลูกหลานชอบซื้อมาฝากผู้สูงอายุเพราะเนื้อนุ่มเคี้ยวง่าย, แต่ระวังโซเดียมแฝงจากผงฟูและเกลือในเนื้อแป้ง, รวมถึงน้ำตาลปริมาณสูงในไส้ครีม"
     },
     {
       "id": "food_078",
@@ -1866,21 +1866,21 @@
         "alt": "ขนมตระกูลทอง (ทองหยิบ-หยอด-ฝอยทอง)"
       },
       "sodium": {
-        "amountMg": 520.0,
+        "amountMg": 520,
         "zone": "red",
         "servingNote": "หมายเหตุ: โซเดียมมาจากไข่แดงและน้ำเชื่อมปรุงรส"
       },
       "nutrition": {
-        "energyKcal": 380.0,
-        "fatG": 14.0,
-        "proteinG": 7.0,
-        "carbG": 56.0
+        "energyKcal": 380,
+        "fatG": 14,
+        "proteinG": 7,
+        "carbG": 56
       },
       "warningIcons": [
         "salt",
         "sugar"
       ],
-      "flavorText": "ขนมไทยภาคกลางที่แพร่หลายไปทั่วประเทศ มักซื้อไปทำบุญหรือจัดงานเลี้ยง เนื้อนุ่มฉ่ำน้ำเชื่อม หวานเจี๊ยบจนแสบคอ และมีโซเดียมแฝงเข้มข้นจากการใช้ไข่แดงล้วนและเทคนิคการแต่งรสน้ำเชื่อม"
+      "flavorText": "ขนมไทยภาคกลางที่แพร่หลายไปทั่วประเทศ, มักซื้อไปทำบุญหรือจัดงานเลี้ยง, เนื้อนุ่มฉ่ำน้ำเชื่อม หวานเจี๊ยบจนแสบคอ, และมีโซเดียมแฝงเข้มข้นจากการใช้ไข่แดงล้วนและเทคนิคการแต่งรสน้ำเชื่อม"
     },
     {
       "id": "food_079",
@@ -1891,21 +1891,21 @@
         "alt": "ขนมบ้าบิ่นมะพร้าวอ่อน"
       },
       "sodium": {
-        "amountMg": 390.0,
+        "amountMg": 390,
         "zone": "yellow",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 280.0,
-        "fatG": 11.0,
-        "proteinG": 3.0,
-        "carbG": 42.0
+        "energyKcal": 280,
+        "fatG": 11,
+        "proteinG": 3,
+        "carbG": 42
       },
       "warningIcons": [
         "salt",
         "sugar"
       ],
-      "flavorText": "ขนมยอดนิยมตามกาดนัด แป้งเหนียวนุ่มหนึบหอมมะพร้าว แต่แม่ค้ามักใส่เกลือป่นค่อนข้างหนักมือในขั้นตอนการผสมแป้งและกะทิ เพื่อตัดรสให้หวานมันเข้มข้นสะใจ"
+      "flavorText": "ขนมยอดนิยมตามกาดนัด, แป้งเหนียวนุ่มหนึบหอมมะพร้าว, แต่แม่ค้ามักใส่เกลือป่นค่อนข้างหนักมือในขั้นตอนการผสมแป้งและกะทิ เพื่อตัดรสให้หวานมันเข้มข้นสะใจ"
     },
     {
       "id": "food_080",
@@ -1916,21 +1916,21 @@
         "alt": "ขนมตะโก้ (ไส้เผือก)"
       },
       "sodium": {
-        "amountMg": 380.0,
+        "amountMg": 380,
         "zone": "yellow",
         "servingNote": "ต่อกระทงขนาดกลาง 2-3 กระทง"
       },
       "nutrition": {
-        "energyKcal": 240.0,
-        "fatG": 9.0,
-        "proteinG": 2.0,
-        "carbG": 38.0
+        "energyKcal": 240,
+        "fatG": 9,
+        "proteinG": 2,
+        "carbG": 38
       },
       "warningIcons": [
         "salt",
         "sugar"
       ],
-      "flavorText": "ขนมตลาดนัดเนื้อนุ่มตักทานง่าย หน้ากะทิเน้นความเค็มมันเข้มข้นสะใจ ส่วนตัวแป้งด้านล่างหวานจัด เป็นคู่หูโซเดียมและน้ำตาลที่ผู้ป่วยความดันและเบาหวานต้องจำกัดปริมาณ"
+      "flavorText": "ขนมตลาดนัดเนื้อนุ่มตักทานง่าย, หน้ากะทิเน้นความเค็มมันเข้มข้นสะใจ, ส่วนตัวแป้งด้านล่างหวานจัด, เป็นคู่หูโซเดียมและน้ำตาลที่ผู้ป่วยความดันและเบาหวานต้องจำกัดปริมาณ"
     },
     {
       "id": "food_081",
@@ -1941,21 +1941,21 @@
         "alt": "หมูปิ้งนมสด"
       },
       "sodium": {
-        "amountMg": 780.0,
+        "amountMg": 780,
         "zone": "red",
         "servingNote": "ต่อ 3 ไม้"
       },
       "nutrition": {
-        "energyKcal": 390.0,
-        "fatG": 24.0,
-        "proteinG": 21.0,
-        "carbG": 22.0
+        "energyKcal": 390,
+        "fatG": 24,
+        "proteinG": 21,
+        "carbG": 22
       },
       "warningIcons": [
         "salt",
         "sugar"
       ],
-      "flavorText": "อาหารเช้าสุดฮิตที่ซ่อนอันตราย หมักด้วยซีอิ๊ว น้ำปลา ผงชูรส และน้ำตาลปี๊บจนเนื้อนุ่ม หวานเค็มเข้มข้นแทรกซึมทุกอนูเนื้อ"
+      "flavorText": "อาหารเช้าสุดฮิตที่ซ่อนอันตราย, หมักด้วยซีอิ๊ว น้ำปลา ผงชูรส และน้ำตาลปี๊บจนเนื้อนุ่ม, หวานเค็มเข้มข้นแทรกซึมทุกอนูเนื้อ"
     },
     {
       "id": "food_082",
@@ -1966,20 +1966,20 @@
         "alt": "ไส้กรอกอีสานย่าง"
       },
       "sodium": {
-        "amountMg": 890.0,
+        "amountMg": 890,
         "zone": "red",
         "servingNote": "ต่อ 1 ไม้/ชุดเล็ก"
       },
       "nutrition": {
-        "energyKcal": 320.0,
-        "fatG": 25.0,
-        "proteinG": 12.0,
-        "carbG": 12.0
+        "energyKcal": 320,
+        "fatG": 25,
+        "proteinG": 12,
+        "carbG": 12
       },
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "มีขายทุกตลาดนัด รสชาติเปรี้ยวเค็มมัน แต่โซเดียมพุ่งทะลุจอจากทั้งเกลือหมักและผงชูรส ควรทานแกล้มผักสดเยอะๆ เพื่อช่วยขับโซเดียม"
+      "flavorText": "มีขายทุกตลาดนัด รสชาติเปรี้ยวเค็มมัน, แต่โซเดียมพุ่งทะลุจอจากทั้งเกลือหมักและผงชูรส, ควรทานแกล้มผักสดเยอะๆ เพื่อช่วยขับโซเดียม"
     },
     {
       "id": "food_083",
@@ -1990,21 +1990,21 @@
         "alt": "แกงพะโล้ขาหมู"
       },
       "sodium": {
-        "amountMg": 950.0,
+        "amountMg": 950,
         "zone": "red",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 480.0,
-        "fatG": 32.0,
-        "proteinG": 26.0,
-        "carbG": 22.0
+        "energyKcal": 480,
+        "fatG": 32,
+        "proteinG": 26,
+        "carbG": 22
       },
       "warningIcons": [
         "salt",
         "sugar"
       ],
-      "flavorText": "เมนูกับข้าวยอดนิยมในร้านข้าวแกง น้ำซุปสีเข้มเกิดจากการเคี่ยวน้ำตาลปี๊บผสมซีอิ๊วดำและเกลือ หวานเจี๊ยบเค็มข้น ไม่ควรตักน้ำราดข้าวมากเกินไป"
+      "flavorText": "เมนูกับข้าวยอดนิยมในร้านข้าวแกง, น้ำซุปสีเข้มเกิดจากการเคี่ยวน้ำตาลปี๊บผสมซีอิ๊วดำและเกลือ, หวานเจี๊ยบเค็มข้น ไม่ควรตักน้ำราดข้าวมากเกินไป"
     },
     {
       "id": "food_084",
@@ -2015,21 +2015,21 @@
         "alt": "ไข่ต้มซีอิ๊วพะโล้"
       },
       "sodium": {
-        "amountMg": 460.0,
+        "amountMg": 460,
         "zone": "yellow",
         "servingNote": "ต่อ 1 ฟอง"
       },
       "nutrition": {
-        "energyKcal": 150.0,
-        "fatG": 10.0,
-        "proteinG": 12.0,
-        "carbG": 3.0
+        "energyKcal": 150,
+        "fatG": 10,
+        "proteinG": 12,
+        "carbG": 3
       },
       "warningIcons": [
         "salt",
         "sugar"
       ],
-      "flavorText": "ไข่ต้มเคี่ยวจนเนื้อหนึบ รสเค็มหวานซึมลึกเข้าไปถึงเนื้อไข่แดง กินง่ายสำหรับผู้สูงอายุ แต่โซเดียมและคอเลสเตอรอลไม่น้อยเลย"
+      "flavorText": "ไข่ต้มเคี่ยวจนเนื้อหนึบ รสเค็มหวานซึมลึกเข้าไปถึงเนื้อไข่แดง, กินง่ายสำหรับผู้สูงอายุ, แต่โซเดียมและคอเลสเตอรอลไม่น้อยเลย"
     },
     {
       "id": "food_085",
@@ -2040,21 +2040,21 @@
         "alt": "ลูกชิ้นทอด น้ำจิ้มรสเด็ด"
       },
       "sodium": {
-        "amountMg": 980.0,
+        "amountMg": 980,
         "zone": "red",
         "servingNote": "ต่อ 4-5 ไม้"
       },
       "nutrition": {
-        "energyKcal": 380.0,
-        "fatG": 18.0,
-        "proteinG": 14.0,
-        "carbG": 40.0
+        "energyKcal": 380,
+        "fatG": 18,
+        "proteinG": 14,
+        "carbG": 40
       },
       "warningIcons": [
         "salt",
         "sugar"
       ],
-      "flavorText": "ตัวลูกชิ้นมีโซเดียมแฝงจากสารบอแรกซ์และเกลืออยู่แล้ว เมื่อราดน้ำจิ้มมะขามเปียกสูตรโบราณที่หวานจัดเค็มจัด ยิ่งทำให้ร่างกายได้รับโซเดียมพุ่งกระฉูด"
+      "flavorText": "ตัวลูกชิ้นมีโซเดียมแฝงจากสารบอแรกซ์และเกลืออยู่แล้ว, เมื่อราดน้ำจิ้มมะขามเปียกสูตรโบราณที่หวานจัดเค็มจัด, ยิ่งทำให้ร่างกายได้รับโซเดียมพุ่งกระฉูด"
     },
     {
       "id": "food_086",
@@ -2065,21 +2065,21 @@
         "alt": "หมูหวาน"
       },
       "sodium": {
-        "amountMg": 750.0,
+        "amountMg": 750,
         "zone": "red",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 410.0,
-        "fatG": 25.0,
-        "proteinG": 18.0,
-        "carbG": 28.0
+        "energyKcal": 410,
+        "fatG": 25,
+        "proteinG": 18,
+        "carbG": 28
       },
       "warningIcons": [
         "salt",
         "sugar"
       ],
-      "flavorText": "เมนูกับข้าวตักที่เด็กๆ และผู้สูงอายุนิยม เพราะเคี้ยวง่าย รสชาติหวานนำเค็มตาม อุดมไปด้วยน้ำตาลทราย ซีอิ๊วขาว และน้ำมันเยิ้ม"
+      "flavorText": "เมนูกับข้าวตักที่เด็กๆ และผู้สูงอายุนิยม เพราะเคี้ยวง่าย, รสชาติหวานนำเค็มตาม, อุดมไปด้วยน้ำตาลทราย ซีอิ๊วขาว และน้ำมันเยิ้ม"
     },
     {
       "id": "food_087",
@@ -2090,21 +2090,21 @@
         "alt": "ปลาทูต้มเค็มหวานโบราณ"
       },
       "sodium": {
-        "amountMg": 1100.0,
+        "amountMg": 1100,
         "zone": "red",
         "servingNote": "ต่อปลา 1 ตัว"
       },
       "nutrition": {
-        "energyKcal": 260.0,
-        "fatG": 12.0,
-        "proteinG": 24.0,
-        "carbG": 14.0
+        "energyKcal": 260,
+        "fatG": 12,
+        "proteinG": 24,
+        "carbG": 14
       },
       "warningIcons": [
         "salt",
         "sugar"
       ],
-      "flavorText": "ปลาทูที่ต้มเคี่ยวกับน้ำตาลอ้อย ซีอิ๊ว และมะขามเปียกจนก้างนิ่มทานได้ทั้งตัว อร่อยนุ่มลิ้นแต่โซเดียมสูงปรี๊ดจากน้ำต้มที่งวดจนเค็มจัด"
+      "flavorText": "ปลาทูที่ต้มเคี่ยวกับน้ำตาลอ้อย ซีอิ๊ว และมะขามเปียกจนก้างนิ่มทานได้ทั้งตัว, อร่อยนุ่มลิ้น, แต่โซเดียมสูงปรี๊ดจากน้ำต้มที่งวดจนเค็มจัด"
     },
     {
       "id": "food_088",
@@ -2115,20 +2115,20 @@
         "alt": "ผัดกะเพราหมูสับ"
       },
       "sodium": {
-        "amountMg": 1200.0,
+        "amountMg": 1200,
         "zone": "red",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 350.0,
-        "fatG": 22.0,
-        "proteinG": 24.0,
-        "carbG": 8.0
+        "energyKcal": 350,
+        "fatG": 22,
+        "proteinG": 24,
+        "carbG": 8
       },
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "เมนูสิ้นคิดยอดฮิตในตลาด ร้านค้ามักสาดน้ำมันหอย ซีอิ๊วขาว น้ำปลา และผงชูรส เพื่อให้ได้รสชาติเค็มเผ็ดสะใจ โซเดียมสูงติดอันดับต้นๆ ของอาหารตามสั่ง"
+      "flavorText": "เมนูสิ้นคิดยอดฮิตในตลาด, ร้านค้ามักสาดน้ำมันหอย ซีอิ๊วขาว น้ำปลา และผงชูรส เพื่อให้ได้รสชาติเค็มเผ็ดสะใจ, โซเดียมสูงติดอันดับต้นๆ ของอาหารตามสั่ง"
     },
     {
       "id": "food_089",
@@ -2139,20 +2139,20 @@
         "alt": "หมูแดดเดียวทอด"
       },
       "sodium": {
-        "amountMg": 850.0,
+        "amountMg": 850,
         "zone": "red",
         "servingNote": "ต่อจานเล็ก"
       },
       "nutrition": {
-        "energyKcal": 380.0,
-        "fatG": 26.0,
-        "proteinG": 32.0,
-        "carbG": 4.0
+        "energyKcal": 380,
+        "fatG": 26,
+        "proteinG": 32,
+        "carbG": 4
       },
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "ของกิ๋นลำคู่ข้าวเหนียวอุ่นๆ การถนอมอาหารด้วยการหมักเกลือ ซอส และผงชูรสปริมาณมาก ก่อนนำไปตากและทอด ทำให้โซเดียมเข้มข้นสูงมาก"
+      "flavorText": "ของกิ๋นลำคู่ข้าวเหนียวอุ่นๆ, การถนอมอาหารด้วยการหมักเกลือ ซอส และผงชูรสปริมาณมาก ก่อนนำไปตากและทอด, ทำให้โซเดียมเข้มข้นสูงมาก"
     },
     {
       "id": "food_090",
@@ -2163,21 +2163,21 @@
         "alt": "ทอดมันปลากราย"
       },
       "sodium": {
-        "amountMg": 580.0,
+        "amountMg": 580,
         "zone": "yellow",
         "servingNote": "ต่อ 4-5 ชิ้น"
       },
       "nutrition": {
-        "energyKcal": 240.0,
-        "fatG": 14.0,
-        "proteinG": 18.0,
-        "carbG": 10.0
+        "energyKcal": 240,
+        "fatG": 14,
+        "proteinG": 18,
+        "carbG": 10
       },
       "warningIcons": [
         "salt",
         "sugar"
       ],
-      "flavorText": "เนื้อปลาเหนียวนุ่มเคี้ยวหนึบ ปรุงรสด้วยพริกแกงที่มีเกลือสูง มักทานคู่กับน้ำจิ้มอาจาดที่หวานนำ ทำให้ได้รับทั้งน้ำตาลและโซเดียมเพิ่มขึ้น"
+      "flavorText": "เนื้อปลาเหนียวนุ่มเคี้ยวหนึบ, ปรุงรสด้วยพริกแกงที่มีเกลือสูง, มักทานคู่กับน้ำจิ้มอาจาดที่หวานนำ ทำให้ได้รับทั้งน้ำตาลและโซเดียมเพิ่มขึ้น"
     },
     {
       "id": "food_091",
@@ -2188,21 +2188,21 @@
         "alt": "กุนเชียงหมูทอด"
       },
       "sodium": {
-        "amountMg": 810.0,
+        "amountMg": 810,
         "zone": "red",
         "servingNote": "ต่อ 1 แท่ง/จานแบ่ง"
       },
       "nutrition": {
-        "energyKcal": 360.0,
-        "fatG": 28.0,
-        "proteinG": 14.0,
-        "carbG": 12.0
+        "energyKcal": 360,
+        "fatG": 28,
+        "proteinG": 14,
+        "carbG": 12
       },
       "warningIcons": [
         "salt",
         "sugar"
       ],
-      "flavorText": "อาหารแปรรูปยอดนิยมที่รสชาติหวานนำเค็มตาม อัดแน่นไปด้วยเกลือเพื่อการถนอมอาหารและน้ำตาลทรายปริมาณมาก รวมถึงไขมันอิ่มตัวสูง"
+      "flavorText": "อาหารแปรรูปยอดนิยมที่รสชาติหวานนำเค็มตาม, อัดแน่นไปด้วยเกลือเพื่อการถนอมอาหารและน้ำตาลทรายปริมาณมาก, รวมถึงไขมันอิ่มตัวสูง"
     },
     {
       "id": "food_092",
@@ -2213,20 +2213,20 @@
         "alt": "แหนมชุบไข่ทอด"
       },
       "sodium": {
-        "amountMg": 930.0,
+        "amountMg": 930,
         "zone": "red",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 290.0,
-        "fatG": 22.0,
-        "proteinG": 18.0,
-        "carbG": 5.0
+        "energyKcal": 290,
+        "fatG": 22,
+        "proteinG": 18,
+        "carbG": 5
       },
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "แหนมเปรี้ยวเค็มนำไปชุบไข่ทอดจนหอมฉุย โซเดียมสูงมากจากเกลือป่นและดินประสิวที่ใช้ในกระบวนการหมักแหนมดิบ"
+      "flavorText": "แหนมเปรี้ยวเค็มนำไปชุบไข่ทอดจนหอมฉุย, โซเดียมสูงมากจากเกลือป่นและดินประสิวที่ใช้ในกระบวนการหมักแหนมดิบ"
     },
     {
       "id": "food_093",
@@ -2237,21 +2237,21 @@
         "alt": "ยำไข่เค็ม"
       },
       "sodium": {
-        "amountMg": 1150.0,
+        "amountMg": 1150,
         "zone": "red",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 320.0,
-        "fatG": 20.0,
-        "proteinG": 12.0,
-        "carbG": 22.0
+        "energyKcal": 320,
+        "fatG": 20,
+        "proteinG": 12,
+        "carbG": 22
       },
       "warningIcons": [
         "salt",
         "sugar"
       ],
-      "flavorText": "เมนูกับแกล้มหรือทานกับข้าวต้ม โซเดียมคูณสามจากไข่เค็ม บวกกับน้ำยำสามรสที่สาดทั้งน้ำปลาและน้ำตาลทรายแบบจัดเต็ม"
+      "flavorText": "เมนูกับแกล้มหรือทานกับข้าวต้ม, โซเดียมคูณสามจากไข่เค็ม, บวกกับน้ำยำสามรสที่สาดทั้งน้ำปลาและน้ำตาลทรายแบบจัดเต็ม"
     },
     {
       "id": "food_094",
@@ -2262,20 +2262,20 @@
         "alt": "ต้มซุปเปอร์ขาไก่"
       },
       "sodium": {
-        "amountMg": 1350.0,
+        "amountMg": 1350,
         "zone": "red",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 220.0,
-        "fatG": 10.0,
-        "proteinG": 28.0,
-        "carbG": 4.0
+        "energyKcal": 220,
+        "fatG": 10,
+        "proteinG": 28,
+        "carbG": 4
       },
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "น้ำซุปรสแซ่บจัดจ้าน เผ็ดเปรี้ยวเค็มสะใจที่คนชอบซดร้อนๆ แท้จริงแล้วอัดแน่นไปด้วยน้ำปลา เกลือป่น และผงชูรสในปริมาณมหาศาลเพื่อกลบความคาว"
+      "flavorText": "น้ำซุปรสแซ่บจัดจ้าน เผ็ดเปรี้ยวเค็มสะใจที่คนชอบซดร้อนๆ, แท้จริงแล้วอัดแน่นไปด้วยน้ำปลา เกลือป่น และผงชูรสในปริมาณมหาศาล, เพื่อกลบความคาว"
     },
     {
       "id": "food_095",
@@ -2286,20 +2286,20 @@
         "alt": "แกงไตปลา (สูตรเข้มข้น)"
       },
       "sodium": {
-        "amountMg": 1450.0,
+        "amountMg": 1450,
         "zone": "red",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 180.0,
-        "fatG": 4.0,
-        "proteinG": 22.0,
-        "carbG": 14.0
+        "energyKcal": 180,
+        "fatG": 4,
+        "proteinG": 22,
+        "carbG": 14
       },
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "ซุปเผ็ดร้อนจัดจ้าน โซเดียมพุ่งสูงริบจากการใช้พุงปลาหมักเกลือเข้มข้นและกะปิ แนะนำให้ทานเนื้อปลาและผัก เขี่ยน้ำแกงออกห้ามซดเด็ดขาด"
+      "flavorText": "ซุปเผ็ดร้อนจัดจ้าน โซเดียมพุ่งสูงริบจากการใช้พุงปลาหมักเกลือเข้มข้นและกะปิ, แนะนำให้ทานเนื้อปลาและผัก, เขี่ยน้ำแกงออกห้ามซดเด็ดขาด"
     },
     {
       "id": "food_096",
@@ -2310,21 +2310,21 @@
         "alt": "ข้าวหมูแดง-หมูกรอบ"
       },
       "sodium": {
-        "amountMg": 1050.0,
+        "amountMg": 1050,
         "zone": "red",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 560.0,
-        "fatG": 24.0,
-        "proteinG": 22.0,
-        "carbG": 64.0
+        "energyKcal": 560,
+        "fatG": 24,
+        "proteinG": 22,
+        "carbG": 64
       },
       "warningIcons": [
         "salt",
         "sugar"
       ],
-      "flavorText": "ตัวร้ายอยู่ที่ \"น้ำราดสีแดง\" ที่เคี่ยวจากน้ำตาลปี๊บ ซีอิ๊ว และผงพวงปรุงรสจนหวานเค็มข้นหนืด ยิ่งราดฉ่ำ เบาหวานและไตยิ่งทำงานหนักควบคู่กัน"
+      "flavorText": "ตัวร้ายอยู่ที่ \"น้ำราดสีแดง\" ที่เคี่ยวจากน้ำตาลปี๊บ ซีอิ๊ว และผงพวงปรุงรสจนหวานเค็มข้นหนืด, ยิ่งราดฉ่ำ, เบาหวานและไตยิ่งทำงานหนักควบคู่กัน"
     },
     {
       "id": "food_097",
@@ -2335,20 +2335,20 @@
         "alt": "ขนมจีนน้ำยาป่า"
       },
       "sodium": {
-        "amountMg": 1180.0,
+        "amountMg": 1180,
         "zone": "red",
         "servingNote": null
       },
       "nutrition": {
-        "energyKcal": 320.0,
-        "fatG": 12.0,
-        "proteinG": 14.0,
-        "carbG": 38.0
+        "energyKcal": 320,
+        "fatG": 12,
+        "proteinG": 14,
+        "carbG": 38
       },
       "warningIcons": [
         "salt"
       ],
-      "flavorText": "น้ำยาขนมจีนเข้มข้นด้วยปลาและพริกแกงที่มีส่วนผสมของกะปิและเกลือป่นปริมาณมาก ผสมผงชูรสเพื่อความนัว ไม่ควรตักน้ำราดจนท่วมเส้น"
+      "flavorText": "น้ำยาขนมจีนเข้มข้นด้วยปลาและพริกแกงที่มีส่วนผสมของกะปิและเกลือป่นปริมาณมาก, ผสมผงชูรสเพื่อความนัว, ไม่ควรตักน้ำราดจนท่วมเส้น"
     },
     {
       "id": "food_098",
@@ -2359,21 +2359,21 @@
         "alt": "ซาลาเปาไส้หมูสับไข่เค็ม"
       },
       "sodium": {
-        "amountMg": 490.0,
+        "amountMg": 490,
         "zone": "yellow",
         "servingNote": "ต่อ 1 ลูกใหญ่"
       },
       "nutrition": {
-        "energyKcal": 260.0,
-        "fatG": 8.0,
-        "proteinG": 10.0,
-        "carbG": 37.0
+        "energyKcal": 260,
+        "fatG": 8,
+        "proteinG": 10,
+        "carbG": 37
       },
       "warningIcons": [
         "salt",
         "sugar"
       ],
-      "flavorText": "แป้งซาลาเปานุ่มๆ มีน้ำตาลแฝงสูง ส่วนไส้หมูสับข้างในปรุงรสด้วยน้ำมันหอย ซีอิ๊วขาว และมักใส่ไข่เค็มเพิ่มรสชาติ ทำให้เป็นของว่างเคี้ยวง่ายที่โซเดียมไม่เบาเลย"
+      "flavorText": "แป้งซาลาเปานุ่มๆ มีน้ำตาลแฝงสูง, ส่วนไส้หมูสับข้างในปรุงรสด้วยน้ำมันหอย ซีอิ๊วขาว และมักใส่ไข่เค็มเพิ่มรสชาติ, ทำให้เป็นของว่างเคี้ยวง่ายที่โซเดียมไม่เบาเลย"
     },
     {
       "id": "food_099",
@@ -2384,15 +2384,15 @@
         "alt": "ยำแหนมคลุกข้าวทอด"
       },
       "sodium": {
-        "amountMg": 1250.0,
+        "amountMg": 1250,
         "zone": "red",
         "servingNote": "ต่อชุดเล็ก 1 ถุง"
       },
       "nutrition": {
-        "energyKcal": 410.0,
-        "fatG": 22.0,
-        "proteinG": 15.0,
-        "carbG": 38.0
+        "energyKcal": 410,
+        "fatG": 22,
+        "proteinG": 15,
+        "carbG": 38
       },
       "warningIcons": [
         "salt",

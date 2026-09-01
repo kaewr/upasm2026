@@ -167,8 +167,6 @@
   }
   .pclose:hover{ color:var(--ink); border-color:var(--accent); }
   .pctype{ display:inline-block; font-size:12px; font-weight:800; color:#fff; padding:4px 12px; border-radius:999px; margin-bottom:10px; }
-  .tts-btn{ display:inline-flex; align-items:center; gap:6px; background:#1E8E3E; color:#fff; border-radius:20px; padding:7px 16px; font-size:13px; font-weight:700; margin-bottom:12px; }
-  .tts-btn:active{ opacity:0.75; }
   .preview-box h3{ font-size:19px; font-weight:800; margin-bottom:10px; }
   .pdesc{ font-size:14px; color:var(--ink-dim); line-height:1.65; margin-bottom:10px; }
   .preq{ font-size:13px; font-weight:700; background:var(--surface-2); padding:8px 12px; border-radius:8px; margin-bottom:10px; }
@@ -267,85 +265,6 @@ let foodSort = 'desc';
 let foodZone = 'all';
 let lastRendered = [];
 const cache = {};
-
-/* ---------- text-to-speech (reads a card's content aloud; mirrors the
-   same feature in sodium-quest-mvp.html, sharing its localStorage keys so
-   a rate/volume/pause preference set there also applies here — no separate
-   settings UI on this page, just the speak button itself). ---------- */
-const TTS_RATE_KEY = 'sodium_quest_tts_rate';
-const TTS_VOLUME_KEY = 'sodium_quest_tts_volume';
-const TTS_GAP_KEY = 'sodium_quest_tts_gap_sec';
-let ttsState = { supported: false, hasThaiVoice: false, offlineReady: false, voice: null };
-// Set right before openPreviewModal() renders — one array entry per
-// "paragraph" (title, scenario, each effect line, each choice, ...), read
-// only when the speak button is actually clicked.
-let ttsSpeakParts = [];
-let ttsSpeechGeneration = 0;
-function setSpeakParts(parts){ ttsSpeakParts = parts; }
-function ttsButtonHtml(){
-  return ttsState.supported ? `<button type="button" class="tts-btn" onclick="speakCardText()">🔊 ฟังเสียงการ์ดนี้</button>` : '';
-}
-function getTtsRate(){ const v = parseFloat(safeLocalGet(TTS_RATE_KEY)); return Number.isFinite(v) ? v : 1; }
-function getTtsVolume(){ const v = parseFloat(safeLocalGet(TTS_VOLUME_KEY)); return Number.isFinite(v) ? v : 1; }
-function getTtsGapMs(){ const v = parseFloat(safeLocalGet(TTS_GAP_KEY)); return Number.isFinite(v) ? Math.round(v*1000) : 250; }
-// Bumped on every stop/speak so a stale chain (from a card the viewer
-// already closed, or a rapid second click) can't keep firing its own
-// queued paragraphs on top of a newer reading.
-function stopSpeaking(){
-  ttsSpeechGeneration++;
-  if(ttsState.supported){ try { speechSynthesis.cancel(); } catch(e) {} }
-}
-function speakParts(parts, gapMs){
-  const gen = ++ttsSpeechGeneration;
-  if(!ttsState.supported) return;
-  try { speechSynthesis.cancel(); } catch(e) {}
-  const clean = (parts||[]).filter(Boolean);
-  if(!clean.length) return;
-  let i = 0;
-  function speakNext(){
-    if(gen !== ttsSpeechGeneration) return;
-    if(i >= clean.length) return;
-    let utter;
-    try { utter = new SpeechSynthesisUtterance(clean[i]); } catch(e) { return; }
-    utter.lang = 'th-TH';
-    if(ttsState.voice) utter.voice = ttsState.voice;
-    utter.rate = getTtsRate();
-    utter.volume = getTtsVolume();
-    utter.onend = () => {
-      if(gen !== ttsSpeechGeneration) return;
-      i++;
-      if(i < clean.length) setTimeout(speakNext, gapMs);
-    };
-    try { speechSynthesis.speak(utter); } catch(e) {}
-  }
-  speakNext();
-}
-function speakCardText(){
-  speakParts(ttsSpeakParts, getTtsGapMs());
-}
-// Voice lists load asynchronously in some browsers (empty on the very
-// first getVoices() call, populated once 'voiceschanged' fires).
-function detectTts(){
-  if(!('speechSynthesis' in window)){ ttsState.supported = false; return; }
-  ttsState.supported = true;
-  const pickVoice = () => {
-    let voices = [];
-    try { voices = speechSynthesis.getVoices() || []; } catch(e) {}
-    const thaiVoices = voices.filter(v => v.lang && v.lang.toLowerCase().startsWith('th'));
-    ttsState.hasThaiVoice = thaiVoices.length > 0;
-    ttsState.voice = thaiVoices.find(v=>v.localService) || thaiVoices[0] || null;
-    ttsState.offlineReady = !!(ttsState.voice && ttsState.voice.localService);
-  };
-  pickVoice();
-  try { speechSynthesis.onvoiceschanged = pickVoice; } catch(e) {}
-}
-detectTts();
-// Plain-text form of describeEffect() for speech — knowledgeCheck's
-// version embeds a <br>, which reads fine visually but must not be spoken
-// as literal markup.
-function describeEffectSpeech(eff){
-  return describeEffect(eff).replace(/<br\s*\/?>/gi, '. ');
-}
 
 /* ---------- font size (zoom) control, shared across cards.html/manual.html ---------- */
 // localStorage throws on opaque origins (e.g. opening this file directly via
@@ -518,10 +437,6 @@ function describeEffect(eff){
 
 /* ---------- preview modal: mirrors the styling used inside the actual game ---------- */
 function openPreviewModal(deckKey, card){
-  // A brand-new card being opened always cuts off whatever the PREVIOUS
-  // card was still reading — nothing ever keeps talking over (or could be
-  // mistaken for) a card the viewer hasn't pressed the speak button on yet.
-  stopSpeaking();
   const d = DECKS[deckKey];
   let html = '';
   if(deckKey === 'food'){
@@ -533,11 +448,9 @@ function openPreviewModal(deckKey, card){
     const nutritionLine = (n.energyKcal!=null)
       ? `⚡ ${Math.round(n.energyKcal)} kcal · 🥓 ไขมัน ${n.fatG??'-'} ก. · 🍗 โปรตีน ${n.proteinG??'-'} ก. · 🍚 คาร์บ ${n.carbG??'-'} ก.`
       : '';
-    setSpeakParts([card.name, `โซเดียม ${sodiumMg} มิลลิกรัม${servingNote} ระดับ${ZONE_LABEL[card.sodium.zone]}`, card.flavorText]);
     html = `
       <span class="pctype" style="background:${ZONE_COLOR[card.sodium.zone]};">🧺 การ์ดเมนูอาหาร (กาดนัด)${warnIcons ? ' · '+warnIcons : ''}</span>
       <h3>${card.name}</h3>
-      ${ttsButtonHtml()}
       ${img}
       <div class="peffect">โซเดียม ${sodiumMg} มก.${servingNote} (${ZONE_LABEL[card.sodium.zone]})</div>
       ${nutritionLine ? `<div class="peffect">${nutritionLine}</div>` : ''}
@@ -545,27 +458,18 @@ function openPreviewModal(deckKey, card){
     `;
   } else if(deckKey === 'mission'){
     const choices = (card.choices||[]).map(c => `<div class="choice-preview"><b>${c.label}</b><div class="choice-eff">${(c.effects||[]).map(describeEffect).join(' · ')}</div></div>`).join('');
-    const ruleSpeech = (card.challengeType === 'food_card_select_threshold' && card.cardSelectRule)
-      ? [card.cardSelectRule.condition === 'sodium_max_each'
-          ? `เลือกการ์ดอาหาร ${card.cardSelectRule.count} ใบ ที่มีโซเดียมไม่เกิน ${card.cardSelectRule.thresholdMg} มิลลิกรัมต่อใบ`
-          : `เลือกการ์ดอาหาร ${card.cardSelectRule.count} ใบ รวมโซเดียมไม่เกิน ${card.cardSelectRule.thresholdMg} มิลลิกรัม`]
-      : (card.choices||[]).map((c,i)=>`ตัวเลือกที่ ${i+1}: ${c.label}`);
-    setSpeakParts([card.title, card.scenario, ...ruleSpeech]);
     html = `
       <span class="pctype" style="background:${d.color};">🏠 ${card.title}</span>
       <h3>สถานการณ์</h3>
-      ${ttsButtonHtml()}
       <div class="pdesc">${card.scenario}</div>
       ${card.instructions ? `<div class="preq">📋 ${card.instructions}</div>` : ''}
       <div class="pchoices">${choices || '<div class="pdesc">ภารกิจนี้ให้เลือกการ์ดอาหารในมือแทนการเลือกข้อความ</div>'}</div>
     `;
   } else if(deckKey === 'obstacle'){
     const effLines = (card.effects||[]).map(e=>`<div class="peffect">${describeEffect(e)}</div>`).join('');
-    setSpeakParts([card.name, card.scenario, ...(card.effects||[]).map(describeEffectSpeech)]);
     html = `
       <span class="pctype" style="background:${d.color};">⚠️ การ์ดอุปสรรคหมู่บ้าน (ขึด)</span>
       <h3>${card.name}</h3>
-      ${ttsButtonHtml()}
       <div class="pdesc">${card.scenario}</div>
       ${card.scope==='all' ? '<div class="preq">⚠️ อุปสรรคนี้ส่งผลกับผู้เล่นทุกคน</div>' : ''}
       ${effLines}
@@ -573,21 +477,17 @@ function openPreviewModal(deckKey, card){
   } else if(deckKey === 'support'){
     const heroBg = card.image?.src ? ` style="background-image:url('${card.image.src}')"` : '';
     const effLines = (card.effects||[]).map(e=>`<div class="peffect">${describeEffect(e)}</div>`).join('');
-    setSpeakParts([card.name, card.scenario, ...(card.effects||[]).map(describeEffectSpeech)]);
     html = `
       <div class="phero"${heroBg}><div class="phero-scrim"><span class="pctype" style="background:${d.color};">🏯 การ์ดสนับสนุนชุมชน</span><h3>${card.name}</h3></div></div>
-      ${ttsButtonHtml()}
       <div class="pdesc">${card.scenario}</div>
       ${card.scope==='all' ? '<div class="preq">🤝 การสนับสนุนนี้ส่งผลกับผู้เล่นทุกคน</div>' : ''}
       ${effLines}
     `;
   } else if(deckKey === 'knowledge'){
     const img = card.image?.src ? `<img class="pimg" src="${card.image.src}" alt="${card.image.alt||card.name}">` : '';
-    setSpeakParts([card.name, card.knowledgeFact, card.flavorText]);
     html = `
       <span class="pctype" style="background:${d.color};">💡 การ์ดความรู้สุขภาพ</span>
       <h3>${card.name}</h3>
-      ${ttsButtonHtml()}
       ${img}
       <div class="pdesc">${card.knowledgeFact}</div>
       ${card.flavorText ? `<div class="peffect" style="font-style:italic;">"${card.flavorText}"</div>` : ''}
@@ -597,7 +497,6 @@ function openPreviewModal(deckKey, card){
   document.getElementById('preview-overlay').classList.add('show');
 }
 function closePreviewModal(){
-  stopSpeaking();
   document.getElementById('preview-overlay').classList.remove('show');
 }
 document.getElementById('preview-close').addEventListener('click', closePreviewModal);
